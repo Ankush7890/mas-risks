@@ -17,3 +17,6 @@ __pycache__/
 
 # OS noise
 .DS_Store
+
+# Paper PDFs kept next to papers/*/paper.md for human reading (see papers/README.md)
+papers/**/*.pdf

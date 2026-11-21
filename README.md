@@ -4,6 +4,8 @@ This project builds small open-weight agents whose susceptibility to influence i
 
 This project uses the [Epistemic Memory](https://github.com/FlorianDietz/EpistemicMemory) conventions: all project memory lives in LOG/SUMMARY file pairs under `convos/`, governed by [CLAUDE.md](CLAUDE.md). Human guide: [docs/HOW_TO_USE.md](docs/HOW_TO_USE.md). Open ideas and deferred items: [FUTURE_WORK.md](FUTURE_WORK.md). Workflow problems and lessons: [FEEDBACK.md](FEEDBACK.md).
 
+**Papers:** papers relevant to the project are stored as agent-readable markdown under [papers/](papers/README.md), one folder per paper. Each folder holds the converted text and, where we have one, a separate notes file with our own comments. The index and the procedure for adding a paper are in `papers/README.md`.
+
 ## Team
 
 - Julian Bitterlich — `convos/julian/` (git user.name: `Julian Bitterlich`)
@@ -31,3 +33,5 @@ All discussions live in `convos/{user}/`. **When starting a new topic, add a row
 | Date | User | Topic | Status | SUMMARY | LOG |
 |------|------|-------|--------|---------|-----|
 | 26-11-21 | julian | Project setup (template configuration) | Done | [SUMMARY](convos/julian/26-11-21_project_setup_SUMMARY.md) | [LOG](convos/julian/26-11-21_project_setup_LOG.md) |
+| 26-11-21 | julian | Papers library (`papers/` folder, conventions, converter) | Set up; 2 papers added | [SUMMARY](convos/julian/26-11-21_papers_library_SUMMARY.md) | [LOG](convos/julian/26-11-21_papers_library_LOG.md) |
+| 26-11-21 | julian | Emergent MAS risks paper: workshop (OpenReview) vs arXiv v4 | Compared; v4 stored in papers/ | [SUMMARY](convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md) | [LOG](convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md) |
