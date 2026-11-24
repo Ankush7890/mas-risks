@@ -4,28 +4,24 @@ Read this in full before writing code or running an experiment in this project. 
 
 ## Project Structure
 
-Each coding project lives in its own folder under `projects/`. An example layout for Python projects — adapt or replace it for your stack:
+One Python codebase at the repo root (one `pyproject.toml`, one uv `.venv`), not the template's per-codebase `projects/<name>/` folders — see `convos/julian/26-11-24_repo_layout_SUMMARY.md`.
 
 ```
-projects/<project_name>/
+mas-risks/
 ├── pyproject.toml          # All dependencies (don't pin versions unless necessary)
 ├── .env                    # API keys — the user provides this; NEVER hardcode keys
-├── .gitignore              # Exclude .venv/, .env, __pycache__/, large data folders
 ├── src/
-│   ├── __init__.py
-│   └── utils.py            # See below
+│   ├── mas_sim/            # General simulation library; must never import risk_experiments
+│   └── risk_experiments/   # The experiments; depends on mas_sim
 ├── scripts/                # Runnable entry points
-├── data/
-│   ├── input/              # External data sources
-│   ├── results/            # Raw outputs (often largest; use subfolders)
-│   └── analysis/           # KPIs, summaries, graphs
+├── data/                   # input/, results/, analysis/ — create when needed
 ├── logs/                   # Runtime logs
 └── tests/                  # Optional; discuss with the user what's worth testing
 ```
 
-**Setup**: install with `pip install -e .` in a project-local `.venv` so all imports work regardless of working directory.
+**Setup**: `uv sync`, then `uv run ...`. A new package under `src/` must also be listed in `[tool.hatch.build.targets.wheel] packages` in `pyproject.toml`, or it won't be importable.
 
-**`src/utils.py` should contain**:
+**Shared utilities** (a `utils.py` module) should contain:
 - Environment variable loading (from `.env`)
 - Path definitions using `pathlib.Path` relative to `__file__` — critical for scripts to work from any directory
 - Shared utility functions and classes

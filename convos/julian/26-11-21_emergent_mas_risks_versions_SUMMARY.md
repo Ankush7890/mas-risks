@@ -26,3 +26,4 @@ The user asked to compare two papers:
 
 LOG: `convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md`
 - See also: `convos/julian/26-11-21_papers_library_SUMMARY.md`. The papers library is where these would go if the user later wants them stored.
+- See also: `convos/julian/26-11-24_mas_sim_plan_SUMMARY.md` — implementation plan that re-implements three of this paper's experiments; its §6 notes build on the problems found here.
