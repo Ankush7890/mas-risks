@@ -15,7 +15,7 @@ This project uses the [Epistemic Memory](https://github.com/FlorianDietz/Epistem
 
 ## Current status and goals
 
-The research plan is [docs/research_agenda.md](docs/research_agenda.md): four research questions, three simulations, two researchers, about 8 part-time weeks.
+The research plan is [docs/research_agenda.md](docs/research_agenda.md): four research questions, three simulations, two researchers, about 8 part-time weeks. The ordered steps for Researcher A's part (model organisms and their evals) are in [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md), a proposal not yet ratified.
 
 As of 26-11-24: the shared Python environment is defined but not yet installed or tested on any machine. Researcher A's work on the susceptibility eval, steering vectors and LoRAs is at the design-proposal stage, with no code written (see the model-organisms topic in the index below).
 
@@ -28,7 +28,7 @@ One Python environment at the repository root serves all code, so both researche
 With [uv](https://docs.astral.sh/uv/) (preferred, installs exactly what the lock says):
 
 ```bash
-uv sync                      # creates .venv with runtime and dev packages
+uv sync                      # creates .venv with runtime and dev packages, and installs src/mas_risks in editable mode
 source .venv/bin/activate
 ```
 
@@ -37,6 +37,13 @@ With plain pip:
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
+pip install --no-deps -e .   # the project's own package, src/mas_risks
+```
+
+The tests of the item generator need no GPU and none of the large packages. On a laptop, this installs only pytest and ruff and runs them:
+
+```bash
+uv run --only-group dev pytest
 ```
 
 Check that the GPU is visible:
@@ -49,7 +56,7 @@ To add or upgrade a dependency, edit `pyproject.toml`, then regenerate the other
 
 ```bash
 uv lock                      # add --upgrade to move everything to the newest versions
-uv export --frozen --no-hashes --no-dev   --format requirements-txt -o requirements.txt
+uv export --frozen --no-hashes --no-dev --no-emit-project --format requirements-txt -o requirements.txt
 uv export --frozen --no-hashes --only-dev --format requirements-txt -o requirements-dev.txt
 ```
 
@@ -74,4 +81,4 @@ All discussions live in `convos/{user}/`. **When starting a new topic, add a row
 | 26-11-21 | julian | Papers library (`papers/` folder, conventions, converter) | Set up; 2 papers added | [SUMMARY](convos/julian/26-11-21_papers_library_SUMMARY.md) | [LOG](convos/julian/26-11-21_papers_library_LOG.md) |
 | 26-11-21 | julian | Emergent MAS risks paper: workshop (OpenReview) vs arXiv v4 | Compared; v4 stored in papers/ | [SUMMARY](convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md) | [LOG](convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md) |
 | 26-11-24 | ankush | Local setup on Ankush's machine (clone, tool checks, git user.name) | Done | [SUMMARY](convos/ankush/26-11-24_local_setup_SUMMARY.md) | [LOG](convos/ankush/26-11-24_local_setup_LOG.md) |
-| 26-11-24 | ankush | Model organisms: susceptibility eval, steering vectors, naive and discerning LoRAs; also the research plan and the shared environment | Plan and environment added; eval and data design settled on Ankush's side; waiting for Julian's answers; no code yet | [SUMMARY](convos/ankush/26-11-24_model_organisms_SUMMARY.md) | [LOG](convos/ankush/26-11-24_model_organisms_LOG.md) |
+| 26-11-24 | ankush | Model organisms: susceptibility eval, steering vectors, naive and discerning LoRAs; also the research plan and the shared environment | Plan and environment added; eval and data design settled on Ankush's side; work plan written (`docs/work_plan_model_organisms.md`, not yet ratified); its steps 1 and 2 implemented (package `src/mas_risks/`, item generator for the twelve families, tests pass; items not yet read by Ankush); waiting for Julian's answers | [SUMMARY](convos/ankush/26-11-24_model_organisms_SUMMARY.md) | [LOG](convos/ankush/26-11-24_model_organisms_LOG.md) |

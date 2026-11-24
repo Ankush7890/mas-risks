@@ -44,11 +44,19 @@ dev = [
     "ruff",
 ]
 
-[tool.uv]
-# No importable package exists yet. Remove this line and add a build system
-# when the first src/ package is created, so that it gets installed in
-# editable mode.
-package = false
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mas_risks"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets the tests import mas_risks without installing the full environment
+# (torch and the CUDA libraries), e.g. on a laptop:
+#   uv run --only-group dev pytest
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100

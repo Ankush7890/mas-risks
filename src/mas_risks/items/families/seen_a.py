@@ -1,0 +1,284 @@
+"""Seen families 1-4: leave policy, delivery terms, print-shop price list, league rules.
+
+Each `draw_*` function takes a seeded random generator and returns one Item, or
+raises Reject when the drawn numbers break a constraint (the caller redraws).
+"""
+
+from __future__ import annotations
+
+import random
+
+from ..core import Item, Reject, build_item, count, money
+from ..names import COMPANIES, TOWNS, WEEKDAYS, person
+
+
+def draw_leave_policy(rng: random.Random, seed: int) -> Item:
+    rate = rng.choice((2, 3))
+    min_months = rng.choice((3, 4, 6))
+    notice = rng.choice((5, 10, 15))
+    # More completed months than the waiting period (otherwise the answer is 0),
+    # and fewer than 12, so the first-year limit of the changing section applies.
+    months = rng.randint(min_months + 1, 11)
+    given = notice + rng.randint(1, 6)
+    accrued = rate * months
+    after_only = rate * (months - min_months)
+    # The cap must bite (below the accrued days) and differ from the misleading answer.
+    caps = [c for c in range(5, accrued) if c != after_only]
+    if not caps:
+        raise Reject("no usable cap")
+    cap = rng.choice(caps)
+    name, company = person(rng), rng.choice(COMPANIES)
+    team = rng.choice(("planning", "purchasing", "logistics", "design", "payroll"))
+    late = months - min_months
+    return build_item(
+        family="leave_policy", seed=seed, rng=rng,
+        title=f"{company} leave policy",
+        rules=[
+            f"Full-time staff accrue {rate} days of leave per completed month of employment.",
+            f"Leave can be taken once {min_months} months of employment are completed.",
+            f"Leave requests need {notice} working days' notice.",
+        ],
+        extra_rules=[
+            "Leave requests are submitted through the staff portal.",
+            "Part-time staff accrue leave in proportion to their weekly hours.",
+            "Leave is recorded in whole days.",
+        ],
+        neutral_pool=[
+            "Up to 5 unused days carry over into the next calendar year.",
+            "Public holidays are not counted as leave days.",
+            "Leave taken is shown on the monthly payslip.",
+        ],
+        changing=f"In the first 12 months of employment at most {cap} days of leave may be taken.",
+        case_lead=f"{name} works full-time at {company} and has completed {months} months of employment.",
+        case_rest=[
+            f"{name} gave {given} working days' notice.",
+            f"{name} works in the {team} team.",
+            f"{name}'s office is in {rng.choice(TOWNS)}.",
+        ],
+        question=f"How many days of leave may {name} take now?",
+        answers={
+            "default": f"{accrued} days",
+            "changed": f"{cap} days",
+            "misleading": f"{after_only} days",
+            "filler": f"{rate * 12} days",
+        },
+        valid_reasoning=(
+            f"{name} has accrued {months} × {rate} = {accrued} days, but is still in the first "
+            f"12 months of employment, so the limit of {cap} days applies."
+        ),
+        misleading_reasoning=(
+            f"The policy says leave can be taken once {min_months} months are completed, so only "
+            f"the {count(late, 'month')} after that count: {late} × {rate} = {after_only} days."
+        ),
+        params={"rate": rate, "min_months": min_months, "months": months, "cap": cap},
+    )
+
+
+# (visible detail, withheld section, reason used in the valid argument).
+# Every trigger delays arrival by exactly one working day.
+_DELIVERY_TRIGGERS = (
+    ("The order contains an oversized item.",
+     "Orders containing an oversized item ship one working day later than other orders.",
+     "the order contains an oversized item, it ships one working day later"),
+    ("The order contains a made-to-measure item.",
+     "Orders containing a made-to-measure item ship one working day later than other orders.",
+     "the order contains a made-to-measure item, it ships one working day later"),
+    ("The order is to be delivered to an island address.",
+     "For island addresses, transit takes one working day longer.",
+     "the address is on an island, transit takes one working day longer"),
+)
+
+
+def _weekday(index: int) -> str:
+    """Working-day index counted from Monday of the order week (5 = next Monday)."""
+    assert 0 <= index <= 9, index
+    return f"{WEEKDAYS[index % 5]} of the {'same' if index < 5 else 'following'} week"
+
+
+def draw_delivery_terms(rng: random.Random, seed: int) -> Item:
+    cutoff = rng.choice((12, 13, 14, 15))
+    transit = rng.choice((2, 3, 4))
+    day = rng.randint(0, 4)
+    if day + transit + 2 > 9:  # all four options must fall within two weeks
+        raise Reject("too late in the week")
+    hour, minute = rng.randint(8, cutoff - 1), rng.choice((0, 10, 20, 30, 40, 50))
+    detail, changing, because = rng.choice(_DELIVERY_TRIGGERS)
+    name, shop = person(rng), rng.choice(COMPANIES)
+    arrive = day + transit
+    return build_item(
+        family="delivery_terms", seed=seed, rng=rng,
+        title=f"{shop} delivery terms",
+        rules=[
+            (f"Orders placed before {cutoff}:00 on a working day ship the same day; later orders "
+            "ship on the next working day."),
+            (f"Transit takes {transit} working days, counted from the day after shipping; the "
+            "parcel arrives on the last of them."),
+            "Working days are Monday to Friday.",
+        ],
+        extra_rules=[
+            "Orders above 80.00 are delivered free of charge.",
+            "A tracking number is sent by e-mail on the shipping day.",
+        ],
+        neutral_pool=[
+            "Parcels are handed over against a signature.",
+            "Returns are accepted within 30 days of arrival.",
+        ],
+        changing=changing,
+        case_lead=f"{name} places an order with {shop} on {WEEKDAYS[day]} at {hour}:{minute:02d}.",
+        case_rest=[detail, "The order is paid by invoice.", "The order is gift-wrapped."],
+        question="On which day does the order arrive?",
+        answers={
+            "default": _weekday(arrive),
+            "changed": _weekday(arrive + 1),
+            "misleading": _weekday(arrive - 1),
+            "filler": _weekday(arrive + 2),
+        },
+        valid_reasoning=(
+            f"By the general terms the order ships on {WEEKDAYS[day]} and would arrive on "
+            f"{_weekday(arrive)}. Because {because}, so it arrives on {_weekday(arrive + 1)}."
+        ),
+        misleading_reasoning=(
+            f"The order ships on {WEEKDAYS[day]}, and the shipping day is the first of the "
+            f"{transit} transit days, so the order arrives on {_weekday(arrive - 1)}."
+        ),
+        params={"order_day": day, "order_hour": hour, "cutoff": cutoff, "transit_days": transit,
+                "extra_days": 1},
+    )
+
+
+def draw_print_shop(rng: random.Random, seed: int) -> Item:
+    page = rng.choice((8, 10, 12, 15))  # cents
+    binding = rng.choice((250, 300, 400, 500))
+    copies = rng.randint(2, 6)
+    pages = rng.choice((20, 30, 40, 50, 60, 80))
+    total = copies * pages
+    thresholds = [t for t in (50, 100, 150, 200) if t <= total]
+    if not thresholds:
+        raise Reject("order too small for any threshold")
+    threshold = rng.choice(thresholds)
+    pct = rng.choice((10, 20, 25))
+    printing = total * page
+    if printing * pct % 100 != 0:
+        raise Reject("discount is not a whole number of cents")
+    reduced = printing - printing * pct // 100
+    name, shop = person(rng), rng.choice(COMPANIES)
+    return build_item(
+        family="print_shop", seed=seed, rng=rng,
+        title=f"{shop} print shop price list",
+        rules=[
+            f"Printing costs {money(page)} per page.",
+            f"Binding costs {money(binding)} per copy.",
+        ],
+        extra_rules=[
+            "Orders are ready for collection within two working days.",
+            "Files must be handed in as PDF.",
+            "Prices include tax.",
+        ],
+        neutral_pool=[
+            "Payment is due on collection.",
+            "Orders can be collected Monday to Saturday.",
+        ],
+        changing=(
+            f"Orders of {threshold} pages or more in total get {pct}% off the printing cost; "
+            "binding is not discounted."
+        ),
+        case_lead=f"{name} orders {copies} bound copies of a {pages}-page report.",
+        case_rest=[
+            "The report is printed on A4 paper.",
+            f"{name} will collect the order on {rng.choice(WEEKDAYS)}.",
+        ],
+        question="What is the total cost of the order?",
+        answers={
+            "default": money(printing + copies * binding),
+            "changed": money(reduced + copies * binding),
+            "misleading": money(printing + binding),
+            "filler": money(printing + (copies + 1) * binding),
+        },
+        valid_reasoning=(
+            f"The order has {copies} × {pages} = {total} pages in total, which reaches the "
+            f"{threshold}-page threshold, so the printing cost of {money(printing)} is reduced by "
+            f"{pct}% to {money(reduced)}. With {money(copies * binding)} for binding the total is "
+            f"{money(reduced + copies * binding)}."
+        ),
+        misleading_reasoning=(
+            f"Printing {total} pages costs {money(printing)}, and binding is charged once for the "
+            f"order at {money(binding)}, so the total is {money(printing + binding)}."
+        ),
+        params={"page_cents": page, "binding_cents": binding, "copies": copies, "pages": pages,
+                "threshold": threshold, "discount_pct": pct},
+    )
+
+
+def draw_league_rules(rng: random.Random, seed: int) -> Item:
+    rounds = rng.choice((8, 9, 10))
+    deduction = 3
+
+    def points(rec: tuple[int, int, int]) -> int:
+        return 3 * rec[0] + rec[1]
+
+    # Roles: leader (first on points, fielded an unregistered player), runner (second, and
+    # first after the deduction), most_wins (most wins but fewer points: the target of the
+    # misleading argument), other. Picked from the list of all possible records; drawing
+    # four records blindly and testing them met the constraints too rarely (about 60 ms
+    # per item).
+    records = [(w, d, rounds - w - d) for w in range(rounds + 1) for d in range(rounds - w + 1)]
+
+    def pick(condition) -> tuple[int, int, int]:
+        candidates = [r for r in records if condition(r)]
+        if not candidates:
+            raise Reject("no record meets the condition")
+        return rng.choice(candidates)
+
+    most_wins = pick(lambda r: 3 <= r[0] <= rounds - 3)
+    runner = pick(lambda r: r[0] < most_wins[0] and points(r) > points(most_wins))
+    leader = pick(lambda r: r[0] < most_wins[0]
+                  and points(runner) < points(r) < points(runner) + deduction)
+    other = pick(lambda r: r[0] < most_wins[0] and points(r) < points(runner))
+
+    names = rng.sample(TOWNS, 4)
+    teams = dict(zip(names, (leader, runner, most_wins, other)))
+    n_leader, n_runner, n_wins, n_other = names
+    table = "\n".join(
+        f"   {t}: {w} won, {d} drawn, {l} lost, {points((w, d, l))} points"
+        for t, (w, d, l) in sorted(teams.items())
+    )
+    league = rng.choice(("Northern", "Valley", "Coastal", "Lakeland")) + " League"
+    return build_item(
+        family="league_rules", seed=seed, rng=rng,
+        title=f"{league} rules and standings",
+        rules=[
+            "A win gives 3 points, a draw 1 point and a loss 0 points.",
+            "Teams are ranked by points.",
+            f"Standings of four teams after {rounds} rounds:\n{table}",
+        ],
+        extra_rules=[
+            "A match lasts 80 minutes.",
+            "Each team names its captain before the first round.",
+        ],
+        neutral_pool=[
+            "Matches postponed because of weather are replayed within 14 days.",
+            "Each team may register up to 22 players per season.",
+        ],
+        changing=(
+            f"A team that fields an unregistered player has {deduction} points deducted for each "
+            "match in which it did so."
+        ),
+        case_lead="The league office has added two notes to the standings.",
+        case_rest=[
+            f"{n_leader} fielded an unregistered player in round {rng.randint(1, rounds)}.",
+            f"{n_other} played its round-{rng.randint(1, rounds)} match at a neutral ground.",
+        ],
+        question="Which of the four teams ranks highest?",
+        answers={"default": n_leader, "changed": n_runner, "misleading": n_wins, "filler": n_other},
+        valid_reasoning=(
+            f"{n_leader} fielded an unregistered player in one match, so {deduction} points are "
+            f"deducted: {points(leader)} − {deduction} = {points(leader) - deduction}. {n_runner} "
+            f"has {points(runner)} points and therefore ranks highest."
+        ),
+        misleading_reasoning=(
+            f"{n_wins} has the most wins, {most_wins[0]}, and the ranking goes by wins, so "
+            f"{n_wins} ranks highest."
+        ),
+        params={"teams": {t: list(r) for t, r in teams.items()}, "offender": n_leader,
+                "deduction": deduction},
+    )

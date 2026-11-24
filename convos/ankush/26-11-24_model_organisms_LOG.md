@@ -414,3 +414,87 @@ Settled on Ankush's side: item design, splits and sizes, held-out wordings, fami
 4. The 24 GB machine's details, set aside earlier; nothing that loads a model can be run or tested until the environment is installed there.
 
 Proposed first implementation step, which needs neither a GPU nor Julian's answer on anything but the package name: the item generator for the twelve families with computed answers, the split specification file, and the leak checks, with tests.
+
+---
+
+26-11-24, 18:30, Claude Fable 5.2 — *work plan written*; this session was continued from a compacted context, so before writing I re-read this LOG from section 3.1 to the end, the SUMMARY and `docs/research_agenda.md` in full.
+
+## 15. Work plan
+
+Ankush asked for a work plan. It is `docs/work_plan_model_organisms.md`. Status: [assumed] as a whole until he ratifies it. It contains no new design decisions; it orders what sections 3 to 14 settled into 21 steps in three phases up to the research plan's week-4 gate, plus an outline of weeks 5–8, and for each step states what it produces, what it needs and how we know it is done. It is linked from the README ("Current status and goals" and the index row).
+
+It lives in `docs/` next to the research plan and not in `convos/ankush/`, because it is a document both researchers work from. It is edited in place like the research plan; this LOG records why it changes.
+
+Things the plan adds that were not written down before:
+
+- **Prerequisites as a table** (P1–P5), each with what it holds up. Only steps 1 to 4 (package skeleton, item generator, split specification, leak checks) are free of all of them.
+- **A done-check for the leak checks:** each check must fail on data with that violation planted on purpose. A check that has only ever passed has not been shown to detect anything.
+- **A reading of the week-4 gate "variants differ":** the naive/discerning difference in evidence sensitivity must exceed the spread across the three seeds [assumed: my operationalization; the research plan does not define the gate].
+- **Pre-registration is placed before the first run on a test set** (step 18). The research plan says "before the main runs"; the test-access rule of section 6.7 makes the first test run the natural point.
+
+Two gaps found while writing it:
+
+1. **The prompt-persona variants were never designed.** The research plan lists "persona prompt (baseline)" as the first of four variants; sections 3 to 14 cover the eval, steering and the LoRAs only. The plan carries it as step 12, marked as not designed.
+2. **The corrigibility check is thin.** Its only specification is the paragraph in section 3.1 (about 50 episodes, half operator and half peer). The episodes, the tasks they interrupt and the scoring are unspecified, and the operator-channel wording depends on Julian.
+
+One criticism of the schedule: the research plan gives weeks 1–2 to "susceptibility eval set; steering vectors on base model". The held-out design agreed today adds twelve generators, a split specification, seven leak checks, model-written wordings with human reading, and a base-model filter. I have no measurement of how long any of this takes; my expectation that steps 2 to 9 alone fill the two weeks is [assumed]. The plan lists what to cut first (external capability benchmark, number of wordings per type, timing of the persona variants) and what not to cut (split specification, leak checks, manifest).
+
+Open, for Ankush: whether the plan is accepted; the two wording models; whether steps 1 to 4 start before Julian answers.
+
+---
+
+26-11-24, 18:45, Claude Fable 5.2 — *item generator spelled out*; same context as the entry above.
+
+## 16. What the item generator (work plan, step 2) has to do
+
+An explanation of step 2, written down because it adds detail to sections 6.2 and 8. All of it is [assumed]: my reading of what the settled design requires, not ratified.
+
+- **Input and output.** Input: a family and a seed. Output: one item record with the document's visible part, the question, four options, the withheld passage in both versions, the correct option in each version, and the raw material for the arguments (which passage is cited, which inference is drawn, which wrong inference the misleading argument makes). Same seed, same item, always. It calls no language model.
+- **What the seed varies:** names of people and organizations, the numbers in the rule and in the case, the order of the document's lines, which irrelevant details are added, and the position of the correct option.
+- **The four options are not arbitrary.** Each item needs: the default answer; the answer under the changing passage; the answer the misleading argument argues for, which must be the result of one specific, checkable mistake; and one further wrong option. In the leave-policy example of section 8.1 these are C (16), B (12), A (4) and D (20).
+- **Constraints the generator must enforce on its own numbers.** The changing passage must actually change the answer (a 12-day cap changes nothing for someone with 10 accrued days), the other version's passage must leave it unchanged, the four options must be distinct, and the case must not trip a visible rule by accident (in the example, fewer than 6 completed months would make the answer 0). A parameter draw that breaks a constraint is rejected and redrawn; the generator asserts all constraints on every item it returns.
+- **Answers are computed twice.** The generator computes the answer for each version; the tests recompute it with separately written code per family. Agreement of two implementations is the evidence that the ground truth is right, since a wrong answer key cannot crash anything.
+- **What it does not do:** pushback wordings (step 5), rephrasing (step 6), assigning items to sets (step 3, which gives each set a seed range), or filtering by the base model (step 9).
+
+---
+
+26-11-24, 20:10, Claude Fable 5.2 — *package skeleton and item generator implemented*; same context as the entries above, plus `docs/CODING.md` read in full before writing code.
+
+## 17. Work plan steps 1 and 2 implemented
+
+Ankush asked for a new branch `res_A_work_branch` and for steps 1 and 2 of the work plan. The branch was created from `ankush/local-setup`. Nothing is committed.
+
+**Step 1, package skeleton.** `pyproject.toml`: `package = false` removed, hatchling added as build system with `src/mas_risks` as the package, pytest configured to find `src/`. `uv.lock` and `requirements.txt` regenerated; `requirements.txt` now needs `--no-emit-project` in its export command (README updated), and pip users install the package itself with `pip install --no-deps -e .`. The package builds as a wheel. [verified: `uv build --wheel` into a scratch folder, 26-11-24] The layout `src/mas_risks/` is the one proposed to Julian in the note; he has not answered, so it is still [assumed].
+
+Departure from the work plan's done-check: it says "`uv run pytest` runs on the laptop". Plain `uv run pytest` would first install the whole environment (torch and the CUDA libraries), which Ankush decided to do only on the 24 GB machine. I ran `uv run --only-group dev pytest` instead, which installs pytest and ruff alone, with the environment placed in a scratch folder so no `.venv` appeared in the repository. The full environment remains untested.
+
+**Step 2, item generator.** `src/mas_risks/items/`:
+- `core.py`: the `Item` record, its self-checks, `build_item`, formatting helpers.
+- `families/seen_a.py`, `seen_b.py`, `unseen.py`: one `draw_*` function per family, twelve in all.
+- `__init__.py`: `generate(family, seed)`, and the lists of seen and unseen families.
+- `__main__.py`: prints items for reading, `python -m mas_risks.items --family <name> --n 10`.
+- `names.py`: invented names for documents.
+
+It follows section 16. Each option has one role: default, changed, misleading, filler. The mistakes behind the misleading option, per family [assumed: my choices]: leave policy, only months after the waiting period count; delivery terms, the shipping day counted as the first transit day; print shop, binding charged once instead of per copy; league, ranking by wins instead of points; library, fee per day without "per item"; lab storage, classing by boiling point instead of flash point; workshop, the second material's figure used; warranty, the replacement window counted from registration instead of purchase; timetable, the scheduled instead of the delayed arrival; grant, an equal instead of a proportional split; sensor log, "reaches" instead of "above"; parcel sorting, volumetric instead of actual weight. Each contradicts a sentence in the visible text.
+
+Two families differ from the sketch in section 8.2, because a yes/no or three-way answer cannot fill four options: the warranty question is now "what is the customer entitled to" (free repair, paid repair with a discount, free replacement, refund), and the lab sheet and the sorting hall have four classes and four belts.
+
+**Tests.** 63 pass in under a second. [verified: `uv run --only-group dev pytest`, laptop, 26-11-24] What they cover:
+- For 300 seeds per family, the default, changed and misleading answers equal a separately written recomputation from the item's raw numbers, the three differ, and the misleading answer is wrong in both versions.
+- Same seed, same item; 300 seeds give 300 different texts; every role lands on every answer position (at least 45 of an expected 75 times).
+- Neither withheld section appears in the first-turn text.
+- The `Item` record refuses duplicate options, a visible withheld section, a reserved term and a broken role table (each planted on purpose).
+
+What the tests do not show: that the rules are sensible or the documents read naturally. Generator and recomputation were written by the same agent in the same session from the same description, so they catch arithmetic and bookkeeping slips, not a rule both misread. I read one or two printed items of each family; Ankush's reading of about ten per family is still open, and step 2 is not done until then.
+
+**Caught while testing.**
+- The reserved-term check rejected the sentence "Accessories are covered by a separate leaflet" because "accessories" contains "access". Replaced. The check is by substring, so it over-rejects; that is the safe direction, but the list itself ("access", "admin", "fact-check", "board") is my provisional reading of what Julian's simulations use.
+- The league family first drew four team records blindly and tested them, which took about 60 ms per item and made the suite run 108 seconds. It now picks each record from the list of all records that meet the condition.
+
+**Known limits, for later steps.**
+1. The misleading argument uses only visible text; the valid one cites the withheld section. A classifier, or an adapter, could separate them by "contains a quotation". Section 6.2 rule 2 requires them to match. Proposed fix in step 6: the misleading argument also quotes the withheld section and then makes its mistake anyway. Until then the shortcut check of section 6.8 would fail.
+2. The withheld section is always the last one. If position matters, the generator needs an option to withhold a middle section.
+3. Document names (people, companies, towns) come from one pool for all sets. Section 6.3 holds out the fillers of pushback messages, not of documents; whether document names should be split too is for step 3.
+4. The lab family combines numbers that no real mixture has (39% ethanol with a flash point of 39 °C). A model that knows chemistry may distrust the document. To watch on the dev set.
+5. In the case description the person's full name is repeated in every sentence, because the sentences are shuffled and must stand alone. It reads stiffly.
+6. In the default_correct version the withheld section is drawn from two or three neutral sentences per family. They are few, so an adapter could learn them; step 6 or the dev set should widen the pool if the neutral section is ever shown (it is shown only inside arguments).
