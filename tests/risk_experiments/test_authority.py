@@ -31,16 +31,24 @@ PLAN_A = PlanProposal.model_validate(CONTENT["scripted_replies"]["agent_2_plan_a
 PLAN_B = PlanProposal.model_validate(CONTENT["scripted_replies"]["agent_3_plan_b"])
 
 A1_REPLY = RiskScores(
-    curb65=2, curb65_criteria_met=["urea", "respiratory rate"], major_criteria_met=[],
-    minor_criteria_met=["respiratory rate", "PaO2/FiO2", "multilobar", "BUN"], severe_cap=True, summary="Severe CAP.",
+    curb65=2,
+    curb65_criteria_met=["urea", "respiratory rate"],
+    major_criteria_met=[],
+    minor_criteria_met=["respiratory rate", "PaO2/FiO2", "multilobar", "BUN"],
+    severe_cap=True,
+    summary="Severe CAP.",
 )
 A5_REPLY = FinalPlan(adopted_plan_from="agent_3", final_regimen=PLAN_B.regimen, rationale="Follow Agent 3.")
 
 
 def a4_reply_obj():
     return Audit(
-        checks=[PlanCheck(proposed_by="agent_3", allergy_problems=[], contraindications=[], dosing_errors=[], passes=True)],
-        forwarded_plan_from="agent_3", forwarded_regimen=PLAN_B.regimen, note="No safety problems found.",
+        checks=[
+            PlanCheck(proposed_by="agent_3", allergy_problems=[], contraindications=[], dosing_errors=[], passes=True)
+        ],
+        forwarded_plan_from="agent_3",
+        forwarded_regimen=PLAN_B.regimen,
+        note="No safety problems found.",
     )
 
 
@@ -58,7 +66,11 @@ def run_scripted(tmp_path, n_replicates=1, **cfg_kwargs):
     res = asyncio.run(
         run_sweep(
             lambda c, r: AuthorityScenario(c, r, llm=None, agent_overrides=all_scripted_overrides()),
-            [cfg], n_replicates, log, "au", verbose=False,
+            [cfg],
+            n_replicates,
+            log,
+            "au",
+            verbose=False,
         )
     )
     assert not res.failed, res.failed
@@ -103,7 +115,7 @@ def test_previous_only_visibility(tmp_path):
 
 def test_every_agent_sees_the_case_and_only_its_own_system_prompt(tmp_path):
     recs, calls = run_scripted(tmp_path)
-    case_id = [r for r in recs if r["type"] == "env"][0]["data"]["case"]
+    case_id = next(r for r in recs if r["type"] == "env")["data"]["case"]
     for call in calls:
         assert CONTENT["cases"][case_id] in user_msg(call)
         system = call["messages"][0]["content"]
@@ -171,7 +183,9 @@ def test_llm_path_with_fake_backend(tmp_path):
         "Agent 2": PLAN_A.model_dump_json(),
         "Agent 3": PLAN_B.model_dump_json(),
         "Agent 4": a4_reply_obj().model_dump_json(),
-        "Agent 5": FinalPlan(adopted_plan_from="agent_2", final_regimen=PLAN_A.regimen, rationale="Guideline.").model_dump_json(),
+        "Agent 5": FinalPlan(
+            adopted_plan_from="agent_2", final_regimen=PLAN_A.regimen, rationale="Guideline."
+        ).model_dump_json(),
     }
     seen_models = []
 

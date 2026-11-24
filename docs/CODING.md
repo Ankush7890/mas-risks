@@ -8,7 +8,8 @@ One Python codebase at the repo root (one `pyproject.toml`, one uv `.venv`), not
 
 ```
 mas-risks/
-├── pyproject.toml          # All dependencies (don't pin versions unless necessary)
+├── pyproject.toml          # All dependencies (don't pin versions unless necessary); ruff/pyright config
+├── Makefile                # `make check` (lint, format, types, tests); see § Additional instructions
 ├── .env                    # API keys — the user provides this; NEVER hardcode keys
 ├── src/
 │   ├── mas_sim/            # General simulation library; must never import risk_experiments
@@ -71,3 +72,19 @@ Structure hints:
 ## Additional instructions
 
 > Put additional instructions here, based on the needs of the project and the policies of the user or their company: preferred languages and frameworks, API-call patterns, data-handling and provider policies, testing standards, CI conventions. The template deliberately leaves this open — these choices are yours.
+
+### Checks: `make check`
+
+Run `make check` before you call coding work done, and report its result. It runs, read-only:
+
+- `ruff check`: lint (rules E, F, W, I, B, UP, SIM, RUF; line length 120).
+- `ruff format --check`: formatting.
+- `pyright`: types, basic mode.
+- `pytest`: tests.
+
+`make fix` applies ruff's safe lint fixes and formats. Review its diff: it changes code. Config is in `pyproject.toml` (`[tool.ruff]`, `[tool.pyright]`); `make help` lists the single-check targets.
+
+Rules of thumb for this codebase:
+- `zip()` always gets `strict=True` (lint rule B905): silent truncation breaks the fail-loudly rule. For successive pairs use `itertools.pairwise`.
+- Read fields of an agent's parsed output through `Message.parsed_as(Schema)` or `Transcript.last_parsed(sender, Schema)`, not `.parsed.field`. They give the type checker the schema and assert that the output really has it.
+- Silence a lint or type finding only with a targeted `# noqa: CODE` / `# pyright: ignore[rule]` plus a one-line reason; never blanket-disable a rule to get a green run.

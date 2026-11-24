@@ -23,5 +23,28 @@ packages = ["src/mas_sim", "src/risk_experiments"]
 
 [dependency-groups]
 dev = [
+    "pyright>=1.1.414",
     "pytest>=9.2.0",
+    "ruff>=0.17.6",
 ]
+
+# Checks run by `make check` (see Makefile and docs/CODING.md § Additional instructions).
+[tool.ruff]
+# 120, not ruff's default 88: the code was written to ~120 columns, and long assert
+# messages read better on one line.
+line-length = 120
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+# B905 (zip without strict=) is the rule that matters most here: a silent zip
+# truncation would violate the repo's fail-loudly rule.
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+# No docstring rules (D): they push toward "what" docstrings on every function,
+# against docs/CODING.md's "comments say why, not what".
+
+[tool.pyright]
+include = ["src", "scripts", "tests"]
+venvPath = "."
+venv = ".venv"
+# basic, not strict: strict would require annotating every test helper.
+typeCheckingMode = "basic"

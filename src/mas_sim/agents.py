@@ -14,9 +14,10 @@ Every reply, from any kind of agent, is parsed with the agent's output schema by
 the runner.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Protocol
+from typing import Protocol
 
 from pydantic import BaseModel
 
@@ -58,8 +59,12 @@ class AgentOutput:
 
 
 class Agent(Protocol):
-    id: str
-    schema: type[BaseModel]
+    # Read-only properties, not plain attributes: a plain attribute in a Protocol
+    # means "writable", which the frozen-dataclass agents are not.
+    @property
+    def id(self) -> str: ...
+    @property
+    def schema(self) -> type[BaseModel]: ...
 
     async def respond(self, ctx: Context) -> AgentOutput: ...
 
@@ -111,12 +116,12 @@ class ScriptedAgent:
     policy_name: str
 
     @classmethod
-    def fixed(cls, id: str, schema: type[BaseModel], text: str, policy_name: str) -> "ScriptedAgent":
+    def fixed(cls, id: str, schema: type[BaseModel], text: str, policy_name: str) -> ScriptedAgent:
         """Always replies with `text`."""
         return cls(id, schema, lambda ctx: text, policy_name)
 
     @classmethod
-    def from_model(cls, id: str, schema: type[BaseModel], output: BaseModel, policy_name: str) -> "ScriptedAgent":
+    def from_model(cls, id: str, schema: type[BaseModel], output: BaseModel, policy_name: str) -> ScriptedAgent:
         """Always replies with `output` serialized as JSON (validated against schema now)."""
         assert isinstance(output, schema), (type(output), schema)
         return cls.fixed(id, schema, output.model_dump_json(), policy_name)
@@ -143,9 +148,7 @@ class ReplayAgent:
         self.source_run_id = source_run_id
         src = source_agent if source_agent is not None else id
         calls = [
-            r
-            for r in read_log(log_path)
-            if r["type"] == "call" and r["run_id"] == source_run_id and r["agent"] == src
+            r for r in read_log(log_path) if r["type"] == "call" and r["run_id"] == source_run_id and r["agent"] == src
         ]
         assert calls, f"no calls by {src!r} in run {source_run_id!r} of {log_path}"
         self._by_pos = {(r["round"], r["step"]): r["raw"] for r in calls}
@@ -154,6 +157,4 @@ class ReplayAgent:
     async def respond(self, ctx: Context) -> AgentOutput:
         pos = (ctx.round, ctx.step)
         assert pos in self._by_pos, f"source run {self.source_run_id} has no reply at round/step {pos}"
-        return AgentOutput(
-            raw=self._by_pos[pos], kind="replay", sent_messages=ctx.messages, policy=self.source_run_id
-        )
+        return AgentOutput(raw=self._by_pos[pos], kind="replay", sent_messages=ctx.messages, policy=self.source_run_id)

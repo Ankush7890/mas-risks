@@ -5,8 +5,8 @@ and every agent's context is rebuilt from the transcript by the scenario's
 `build_context`. Written by the runner, read by scenarios.
 """
 
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import Iterator
 
 from pydantic import BaseModel
 
@@ -33,6 +33,11 @@ class Message:
     def ref(self) -> tuple[int, int, str]:
         return (self.round, self.step, self.sender)
 
+    def parsed_as[T: BaseModel](self, schema: type[T]) -> T:
+        """`parsed`, checked to be an instance of `schema` (typed access to its fields)."""
+        assert isinstance(self.parsed, schema), f"{self.sender}'s output is {type(self.parsed)}, not {schema}"
+        return self.parsed
+
 
 class Transcript:
     """Append-only list of Messages, ordered by (step, order of agents within the step)."""
@@ -44,8 +49,7 @@ class Transcript:
         assert isinstance(msg, Message), type(msg)
         if self._messages:
             assert msg.step >= self._messages[-1].step, (
-                f"transcript is append-only in step order: got step {msg.step} "
-                f"after step {self._messages[-1].step}"
+                f"transcript is append-only in step order: got step {msg.step} after step {self._messages[-1].step}"
             )
         self._messages.append(msg)
 
@@ -68,3 +72,6 @@ class Transcript:
         msgs = self.by_sender(sender)
         assert msgs, f"no message from {sender!r} in transcript"
         return msgs[-1]
+
+    def last_parsed[T: BaseModel](self, sender: str, schema: type[T]) -> T:
+        return self.last_from(sender).parsed_as(schema)

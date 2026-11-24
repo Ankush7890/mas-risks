@@ -14,8 +14,9 @@ run:  experiment, config, replicate, status ("ok"|"failed"), outcome (dict or nu
 """
 
 import json
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
+from typing import Self
 
 
 class LogWriter:
@@ -24,7 +25,15 @@ class LogWriter:
     def __init__(self, path: Path) -> None:
         self.path = path
         path.parent.mkdir(parents=True, exist_ok=True)
-        self._f = open(path, "a", encoding="utf-8")
+        # Held open for the whole sweep, not reopened per record; callers close it
+        # via `with LogWriter(...)`.
+        self._f = open(path, "a", encoding="utf-8")  # noqa: SIM115
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(self, *exc_info: object) -> None:
+        self.close()
 
     def write(self, record: dict) -> None:
         assert "type" in record and "run_id" in record, sorted(record)

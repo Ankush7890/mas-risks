@@ -40,8 +40,13 @@ def main() -> None:
     load_env()
     configs = [
         AuthorityConfig(
-            model=args.model, cue=cue, visibility=vis, a2_mode=a2, a3_mode=a3,
-            temperature=args.temperature, normalization=args.normalization,
+            model=args.model,
+            cue=cue,
+            visibility=vis,
+            a2_mode=a2,
+            a3_mode=a3,
+            temperature=args.temperature,
+            normalization=args.normalization,
         )
         for cue, vis, a2, a3 in itertools.product(args.cue, args.visibility, args.a2_mode, args.a3_mode)
     ]
@@ -50,7 +55,11 @@ def main() -> None:
     asyncio.run(
         run_sweep(
             lambda cfg, rep: AuthorityScenario(cfg, rep, llm),
-            configs, args.n_replicates, args.log, prefix="au", max_concurrent_runs=args.max_concurrent_runs,
+            configs,
+            args.n_replicates,
+            args.log,
+            prefix="au",
+            max_concurrent_runs=args.max_concurrent_runs,
         )
     )
     print(f"LLM calls: {llm.n_api_calls} to the API, {llm.n_cache_hits} from cache\n")

@@ -14,6 +14,7 @@ from mas_sim.logs import format_run, read_log, run_records
 from mas_sim.output import OutputSchema, ParseError, extract_json_text, parse_output
 from mas_sim.runner import make_run_id, run_sweep
 from mas_sim.scenario import Scenario, Step
+from mas_sim.transcript import Message, Transcript
 
 SRC = Path(__file__).resolve().parents[2] / "src"
 
@@ -36,7 +37,7 @@ class EchoConfig:
     tag: str = "a"
 
 
-class EchoScenario(Scenario):
+class EchoScenario(Scenario[EchoConfig]):
     """Agents x and y speak in parallel each round and see all messages of earlier rounds."""
 
     name = "echo"
@@ -64,7 +65,7 @@ class EchoScenario(Scenario):
         return {"n_messages": len(transcript)}
 
     def outcome(self, transcript):
-        return {"texts": [m.parsed.text for m in transcript]}
+        return {"texts": [m.parsed_as(Say).text for m in transcript]}
 
 
 def run(coro):
@@ -242,7 +243,11 @@ def test_normalize_rejects_bad_input():
 
 @pytest.mark.parametrize(
     "raw",
-    ['{"text": "a", "n_visible": 1}', '  ```json\n{"text": "a", "n_visible": 1}\n```\n', '```\n{"text": "a", "n_visible": 1}\n```'],
+    [
+        '{"text": "a", "n_visible": 1}',
+        '  ```json\n{"text": "a", "n_visible": 1}\n```\n',
+        '```\n{"text": "a", "n_visible": 1}\n```',
+    ],
 )
 def test_parse_accepts(raw):
     assert parse_output(raw, Say) == Say(text="a", n_visible=1)
@@ -267,6 +272,21 @@ def test_parse_rejects(raw):
 def test_extract_rejects_two_fences():
     with pytest.raises(ParseError):
         extract_json_text('```json\n{"a": 1}\n```\n```json\n{"b": 2}\n```')
+
+
+# --- transcript ------------------------------------------------------------------
+
+
+class Other(OutputSchema):
+    x: int
+
+
+def test_typed_access_checks_the_schema():
+    tr = Transcript()
+    tr.append(Message(0, 0, "a", "{}", Say(text="hi", n_visible=0)))
+    assert tr.last_parsed("a", Say).text == "hi"
+    with pytest.raises(AssertionError, match="not"):
+        tr.last_parsed("a", Other)
 
 
 # --- package boundary ------------------------------------------------------------

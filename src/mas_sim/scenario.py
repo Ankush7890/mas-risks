@@ -15,8 +15,8 @@ between runs.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import Iterator
 
 from mas_sim.agents import Agent, Context
 from mas_sim.transcript import Transcript
@@ -34,11 +34,13 @@ class Step:
         assert len(set(ids)) == len(ids), f"agent listed twice in one step: {ids}"
 
 
-class Scenario(ABC):
+class Scenario[ConfigT](ABC):
+    """ConfigT: the experiment's config dataclass (frozen; hashed into run ids)."""
+
     #: Experiment name written into run records.
     name: str
 
-    def __init__(self, config, replicate: int) -> None:
+    def __init__(self, config: ConfigT, replicate: int) -> None:
         self.config = config
         self.replicate = replicate
 

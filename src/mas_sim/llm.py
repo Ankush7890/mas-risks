@@ -13,12 +13,16 @@ parser (mas_sim.output).
 
 import asyncio
 import hashlib
+import itertools
 import json
 import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
+
+if TYPE_CHECKING:
+    from openai import AsyncOpenAI
 
 
 @dataclass(frozen=True)
@@ -97,7 +101,7 @@ def normalize_messages(messages: list[dict], mode: str) -> list[dict]:
             merged.append(m)
     body = merged[1:] if merged[0]["role"] == "system" else merged
     assert body and body[0]["role"] == "user", "first non-system message must be a user message"
-    for a, b in zip(body, body[1:]):
+    for a, b in itertools.pairwise(body):
         assert a["role"] != b["role"], "roles do not alternate after merging"
     return merged
 
@@ -117,11 +121,11 @@ class OpenAIBackend:
     """Real API calls via the `openai` SDK (which retries transient errors itself)."""
 
     def __init__(self, max_retries: int = 6, timeout_s: float = 120.0) -> None:
-        self._clients: dict[str, object] = {}
+        self._clients: dict[str, AsyncOpenAI] = {}
         self._max_retries = max_retries
         self._timeout_s = timeout_s
 
-    def _client(self, provider: str):
+    def _client(self, provider: str) -> AsyncOpenAI:
         if provider not in self._clients:
             from openai import AsyncOpenAI
 

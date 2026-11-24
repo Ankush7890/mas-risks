@@ -18,9 +18,10 @@ import dataclasses
 import hashlib
 import json
 import sys
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import Any
 
 from mas_sim.logs import LogWriter, read_log, run_records
 from mas_sim.output import ParseError, parse_output
@@ -29,7 +30,9 @@ from mas_sim.transcript import Message, Transcript
 
 
 def config_dict(config) -> dict:
-    assert dataclasses.is_dataclass(config) and not isinstance(config, type), f"config must be a dataclass instance, got {type(config)}"
+    assert dataclasses.is_dataclass(config) and not isinstance(config, type), (
+        f"config must be a dataclass instance, got {type(config)}"
+    )
     return dataclasses.asdict(config)
 
 
@@ -45,27 +48,25 @@ class _RunFailed(Exception):
     pass
 
 
-async def run_one(scenario: Scenario, run_id: str, log: LogWriter) -> dict:
+async def run_one(scenario: Scenario[Any], run_id: str, log: LogWriter) -> dict:
     """Run one scenario instance to completion. Returns the run record (also logged)."""
     tr = Transcript()
     status, error, outcome = "ok", None, None
     try:
-        expected_index = 0
-        for step in scenario.schedule():
+        for expected_index, step in enumerate(scenario.schedule()):
             assert step.index == expected_index, f"step index {step.index}, expected {expected_index}"
-            expected_index += 1
             # All contexts are built before anyone replies: agents in a parallel
             # step must not see each other's current-step output.
             ctxs = [scenario.build_context(a, step, tr, run_id) for a in step.agents]
-            for a, ctx in zip(step.agents, ctxs):
+            for a, ctx in zip(step.agents, ctxs, strict=True):
                 assert (ctx.agent_id, ctx.round, ctx.step, ctx.run_id) == (a.id, step.round, step.index, run_id), (
                     f"build_context returned a context for {(ctx.agent_id, ctx.round, ctx.step, ctx.run_id)}"
                 )
                 assert ctx.replicate == scenario.replicate, (ctx.replicate, scenario.replicate)
-            outs = await asyncio.gather(*(a.respond(ctx) for a, ctx in zip(step.agents, ctxs)))
+            outs = await asyncio.gather(*(a.respond(ctx) for a, ctx in zip(step.agents, ctxs, strict=True)))
             new_msgs: list[Message] = []
             failure = None
-            for a, ctx, out in zip(step.agents, ctxs, outs):
+            for a, ctx, out in zip(step.agents, ctxs, outs, strict=True):
                 try:
                     parsed, parse_error = parse_output(out.raw, a.schema), None
                 except ParseError as e:
@@ -131,9 +132,9 @@ class SweepResult:
         return [r for r in self.run_records if r["status"] == "failed"]
 
 
-async def run_sweep(
-    make_scenario: Callable[[object, int], Scenario],
-    configs: Sequence,
+async def run_sweep[C](
+    make_scenario: Callable[[C, int], Scenario[C]],
+    configs: Sequence[C],
     n_replicates: int,
     log_path: Path,
     prefix: str,
@@ -148,11 +149,10 @@ async def run_sweep(
     done_ids = {r["run_id"] for r in run_records(read_log(log_path))} if log_path.exists() else set()
     jobs = [(c, rep, make_run_id(prefix, c, rep)) for c in configs for rep in range(n_replicates)]
     todo = [j for j in jobs if j[2] not in done_ids]
-    log = LogWriter(log_path)
     sem = asyncio.Semaphore(max_concurrent_runs)
     records: list[dict] = []
 
-    async def one(config, rep: int, run_id: str) -> None:
+    async def one(config: C, rep: int, run_id: str, log: LogWriter) -> None:
         async with sem:
             rec = await run_one(make_scenario(config, rep), run_id, log)
         records.append(rec)
@@ -161,12 +161,10 @@ async def run_sweep(
         elif verbose:
             print(f"[{len(records)}/{len(todo)}] {run_id} ok", flush=True)
 
-    try:
+    with LogWriter(log_path) as log:
         async with asyncio.TaskGroup() as tg:
             for c, rep, rid in todo:
-                tg.create_task(one(c, rep, rid))
-    finally:
-        log.close()
+                tg.create_task(one(c, rep, rid, log))
     result = SweepResult(run_records=records, n_skipped=len(jobs) - len(todo))
     if verbose:
         print(

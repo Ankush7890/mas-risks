@@ -19,7 +19,7 @@ Open: RiskLab prompt licensing. Before implementation: `.env` with `MISTRAL_API_
 **Implemented (milestone 1)** [verified: tests + error injection + one scripted run read by eye, 26-11-24; no live API call yet]:
 - `src/mas_sim/`: agents (LLM, scripted, replay), LLM client (`openai` SDK, providers openai/mistral/vllm/ollama, message normalization, disk cache in `data/cache/llm/`), strict JSON output parsing, transcript, Scenario base class, runner with resumable sweeps, JSONL logs.
 - `src/risk_experiments/authority.py` + `scenarios/authority_pneumonia.yaml`: our own content (three severe-pneumonia cases, prompts, cue sentences, scripted Plan A/B). Plan classes are computed from drug names. Deviations from the paper, made so the cue is the only authority signal: A2 and A3 are both shown as "Clinician", and A3 doesn't mention its seniority. The 15 judgment calls I made while Julian was away are listed in the LOG entry *milestone 1 implemented* [concluded/assumed there].
-- Run: `uv run scripts/run_authority.py` (needs `.env` with `MISTRAL_API_KEY`); inspect: `uv run scripts/inspect_run.py LOG [RUN_ID]`; tests: `uv run pytest`.
+- Run: `uv run scripts/run_authority.py` (needs `.env` with `MISTRAL_API_KEY`); inspect: `uv run scripts/inspect_run.py LOG [RUN_ID]`; tests: `uv run pytest` (all checks: `make check`).
 - Medical content is unreviewed by a clinician [assumed]; the claims to check are listed in that LOG entry.
 
 Example run record (outcome fields):
@@ -33,4 +33,5 @@ Next: Julian creates `.env`; smoke run with 2 replicates, read one run end to en
 
 LOG: `convos/julian/26-11-24_mas_sim_plan_LOG.md`
 - See also: `convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md` — the paper comparison; it found the majority-sway data contradicting its interpretation, which the plan's §6.1 relies on.
+- See also: `convos/julian/26-11-24_clean_code_SUMMARY.md` — added `make check` (ruff, pyright, pytest); made `Scenario` generic in its config and added typed parsed-output access (`Transcript.last_parsed`).
 - See also: `convos/julian/26-11-24_repo_layout_SUMMARY.md` — decided the single root pyproject with packages under `src/` that the plan now follows.
