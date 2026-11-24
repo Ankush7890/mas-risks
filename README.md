@@ -9,7 +9,7 @@ This project uses the [Epistemic Memory](https://github.com/FlorianDietz/Epistem
 ## Team
 
 - Julian Bitterlich — `convos/julian/` (git user.name: `Julian Bitterlich`)
-- Ankush — `convos/ankush/` (git user.name: not yet recorded; add it here on Ankush's first session)
+- Ankush — `convos/ankush/` (git user.name: `Ankush7890`)
 
 **Identifying the current user:** match `git config user.name` against this list. If it doesn't match anyone or the match is ambiguous, ask before proceeding.
 
@@ -35,3 +35,4 @@ All discussions live in `convos/{user}/`. **When starting a new topic, add a row
 | 26-11-21 | julian | Project setup (template configuration) | Done | [SUMMARY](convos/julian/26-11-21_project_setup_SUMMARY.md) | [LOG](convos/julian/26-11-21_project_setup_LOG.md) |
 | 26-11-21 | julian | Papers library (`papers/` folder, conventions, converter) | Set up; 2 papers added | [SUMMARY](convos/julian/26-11-21_papers_library_SUMMARY.md) | [LOG](convos/julian/26-11-21_papers_library_LOG.md) |
 | 26-11-21 | julian | Emergent MAS risks paper: workshop (OpenReview) vs arXiv v4 | Compared; v4 stored in papers/ | [SUMMARY](convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md) | [LOG](convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md) |
+| 26-11-24 | ankush | Local setup on Ankush's machine (clone, tool checks, git user.name) | Done | [SUMMARY](convos/ankush/26-11-24_local_setup_SUMMARY.md) | [LOG](convos/ankush/26-11-24_local_setup_LOG.md) |
