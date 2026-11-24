@@ -26,3 +26,4 @@ The user asked to compare two papers:
 
 LOG: `convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md`
 - See also: `convos/julian/26-11-21_papers_library_SUMMARY.md`. The papers library is where these would go if the user later wants them stored.
+- See also: `convos/ankush/26-11-24_model_organisms_SUMMARY.md` — the research plan reuses Risks 2.1 and 2.2 from this paper; problem 2 above bears on how its majority-sway baseline is read.
