@@ -1,11 +1,10 @@
-# Private per-user records — never committed (see CLAUDE.md §Privacy).
+# Private per-user records — never committed.
 # Both patterns are needed: the trailing-slash form matches the real directory,
 # the bare form matches the symlink used in the worktree setup (a symlink is not
 # a directory to git, so the first pattern alone would let it be committed).
 convos/*/private/
 convos/*/private
 
-# Working files of the error-injection review procedure (docs/procedures/code_review.md)
 scratch/
 
 # Secrets
@@ -18,5 +17,3 @@ __pycache__/
 # OS noise
 .DS_Store
 
-# Paper PDFs kept next to papers/*/paper.md for human reading (see papers/README.md)
-papers/**/*.pdf

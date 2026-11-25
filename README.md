@@ -1,25 +1,18 @@
 # mas-risks
 
-This project builds small open-weight agents whose susceptibility to influence is controlled, then runs them in multi-agent risk scenarios. Julian and Ankush work on it.
+This project builds small open-weight agents whose susceptibility to influence is controlled, then runs them in multi-agent risk scenarios. Julian Bitterlich and Ankush work on it; Ankush is Researcher A of the research plan (model organisms and their evals).
 
-This project uses the [Epistemic Memory](https://github.com/FlorianDietz/EpistemicMemory) conventions: all project memory lives in LOG/SUMMARY file pairs under `convos/`, governed by [CLAUDE.md](CLAUDE.md). Human guide: [docs/HOW_TO_USE.md](docs/HOW_TO_USE.md). Open ideas and deferred items: [FUTURE_WORK.md](FUTURE_WORK.md). Workflow problems and lessons: [FEEDBACK.md](FEEDBACK.md).
+**This branch (`res_A_remote_run`) is for running the work on a machine with a 24 GB GPU.** It holds the code, the data built so far, and three documents:
 
-**Papers:** papers relevant to the project are stored as agent-readable markdown under [papers/](papers/README.md), one folder per paper. Each folder holds the converted text and, where we have one, a separate notes file with our own comments. The index and the procedure for adding a paper are in `papers/README.md`.
+- [docs/REMOTE_AGENT_BRIEF.md](docs/REMOTE_AGENT_BRIEF.md): what to do next on that machine. Start here.
+- [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md): all steps of Researcher A's part, with their state.
+- [docs/research_agenda.md](docs/research_agenda.md): the research plan of the whole project.
 
-## Team
+The project's working records (design log, notes for Julian, stored papers, and the conventions for keeping them) are on the branch `res_A_work_branch` and are not needed here.
 
-- Julian Bitterlich — `convos/julian/` (git user.name: `Julian Bitterlich`). Researcher B of the research plan (simulations S1–S3 and instrumental hooks); assumed by elimination, not yet confirmed by Julian.
-- Ankush — `convos/ankush/` (git user.name: `Ankush7890`). Researcher A of the research plan (model organisms and their evals).
+## State
 
-**Identifying the current user:** match `git config user.name` against this list. If it doesn't match anyone or the match is ambiguous, ask before proceeding.
-
-## Current status and goals
-
-The research plan is [docs/research_agenda.md](docs/research_agenda.md): four research questions, three simulations, two researchers, about 8 part-time weeks. The ordered steps for Researcher A's part (model organisms and their evals) are in [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md), accepted by Ankush as the working plan on 26-11-25.
-
-As of 26-11-24: the shared Python environment is defined but not yet installed or tested on any machine. Researcher A's work on the susceptibility eval, steering vectors and LoRAs is at the design-proposal stage, with no code written (see the model-organisms topic in the index below).
-
-**Open for Julian:** three points need his agreement before code is written: the shared environment, a shared code package, and content reserved for his simulations. They are in [convos/ankush/26-11-24_note_for_julian.md](convos/ankush/26-11-24_note_for_julian.md).
+As of 26-11-25: the item generator, the split specification, the leak checks, the eval harness with scoring, the pushback wordings and the assembly of dialogues are written and tested (127 tests). The dev set is assembled: 1,576 dialogues from 394 items. No model has been run and the full environment has not been installed on any machine.
 
 ## Environment
 
@@ -67,24 +60,3 @@ uv export --frozen --no-hashes --only-dev --format requirements-txt -o requireme
 ```
 
 Keys such as a Hugging Face token go in a `.env` file at the repository root, which git ignores.
-
-## Maintenance
-
-Recurring tasks:
-
-| Task | Last run | Due when | Notes |
-|------|----------|----------|-------|
-| Sync (LOG/SUMMARY drift) | — | After many LOG changes, or ~monthly | `!sync`; procedure: `docs/procedures/sync.md` |
-| LLM-ism checklist refresh | — | ~Monthly while you publish regularly; otherwise before any high-stakes submission | Update the checklist and Known-screening sections of `docs/procedures/outward_text.md` from full primary sources (see the file's refresh rule); bump its refresh date |
-
-## Conversation Index
-
-All discussions live in `convos/{user}/`. **When starting a new topic, add a row here.** Read the SUMMARY first; open the LOG only if the SUMMARY is insufficient. Status cells describe current state only — rewrite them on update, don't append.
-
-| Date | User | Topic | Status | SUMMARY | LOG |
-|------|------|-------|--------|---------|-----|
-| 26-11-21 | julian | Project setup (template configuration) | Done | [SUMMARY](convos/julian/26-11-21_project_setup_SUMMARY.md) | [LOG](convos/julian/26-11-21_project_setup_LOG.md) |
-| 26-11-21 | julian | Papers library (`papers/` folder, conventions, converter) | Set up; 2 papers added | [SUMMARY](convos/julian/26-11-21_papers_library_SUMMARY.md) | [LOG](convos/julian/26-11-21_papers_library_LOG.md) |
-| 26-11-21 | julian | Emergent MAS risks paper: workshop (OpenReview) vs arXiv v4 | Compared; v4 stored in papers/ | [SUMMARY](convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md) | [LOG](convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md) |
-| 26-11-24 | ankush | Local setup on Ankush's machine (clone, tool checks, git user.name) | Done | [SUMMARY](convos/ankush/26-11-24_local_setup_SUMMARY.md) | [LOG](convos/ankush/26-11-24_local_setup_LOG.md) |
-| 26-11-24 | ankush | Model organisms: susceptibility eval, steering vectors, naive and discerning LoRAs; also the research plan and the shared environment | Plan and environment added; eval and data design settled on Ankush's side; work plan accepted (`docs/work_plan_model_organisms.md`); its steps 1 to 4 implemented and step 7 partly (package `src/mas_risks/`: item generator, split specification, leak checks, eval harness; 127 tests pass; no data generated, no model run); item design changed on 26-11-25 so that an argument's validity depends on the item; new items accepted by Ankush; pushback wordings written by two models and accepted; dev dialogues assembled; waiting for the GPU machine and Julian's answers | [SUMMARY](convos/ankush/26-11-24_model_organisms_SUMMARY.md) | [LOG](convos/ankush/26-11-24_model_organisms_LOG.md) |
