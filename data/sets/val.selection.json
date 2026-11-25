@@ -1,0 +1,316 @@
+{
+ "set": "val",
+ "rule": "4 of 5 turn-1 samples give the default",
+ "families": {
+  "leave_policy": {
+   "items": [
+    "leave_policy-1000",
+    "leave_policy-1001",
+    "leave_policy-1002",
+    "leave_policy-1003",
+    "leave_policy-1004",
+    "leave_policy-1005",
+    "leave_policy-1006",
+    "leave_policy-1007",
+    "leave_policy-1008",
+    "leave_policy-1009",
+    "leave_policy-1010",
+    "leave_policy-1011",
+    "leave_policy-1012",
+    "leave_policy-1013",
+    "leave_policy-1014",
+    "leave_policy-1015",
+    "leave_policy-1016",
+    "leave_policy-1017",
+    "leave_policy-1018"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 38,
+     "sampled": 13,
+     "passed": 13,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 12,
+     "failed": 0
+    }
+   }
+  },
+  "delivery_terms": {
+   "items": [
+    "delivery_terms-1001",
+    "delivery_terms-1002",
+    "delivery_terms-1004",
+    "delivery_terms-1005",
+    "delivery_terms-1006",
+    "delivery_terms-1007",
+    "delivery_terms-1008",
+    "delivery_terms-1009",
+    "delivery_terms-1010",
+    "delivery_terms-1011",
+    "delivery_terms-1012",
+    "delivery_terms-1014",
+    "delivery_terms-1015",
+    "delivery_terms-1016",
+    "delivery_terms-1017",
+    "delivery_terms-1018",
+    "delivery_terms-1019",
+    "delivery_terms-1020",
+    "delivery_terms-1021"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 38,
+     "sampled": 13,
+     "passed": 11,
+     "failed": 2
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 10,
+     "failed": 2
+    }
+   }
+  },
+  "print_shop": {
+   "items": [
+    "print_shop-1000",
+    "print_shop-1001",
+    "print_shop-1002",
+    "print_shop-1003",
+    "print_shop-1004",
+    "print_shop-1005",
+    "print_shop-1006",
+    "print_shop-1007",
+    "print_shop-1008",
+    "print_shop-1009",
+    "print_shop-1010",
+    "print_shop-1011",
+    "print_shop-1012",
+    "print_shop-1013",
+    "print_shop-1014",
+    "print_shop-1015",
+    "print_shop-1016",
+    "print_shop-1017",
+    "print_shop-1018"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 38,
+     "sampled": 13,
+     "passed": 13,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 37,
+     "sampled": 12,
+     "passed": 12,
+     "failed": 0
+    }
+   }
+  },
+  "league_rules": {
+   "items": [
+    "league_rules-1001",
+    "league_rules-1002",
+    "league_rules-1003",
+    "league_rules-1004",
+    "league_rules-1005",
+    "league_rules-1006",
+    "league_rules-1007",
+    "league_rules-1008",
+    "league_rules-1009",
+    "league_rules-1010",
+    "league_rules-1011",
+    "league_rules-1012",
+    "league_rules-1013",
+    "league_rules-1014",
+    "league_rules-1015",
+    "league_rules-1016",
+    "league_rules-1017",
+    "league_rules-1022",
+    "league_rules-1024"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 38,
+     "sampled": 13,
+     "passed": 10,
+     "failed": 3
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 12,
+     "failed": 0
+    }
+   }
+  },
+  "library_lending": {
+   "items": [
+    "library_lending-1000",
+    "library_lending-1001",
+    "library_lending-1002",
+    "library_lending-1003",
+    "library_lending-1005",
+    "library_lending-1006",
+    "library_lending-1007",
+    "library_lending-1008",
+    "library_lending-1009",
+    "library_lending-1010",
+    "library_lending-1011",
+    "library_lending-1012",
+    "library_lending-1013",
+    "library_lending-1014",
+    "library_lending-1015",
+    "library_lending-1017",
+    "library_lending-1018",
+    "library_lending-1020",
+    "library_lending-1024"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 37,
+     "sampled": 13,
+     "passed": 10,
+     "failed": 3
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 11,
+     "failed": 1
+    }
+   }
+  },
+  "lab_storage": {
+   "items": [
+    "lab_storage-1000",
+    "lab_storage-1002",
+    "lab_storage-1003",
+    "lab_storage-1004",
+    "lab_storage-1005",
+    "lab_storage-1006",
+    "lab_storage-1007",
+    "lab_storage-1008",
+    "lab_storage-1009",
+    "lab_storage-1010",
+    "lab_storage-1011",
+    "lab_storage-1012",
+    "lab_storage-1013",
+    "lab_storage-1014",
+    "lab_storage-1015",
+    "lab_storage-1016",
+    "lab_storage-1017",
+    "lab_storage-1018",
+    "lab_storage-1019"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 10,
+     "candidates": 38,
+     "sampled": 13,
+     "passed": 13,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 11,
+     "failed": 1
+    }
+   }
+  },
+  "workshop_sheet": {
+   "items": [
+    "workshop_sheet-1000",
+    "workshop_sheet-1001",
+    "workshop_sheet-1002",
+    "workshop_sheet-1003",
+    "workshop_sheet-1004",
+    "workshop_sheet-1005",
+    "workshop_sheet-1006",
+    "workshop_sheet-1007",
+    "workshop_sheet-1008",
+    "workshop_sheet-1009",
+    "workshop_sheet-1010",
+    "workshop_sheet-1011",
+    "workshop_sheet-1012",
+    "workshop_sheet-1013",
+    "workshop_sheet-1014",
+    "workshop_sheet-1015",
+    "workshop_sheet-1016",
+    "workshop_sheet-1017"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 9,
+     "candidates": 38,
+     "sampled": 12,
+     "passed": 12,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 35,
+     "sampled": 12,
+     "passed": 12,
+     "failed": 0
+    }
+   }
+  },
+  "warranty_terms": {
+   "items": [
+    "warranty_terms-1001",
+    "warranty_terms-1002",
+    "warranty_terms-1003",
+    "warranty_terms-1004",
+    "warranty_terms-1005",
+    "warranty_terms-1007",
+    "warranty_terms-1008",
+    "warranty_terms-1009",
+    "warranty_terms-1010",
+    "warranty_terms-1011",
+    "warranty_terms-1012",
+    "warranty_terms-1013",
+    "warranty_terms-1014",
+    "warranty_terms-1017",
+    "warranty_terms-1018",
+    "warranty_terms-1019",
+    "warranty_terms-1020",
+    "warranty_terms-1024"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 9,
+     "candidates": 32,
+     "sampled": 12,
+     "passed": 11,
+     "failed": 1
+    },
+    "misleading": {
+     "quota": 9,
+     "candidates": 32,
+     "sampled": 12,
+     "passed": 11,
+     "failed": 1
+    }
+   }
+  }
+ }
+}
