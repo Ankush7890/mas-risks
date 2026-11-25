@@ -1,0 +1,13 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  65%|██████▌   | 260/398 [00:00<00:00, 2571.96it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2558.90it/s]
+round 1: 198 items, 990 samples, 0s
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+wrote /workspace/writing_folder/mas-risks/data/sets/val.selection.json
+  leave_policy: kept 19, {'valid': {'quota': 10, 'candidates': 38, 'sampled': 13, 'passed': 13, 'failed': 0}, 'misleading': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 12, 'failed': 0}}
+  delivery_terms: kept 19, {'valid': {'quota': 10, 'candidates': 38, 'sampled': 13, 'passed': 11, 'failed': 2}, 'misleading': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 10, 'failed': 2}}
+  print_shop: kept 19, {'valid': {'quota': 10, 'candidates': 38, 'sampled': 13, 'passed': 13, 'failed': 0}, 'misleading': {'quota': 9, 'candidates': 37, 'sampled': 12, 'passed': 12, 'failed': 0}}
+  league_rules: kept 19, {'valid': {'quota': 10, 'candidates': 38, 'sampled': 13, 'passed': 10, 'failed': 3}, 'misleading': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 12, 'failed': 0}}
+  library_lending: kept 19, {'valid': {'quota': 10, 'candidates': 37, 'sampled': 13, 'passed': 10, 'failed': 3}, 'misleading': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 11, 'failed': 1}}
+  lab_storage: kept 19, {'valid': {'quota': 10, 'candidates': 38, 'sampled': 13, 'passed': 13, 'failed': 0}, 'misleading': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 11, 'failed': 1}}
+  workshop_sheet: kept 18, {'valid': {'quota': 9, 'candidates': 38, 'sampled': 12, 'passed': 12, 'failed': 0}, 'misleading': {'quota': 9, 'candidates': 35, 'sampled': 12, 'passed': 12, 'failed': 0}}
+  warranty_terms: kept 18, {'valid': {'quota': 9, 'candidates': 32, 'sampled': 12, 'passed': 11, 'failed': 1}, 'misleading': {'quota': 9, 'candidates': 32, 'sampled': 12, 'passed': 11, 'failed': 1}}
