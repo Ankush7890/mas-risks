@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-25T22:17:13+00:00",
+  "git_commit": "fbaf916338337f2137f0004c715f4428dfc98a16-dirty",
+  "pairs": 2000,
+  "conditions": [
+    "majority",
+    "authority"
+  ],
+  "prefill": {
+    "hold": "{\"reason\": \"I keep my answer",
+    "yield": "{\"reason\": \"I change my answer"
+  },
+  "layer_norms": [
+    0.844,
+    1.94,
+    3.102,
+    3.389,
+    5.215,
+    6.961,
+    10.541,
+    13.764,
+    18.56,
+    17.958,
+    16.939,
+    20.344,
+    19.815,
+    20.849,
+    20.759,
+    21.161,
+    21.937,
+    23.191,
+    24.433,
+    31.788,
+    36.039,
+    41.368,
+    45.048,
+    64.637,
+    76.016,
+    84.899,
+    100.156,
+    114.929,
+    149.051,
+    163.904,
+    192.859,
+    208.472,
+    230.618,
+    254.896,
+    280.668,
+    358.952
+  ],
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 16,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "adapter": null,
+    "adapter_scale": 1.0,
+    "steer": null
+  },
+  "wall_seconds": 274.2
+}
