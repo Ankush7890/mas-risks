@@ -1,0 +1,57 @@
+bash: /root/.bash_env: Permission denied
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:   8%|▊         | 30/398 [00:00<00:02, 167.06it/s]Loading weights:  12%|█▏        | 47/398 [00:00<00:02, 123.12it/s]Loading weights:  16%|█▋        | 65/398 [00:00<00:02, 120.87it/s]Loading weights:  20%|█▉        | 78/398 [00:00<00:03, 90.02it/s] Loading weights:  23%|██▎       | 92/398 [00:00<00:03, 80.62it/s]Loading weights:  25%|██▌       | 101/398 [00:01<00:05, 58.06it/s]Loading weights:  27%|██▋       | 108/398 [00:01<00:04, 58.30it/s]Loading weights:  33%|███▎      | 132/398 [00:01<00:03, 81.37it/s]Loading weights:  35%|███▌      | 141/398 [00:01<00:03, 74.79it/s]Loading weights:  41%|████▏     | 165/398 [00:01<00:02, 89.77it/s]Loading weights:  44%|████▍     | 175/398 [00:02<00:03, 73.22it/s]Loading weights:  49%|████▊     | 194/398 [00:02<00:02, 84.89it/s]Loading weights:  51%|█████     | 203/398 [00:02<00:02, 71.12it/s]Loading weights:  56%|█████▌    | 222/398 [00:02<00:02, 73.36it/s]Loading weights:  59%|█████▉    | 236/398 [00:02<00:02, 69.58it/s]Loading weights:  64%|██████▍   | 255/398 [00:03<00:01, 86.28it/s]Loading weights:  67%|██████▋   | 265/398 [00:03<00:01, 67.89it/s]Loading weights:  72%|███████▏  | 286/398 [00:03<00:01, 83.85it/s]Loading weights:  74%|███████▍  | 296/398 [00:03<00:01, 61.26it/s]Loading weights:  79%|███████▉  | 315/398 [00:04<00:01, 76.75it/s]Loading weights:  82%|████████▏ | 325/398 [00:04<00:01, 55.80it/s]Loading weights:  89%|████████▉ | 354/398 [00:04<00:00, 86.35it/s]Loading weights:  92%|█████████▏| 367/398 [00:04<00:00, 79.33it/s]Loading weights:  95%|█████████▍| 378/398 [00:04<00:00, 76.68it/s]Loading weights:  98%|█████████▊| 390/398 [00:04<00:00, 83.24it/s]Loading weights: 100%|██████████| 398/398 [00:04<00:00, 80.00it/s]
+600 planned, 0 already logged, 600 to run
+50/600 done, 51s, {'calls': 128, 'batches': 4, 'new_tokens': 8210, 'prompt_tokens': 43897, 'gpu_seconds': 50.9, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 161.2, 'mean_batch_size': 32.0}
+100/600 done, 99s, {'calls': 256, 'batches': 8, 'new_tokens': 16394, 'prompt_tokens': 88338, 'gpu_seconds': 98.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 166.5, 'mean_batch_size': 32.0}
+150/600 done, 124s, {'calls': 320, 'batches': 10, 'new_tokens': 20612, 'prompt_tokens': 110771, 'gpu_seconds': 123.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 167.6, 'mean_batch_size': 32.0}
+200/600 done, 166s, {'calls': 448, 'batches': 14, 'new_tokens': 28562, 'prompt_tokens': 154706, 'gpu_seconds': 164.9, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 173.2, 'mean_batch_size': 32.0}
+250/600 done, 192s, {'calls': 512, 'batches': 16, 'new_tokens': 32610, 'prompt_tokens': 177379, 'gpu_seconds': 191.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 170.7, 'mean_batch_size': 32.0}
+300/600 done, 243s, {'calls': 640, 'batches': 20, 'new_tokens': 40648, 'prompt_tokens': 222237, 'gpu_seconds': 242.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 167.8, 'mean_batch_size': 32.0}
+350/600 done, 269s, {'calls': 704, 'batches': 22, 'new_tokens': 44728, 'prompt_tokens': 244495, 'gpu_seconds': 268.3, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 166.7, 'mean_batch_size': 32.0}
+400/600 done, 314s, {'calls': 832, 'batches': 26, 'new_tokens': 52922, 'prompt_tokens': 288967, 'gpu_seconds': 312.9, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 169.1, 'mean_batch_size': 32.0}
+450/600 done, 359s, {'calls': 960, 'batches': 30, 'new_tokens': 61202, 'prompt_tokens': 333244, 'gpu_seconds': 358.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 171.0, 'mean_batch_size': 32.0}
+500/600 done, 385s, {'calls': 1024, 'batches': 32, 'new_tokens': 65395, 'prompt_tokens': 355502, 'gpu_seconds': 383.6, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 170.5, 'mean_batch_size': 32.0}
+550/600 done, 433s, {'calls': 1152, 'batches': 36, 'new_tokens': 73363, 'prompt_tokens': 400786, 'gpu_seconds': 431.4, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 170.1, 'mean_batch_size': 32.0}
+600/600 done, 456s, {'calls': 1200, 'batches': 38, 'new_tokens': 76335, 'prompt_tokens': 417903, 'gpu_seconds': 454.6, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 167.9, 'mean_batch_size': 31.58}
+{
+  "date": "2026-11-25T21:29:13+00:00",
+  "git_commit": "cd9dec461fdd4bc309da6bd5b793e50dc8a1786c",
+  "set": "val",
+  "variant": "base",
+  "prompts": "reason_first",
+  "first_turn_only": false,
+  "families": null,
+  "units_run": 600,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "wall_seconds_total": 456.4,
+  "mean_wall_seconds_per_unit_concurrent": 24.02,
+  "generation": {
+    "calls": 1200,
+    "batches": 38,
+    "new_tokens": 76335,
+    "prompt_tokens": 417903,
+    "gpu_seconds": 454.6,
+    "hit_max_new_tokens": 0,
+    "new_tokens_per_second": 167.9,
+    "mean_batch_size": 31.58
+  }
+}
