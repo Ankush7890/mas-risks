@@ -4,28 +4,25 @@ Read this in full before writing code or running an experiment in this project. 
 
 ## Project Structure
 
-Each coding project lives in its own folder under `projects/`. An example layout for Python projects — adapt or replace it for your stack:
+One Python codebase at the repo root (one `pyproject.toml`, one uv `.venv`), not the template's per-codebase `projects/<name>/` folders — see `convos/julian/26-11-24_repo_layout_SUMMARY.md`.
 
 ```
-projects/<project_name>/
-├── pyproject.toml          # All dependencies (don't pin versions unless necessary)
+mas-risks/
+├── pyproject.toml          # All dependencies (don't pin versions unless necessary); ruff/pyright config
+├── Makefile                # `make check` (lint, format, types, tests); see § Additional instructions
 ├── .env                    # API keys — the user provides this; NEVER hardcode keys
-├── .gitignore              # Exclude .venv/, .env, __pycache__/, large data folders
 ├── src/
-│   ├── __init__.py
-│   └── utils.py            # See below
+│   ├── mas_sim/            # General simulation library; must never import risk_experiments
+│   └── risk_experiments/   # The experiments; depends on mas_sim
 ├── scripts/                # Runnable entry points
-├── data/
-│   ├── input/              # External data sources
-│   ├── results/            # Raw outputs (often largest; use subfolders)
-│   └── analysis/           # KPIs, summaries, graphs
+├── data/                   # input/, results/, analysis/ — create when needed
 ├── logs/                   # Runtime logs
 └── tests/                  # Optional; discuss with the user what's worth testing
 ```
 
-**Setup**: install with `pip install -e .` in a project-local `.venv` so all imports work regardless of working directory.
+**Setup**: `uv sync`, then `uv run ...`. A new package under `src/` must also be listed in `[tool.hatch.build.targets.wheel] packages` in `pyproject.toml`, or it won't be importable.
 
-**`src/utils.py` should contain**:
+**Shared utilities** (a `utils.py` module) should contain:
 - Environment variable loading (from `.env`)
 - Path definitions using `pathlib.Path` relative to `__file__` — critical for scripts to work from any directory
 - Shared utility functions and classes
@@ -75,3 +72,19 @@ Structure hints:
 ## Additional instructions
 
 > Put additional instructions here, based on the needs of the project and the policies of the user or their company: preferred languages and frameworks, API-call patterns, data-handling and provider policies, testing standards, CI conventions. The template deliberately leaves this open — these choices are yours.
+
+### Checks: `make check`
+
+Run `make check` before you call coding work done, and report its result. It runs, read-only:
+
+- `ruff check`: lint (rules E, F, W, I, B, UP, SIM, RUF; line length 120).
+- `ruff format --check`: formatting.
+- `pyright`: types, basic mode.
+- `pytest`: tests.
+
+`make fix` applies ruff's safe lint fixes and formats. Review its diff: it changes code. Config is in `pyproject.toml` (`[tool.ruff]`, `[tool.pyright]`); `make help` lists the single-check targets.
+
+Rules of thumb for this codebase:
+- `zip()` always gets `strict=True` (lint rule B905): silent truncation breaks the fail-loudly rule. For successive pairs use `itertools.pairwise`.
+- Read fields of an agent's parsed output through `Message.parsed_as(Schema)` or `Transcript.last_parsed(sender, Schema)`, not `.parsed.field`. They give the type checker the schema and assert that the output really has it.
+- Silence a lint or type finding only with a targeted `# noqa: CODE` / `# pyright: ignore[rule]` plus a one-line reason; never blanket-disable a rule to get a green run.

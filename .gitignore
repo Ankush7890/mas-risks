@@ -20,3 +20,6 @@ __pycache__/
 
 # Paper PDFs kept next to papers/*/paper.md for human reading (see papers/README.md)
 papers/**/*.pdf
+
+# LLM reply cache (mas_sim.llm.LLMClient); large and reproducible from the APIs
+data/cache/

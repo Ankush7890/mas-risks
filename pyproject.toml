@@ -1,7 +1,7 @@
 # One shared environment for all code in this repository, so that both
 # researchers run the model organisms and the simulations on identical library
-# versions. This deliberately departs from the per-project pyproject.toml
-# layout in docs/CODING.md.
+# versions (one pyproject at the repo root, packages under src/; see
+# docs/CODING.md, section "Project Structure").
 #
 # This file lists direct dependencies only, with lower bounds only where a
 # feature we rely on needs them. Exact versions live in uv.lock, which is what
@@ -12,10 +12,10 @@
 [project]
 name = "mas-risks"
 version = "0.1.0"
-description = "Small open-weight agents with controlled susceptibility to influence, run in multi-agent risk scenarios"
+description = "Small open-weight agents with controlled susceptibility to influence, run in multi-agent risk scenarios."
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     # Models, steering and LoRA training
     "torch",
@@ -32,23 +32,49 @@ dependencies = [
     "scipy",
     "statsmodels",
     "matplotlib",
+    # Simulations (mas_sim, risk_experiments)
+    "openai>=3.58.0",  # client for OpenAI, Mistral and local vLLM/Ollama endpoints
+    "pyyaml>=6.0.4",  # scenario files
     # Plumbing
-    "pydantic",  # validates the agents' JSON outputs
-    "python-dotenv",  # reads keys such as HF_TOKEN from .env
+    "pydantic>=2.14.4",  # validates the agents' JSON outputs
+    "python-dotenv>=1.2.4",  # reads keys such as HF_TOKEN from .env
     "tqdm",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# One distribution, several import packages under src/. The project name
+# (mas-risks) matches none of them, so hatchling must be told which to ship.
+# Add every new package under src/ here, or it will not be importable.
+[tool.hatch.build.targets.wheel]
+packages = ["src/mas_sim", "src/risk_experiments"]
+
 [dependency-groups]
 dev = [
-    "pytest",
-    "ruff",
+    "pyright>=1.1.414",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
 ]
 
-[tool.uv]
-# No importable package exists yet. Remove this line and add a build system
-# when the first src/ package is created, so that it gets installed in
-# editable mode.
-package = false
-
+# Checks run by `make check` (see Makefile and docs/CODING.md § Additional instructions).
 [tool.ruff]
-line-length = 100
+# 120, not ruff's default 88: the code was written to ~120 columns, and long assert
+# messages read better on one line.
+line-length = 120
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+# B905 (zip without strict=) is the rule that matters most here: a silent zip
+# truncation would violate the repo's fail-loudly rule.
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+# No docstring rules (D): they push toward "what" docstrings on every function,
+# against docs/CODING.md's "comments say why, not what".
+
+[tool.pyright]
+include = ["src", "scripts", "tests"]
+venvPath = "."
+venv = ".venv"
+# basic, not strict: strict would require annotating every test helper.
+typeCheckingMode = "basic"
