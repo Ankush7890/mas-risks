@@ -1,0 +1,37 @@
+  dev         delivery_terms   chi2  2.05  {'valid': {'A': 7, 'B': 5, 'C': 5, 'D': 8}, 'misleading': {'A': 5, 'B': 8, 'C': 7, 'D': 5}}
+  dev         lab_storage      chi2  1.39  {'valid': {'A': 5, 'B': 8, 'C': 9, 'D': 4}, 'misleading': {'A': 3, 'B': 6, 'C': 11, 'D': 6}}
+  dev         league_rules     chi2  0.88  {'valid': {'A': 8, 'B': 5, 'C': 5, 'D': 8}, 'misleading': {'A': 10, 'B': 3, 'C': 6, 'D': 7}}
+  dev         leave_policy     chi2  1.77  {'valid': {'A': 4, 'B': 10, 'C': 5, 'D': 4}, 'misleading': {'A': 8, 'B': 10, 'C': 3, 'D': 5}}
+  dev         library_lending  chi2  2.78  {'valid': {'A': 9, 'B': 5, 'C': 5, 'D': 7}, 'misleading': {'A': 8, 'B': 5, 'C': 9, 'D': 3}}
+  dev         print_shop       chi2  7.15  {'valid': {'A': 10, 'B': 6, 'C': 3, 'D': 7}, 'misleading': {'A': 5, 'B': 4, 'C': 10, 'D': 3}}
+  dev         warranty_terms   chi2  1.75  {'valid': {'A': 3, 'B': 6, 'C': 5, 'D': 4}, 'misleading': {'A': 8, 'B': 7, 'C': 4, 'D': 5}}
+  dev         workshop_sheet   chi2  7.35  {'valid': {'A': 7, 'B': 6, 'C': 2, 'D': 11}, 'misleading': {'A': 4, 'B': 12, 'C': 5, 'D': 4}}
+  train       delivery_terms   chi2  5.09  {'valid': {'A': 13, 'B': 21, 'C': 14, 'D': 15}, 'misleading': {'A': 16, 'B': 10, 'C': 19, 'D': 17}}
+  train       lab_storage      chi2  2.44  {'valid': {'A': 12, 'B': 18, 'C': 21, 'D': 12}, 'misleading': {'A': 14, 'B': 17, 'C': 14, 'D': 17}}
+  train       league_rules     chi2  1.40  {'valid': {'A': 13, 'B': 18, 'C': 19, 'D': 13}, 'misleading': {'A': 14, 'B': 13, 'C': 18, 'D': 17}}
+  train       leave_policy     chi2  0.76  {'valid': {'A': 13, 'B': 17, 'C': 15, 'D': 18}, 'misleading': {'A': 13, 'B': 13, 'C': 15, 'D': 21}}
+  train       library_lending  chi2  1.62  {'valid': {'A': 17, 'B': 16, 'C': 18, 'D': 12}, 'misleading': {'A': 23, 'B': 12, 'C': 16, 'D': 11}}
+  train       print_shop       chi2  9.38  {'valid': {'A': 14, 'B': 15, 'C': 10, 'D': 24}, 'misleading': {'A': 16, 'B': 9, 'C': 23, 'D': 14}}
+  train       warranty_terms   chi2  4.93  {'valid': {'A': 15, 'B': 14, 'C': 13, 'D': 21}, 'misleading': {'A': 16, 'B': 22, 'C': 13, 'D': 11}}
+  train       workshop_sheet   chi2  0.72  {'valid': {'A': 14, 'B': 15, 'C': 16, 'D': 18}, 'misleading': {'A': 16, 'B': 15, 'C': 12, 'D': 19}}
+  val         delivery_terms   chi2  5.50  {'valid': {'A': 6, 'B': 2, 'C': 2}, 'misleading': {'A': 2, 'B': 1, 'C': 3, 'D': 3}}
+  val         lab_storage      chi2  2.91  {'valid': {'A': 1, 'B': 3, 'C': 4, 'D': 2}, 'misleading': {'A': 1, 'B': 1, 'C': 2, 'D': 5}}
+  val         league_rules     chi2  1.45  {'valid': {'A': 3, 'B': 4, 'C': 1, 'D': 2}, 'misleading': {'A': 5, 'B': 2, 'C': 1, 'D': 1}}
+  val         leave_policy     chi2  2.96  {'valid': {'A': 2, 'B': 4, 'C': 2, 'D': 2}, 'misleading': {'A': 4, 'B': 1, 'C': 3, 'D': 1}}
+  val         library_lending  chi2  4.30  {'valid': {'A': 4, 'B': 3, 'C': 2, 'D': 1}, 'misleading': {'A': 3, 'C': 3, 'D': 3}}
+  val         print_shop       chi2  7.43  {'valid': {'A': 3, 'B': 1, 'C': 2, 'D': 4}, 'misleading': {'A': 1, 'B': 4, 'C': 4}}
+  val         warranty_terms   chi2  5.33  {'valid': {'A': 4, 'B': 1, 'C': 2, 'D': 2}, 'misleading': {'A': 2, 'B': 5, 'C': 2}}
+  val         workshop_sheet   chi2  2.50  {'valid': {'A': 4, 'B': 1, 'C': 3, 'D': 1}, 'misleading': {'A': 2, 'C': 5, 'D': 2}}
+  test_seen   delivery_terms   chi2  1.82  {'valid': {'A': 6, 'B': 2, 'C': 4, 'D': 4}, 'misleading': {'A': 3, 'B': 2, 'C': 4, 'D': 7}}
+  test_seen   lab_storage      chi2  4.40  {'valid': {'A': 4, 'B': 5, 'D': 7}, 'misleading': {'A': 5, 'B': 3, 'C': 3, 'D': 4}}
+  test_seen   league_rules     chi2  4.26  {'valid': {'A': 6, 'B': 5, 'C': 3, 'D': 2}, 'misleading': {'A': 2, 'B': 3, 'C': 5, 'D': 5}}
+  test_seen   leave_policy     chi2  2.26  {'valid': {'A': 4, 'B': 4, 'C': 4, 'D': 4}, 'misleading': {'A': 2, 'B': 5, 'C': 2, 'D': 7}}
+  test_seen   library_lending  chi2  1.89  {'valid': {'A': 2, 'B': 3, 'C': 5, 'D': 6}, 'misleading': {'A': 1, 'B': 5, 'C': 6, 'D': 3}}
+  test_seen   print_shop       chi2  4.68  {'valid': {'A': 7, 'B': 2, 'C': 3, 'D': 4}, 'misleading': {'A': 3, 'B': 6, 'C': 1, 'D': 5}}
+  test_seen   warranty_terms   chi2  1.51  {'valid': {'A': 1, 'B': 5, 'C': 4, 'D': 6}, 'misleading': {'A': 3, 'B': 5, 'C': 3, 'D': 4}}
+  test_seen   workshop_sheet   chi2  1.48  {'valid': {'A': 6, 'B': 5, 'C': 1, 'D': 4}, 'misleading': {'A': 4, 'B': 4, 'C': 3, 'D': 4}}
+  test_unseen grant_budget     chi2  1.96  {'valid': {'A': 5, 'B': 15, 'C': 5, 'D': 7}, 'misleading': {'A': 4, 'B': 10, 'C': 7, 'D': 10}}
+  test_unseen parcel_sorting   chi2  3.06  {'valid': {'A': 8, 'B': 6, 'C': 8, 'D': 9}, 'misleading': {'A': 6, 'B': 6, 'C': 14, 'D': 5}}
+  test_unseen sensor_log       chi2  9.70  {'valid': {'A': 7, 'B': 9, 'C': 5, 'D': 10}, 'misleading': {'A': 11, 'B': 6, 'C': 12, 'D': 2}}
+  test_unseen train_timetable  chi2  4.33  {'valid': {'A': 7, 'B': 2, 'C': 14, 'D': 9}, 'misleading': {'A': 8, 'B': 7, 'C': 11, 'D': 5}}
+largest chi2 9.7 (limit 16.27 at p=0.001, 3 df)
