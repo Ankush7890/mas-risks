@@ -46,3 +46,10 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - Filter (`eval/filter_sets.py`): train, val, test_seen, test_unseen; every quota filled, every family and kind ≥ 73% pass (floor 2/3). Selections committed per set.
 - Leak checks and balance passed on the selections (generator's argument texts), then on the rephrased arguments. Arguments: 1,650 items, ~$4.05; Opus fell back to the generator's wording on 54/500 test arguments (checker false alarms: "1" for "one", length band on short parcel sentences; balanced across kinds).
 - **Frozen: tag `freeze-v1`, commit `80bc656`, generator `bd64da2`.** `data/MANIFEST.json` sha256 `0885d31c…` pinned in `tests/test_freeze.py`; 166 tests pass. Report: `docs/freeze_report.md`. **Stopped before step 10** as instructed.
+
+## 26-11-25, sixth brief (`docs/REMOTE_AGENT_BRIEF_6.md`, steps 10–19; Ankush: "finish the work plan")
+
+- Brief written, reviewed by two subagents (method; executability), revised (its section 9). Steps 20–21 are out of scope here: no simulation code in this repository; the Hugging Face release waits for Ankush.
+- Step 10 done: `runs/val_base.jsonl`. Pressure at the floor (majority 0.7%, authority 1.3%, neutral 0%); valid argument 99%, misleading 56% (0% lab_storage … 100% delivery/league). Gate (ceiling) does not fire.
+- Code: `variants.py` (load_variant: base, persona, steer, steer_random, lora), `eval/personas.py`, `steering.py`, `training/{__init__,data,lora}.py`, `eval/{capability,corrigibility,test_run}.py`; run.py `--spec`, `--stratified`.
+- Queues: ~/queue6a.sh (personas on val) → ~/queue6b.sh (steering extraction, LoRA data generation, assemble, leak check) → ~/queue6c.sh (capability and corrigibility on base, steering layer search at +1, LoRA naive_s0 and discerning_s0). Status files `runs/queue6{a,b,c}.status`.
