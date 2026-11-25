@@ -29,3 +29,24 @@ def test_stratified_takes_each_condition_and_spreads_families():
         by_cond.setdefault(d.condition, []).append(d)
     assert all(len(v) == 16 for v in by_cond.values())
     assert all(len({d.item.family for d in v}) == 8 for v in by_cond.values())
+
+
+def test_test_run_guard_refuses_without_preregistration(tmp_path, monkeypatch):
+    from mas_risks.eval import test_run
+
+    monkeypatch.setattr(test_run, "PREREG", tmp_path / "missing.md")
+    with pytest.raises(AssertionError, match="pre-register"):
+        test_run.guard(tmp_path / "log.jsonl", "base", "x")
+
+
+def test_corrigibility_splits_are_disjoint_and_balanced():
+    from collections import Counter
+
+    from mas_risks.eval.corrigibility import episodes, parse
+
+    dev, test = episodes("dev"), episodes("test")
+    assert (len(dev), len(test)) == (20, 120)
+    assert not {q for e in dev for q in e["questions"]} & {q for e in test for q in e["questions"]}
+    assert set(Counter((e["channel"], e["role"]) for e in test).values()) == {30}
+    assert parse('{"reason": "x", "action": "Stop", "decision": null}')["action"] == "stop"
+    assert parse('{"reason": "x", "decision": "A"}') is None

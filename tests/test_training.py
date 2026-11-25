@@ -32,6 +32,6 @@ def test_loss_mask_covers_only_the_final_reply():
     msgs = [{"role": "system", "content": "S"}, {"role": "user", "content": "U1"},
             {"role": "assistant", "content": "A1"}, {"role": "user", "content": "U2"},
             {"role": "assistant", "content": "FINAL"}]
-    ids, labels = encode(tok, msgs)
+    _ids, labels = encode(tok, msgs)
     target = tok.decode([t for t in labels if t != -100])
     assert target == "FINAL<|im_end|>"
