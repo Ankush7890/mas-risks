@@ -62,6 +62,24 @@ def select_families(dialogues: list, families: list[str] | None) -> list:
     return [d for d in dialogues if d.item.family in families]
 
 
+def stratified(dialogues: list, per_condition: int) -> list:
+    """The first `per_condition` dialogues of each condition, taken round-robin over the
+    families (the list is already in a seeded order), so every family is represented."""
+    out = []
+    for cond in sorted({d.condition for d in dialogues}):
+        by_family: dict[str, list] = {}
+        for d in dialogues:
+            if d.condition == cond:
+                by_family.setdefault(d.item.family, []).append(d)
+        queues, picked = list(by_family.values()), []
+        while len(picked) < per_condition and any(queues):
+            for q in queues:
+                if q and len(picked) < per_condition:
+                    picked.append(q.pop(0))
+        out += picked
+    return out
+
+
 def first_turn_record(model, item, *, variant, set_name, system_prompt, format_instruction):
     messages = [
         {"role": "system", "content": system_prompt},
@@ -90,6 +108,10 @@ def main() -> None:
     parser.add_argument("--families", nargs="+", help="run only these families")
     parser.add_argument("--threads", type=int, default=32)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--spec", help="model variant (mas_risks.variants), e.g. persona:hold_1, "
+                        "steer:18:1, lora:runs/lora/naive_s0; sets the prompts to reason_first")
+    parser.add_argument("--stratified", type=int, help="run only this many dialogues per "
+                        "condition (seeded, spread over families)")
     parser.add_argument("--show-prompt", action="store_true",
                         help="print one complete templated prompt and exit")
     args = parser.parse_args()
@@ -100,10 +122,18 @@ def main() -> None:
     import torch
 
     from ..models import QwenChat
+    from ..variants import fingerprint, load_variant, parse
 
-    system_prompt, format_instruction = prompt_variant(args.prompts)
+    if args.spec:
+        spec = parse(args.spec)
+        system_prompt, format_instruction = spec.system_prompt, spec.format_instruction
+        args.prompts = "reason_first"
+    else:
+        system_prompt, format_instruction = prompt_variant(args.prompts)
     dialogues = select_families(build(args.set), args.families)
     random.Random(f"order:{args.set}").shuffle(dialogues)
+    if args.stratified:
+        dialogues = stratified(dialogues, args.stratified)
     if args.first_turn_only:
         seen, units = set(), []
         for d in dialogues:
@@ -118,7 +148,10 @@ def main() -> None:
         units = units[:args.limit]
 
     torch.manual_seed(args.seed)
-    model = QwenChat(seed=args.seed, max_batch=args.threads)
+    if args.spec:
+        model, _ = load_variant(args.spec, seed=args.seed, max_batch=args.threads)
+    else:
+        model = QwenChat(seed=args.seed, max_batch=args.threads)
     if args.show_prompt:
         d = dialogues[0]
         print(model.render([{"role": "system", "content": system_prompt},
@@ -174,6 +207,8 @@ def main() -> None:
         "git_commit": commit, "set": args.set, "variant": args.variant,
         "prompts": args.prompts, "first_turn_only": args.first_turn_only,
         "families": args.families,
+        "spec": args.spec, "fingerprint": fingerprint(parse(args.spec)) if args.spec else None,
+        "stratified": args.stratified,
         "units_run": len(todo), "threads": args.threads, "model": model.metadata(),
         "wall_seconds_total": round(time.monotonic() - started, 1),
         "mean_wall_seconds_per_unit_concurrent": round(sum(walls) / len(walls), 2)

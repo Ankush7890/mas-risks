@@ -8,7 +8,9 @@ is what makes a full dev run take minutes instead of hours. Batching changes the
 floating-point arithmetic slightly, so a sample is not bit-identical to the same
 prompt run alone; this is noted in the run's metadata.
 
-The steering and LoRA variants will be loaded behind the same interface.
+The steering and LoRA variants are loaded behind the same interface: `adapter` merges
+a LoRA adapter (at `adapter_scale`) into the weights, and `steer` adds a vector to the
+residual stream after one decoder layer at every position (see `mas_risks.variants`).
 """
 
 from __future__ import annotations
@@ -59,7 +61,9 @@ class GenerationStats:
 class QwenChat:
     def __init__(self, model_id: str = MODEL_ID, *, revision: str | None = None,
                  sampling: SamplingSettings = SamplingSettings(), seed: int = 0,
-                 max_batch: int = 32, batch_wait_s: float = 0.05, device: str = "cuda"):
+                 max_batch: int = 32, batch_wait_s: float = 0.05, device: str = "cuda",
+                 adapter: str | None = None, adapter_scale: float = 1.0,
+                 steer: tuple[int, object, float] | None = None):
         import torch
         from huggingface_hub import HfApi
         from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -79,12 +83,51 @@ class QwenChat:
         assert self.tokenizer.pad_token_id is not None
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id, revision=self.revision, dtype=torch.bfloat16).to(device)
+        self.adapter, self.adapter_scale = adapter, adapter_scale
+        if adapter:
+            from peft import PeftModel
+            peft_model = PeftModel.from_pretrained(self.model, adapter)
+            if adapter_scale != 1.0:
+                for module in peft_model.modules():
+                    if hasattr(module, "scaling") and isinstance(module.scaling, dict):
+                        for k in module.scaling:
+                            module.scaling[k] *= adapter_scale
+            self.model = peft_model.merge_and_unload()
         self.model.eval()
+        self.steer_info = None
+        if steer is not None:
+            layer, vector, strength = steer
+            vec = torch.as_tensor(vector, dtype=torch.bfloat16, device=device) * float(strength)
+            self.steer_info = {"layer": int(layer), "strength": float(strength),
+                               "norm": float(vec.float().norm())}
+            self.layers[int(layer)].register_forward_hook(_adder(vec))
         self.device = device
         self.stats = GenerationStats()
         self._queue: queue.Queue = queue.Queue()
         self._worker = threading.Thread(target=self._serve, daemon=True)
         self._worker.start()
+
+    @property
+    def layers(self):
+        return self.model.model.layers
+
+    def last_token_states(self, prompts: list[str]) -> object:
+        """Residual-stream output of every decoder layer at each prompt's last token, as a
+        float32 tensor (prompts, layers, hidden). Prompts are rendered text; left padding
+        puts every last token in the final position."""
+        torch = self._torch
+        grabbed: dict[int, object] = {}
+        hooks = [layer.register_forward_hook(_grabber(grabbed, i))
+                 for i, layer in enumerate(self.layers)]
+        try:
+            enc = self.tokenizer(prompts, return_tensors="pt", padding=True,
+                                 add_special_tokens=False).to(self.device)
+            with torch.inference_mode():
+                self.model(**enc)
+        finally:
+            for h in hooks:
+                h.remove()
+        return torch.stack([grabbed[i] for i in range(len(self.layers))], dim=1)
 
     # ---------------------------------------------------------------- interface
     def render(self, messages: list[dict[str, str]]) -> str:
@@ -112,6 +155,8 @@ class QwenChat:
             "batched": True, "max_batch": self.max_batch,
             "torch": torch.__version__, "transformers": transformers.__version__,
             "gpu": torch.cuda.get_device_name(0),
+            "adapter": self.adapter, "adapter_scale": self.adapter_scale,
+            "steer": self.steer_info,
         }
 
     # ------------------------------------------------------------------ worker
@@ -167,3 +212,21 @@ class QwenChat:
         self.stats.prompt_tokens += int(enc["attention_mask"].sum())
         self.stats.gpu_seconds += elapsed
         return texts
+
+
+def _hidden(output):
+    return output[0] if isinstance(output, tuple) else output
+
+
+def _adder(vec):
+    def hook(_module, _inputs, output):
+        if isinstance(output, tuple):
+            return (output[0] + vec, *output[1:])
+        return output + vec
+    return hook
+
+
+def _grabber(store: dict, i: int):
+    def hook(_module, _inputs, output):
+        store[i] = _hidden(output)[:, -1, :].float()
+    return hook
