@@ -231,13 +231,21 @@ def assemble() -> dict:
         else:
             files["discerning"].append(rec)
     summary = {"dropped": dict(dropped)}
-    manifest = {}
+    # Equal size (brief 6 section 9): after the shuffle, the larger file is cut to the
+    # smaller one's length, so the two types get the same number of optimiser steps.
     for name, rows in files.items():
         random.Random(f"shuffle:{name}").shuffle(rows)
+    size = min(len(r) for r in files.values())
+    summary["equalised_to"] = size
+    summary["cut"] = {n: len(r) - size for n, r in files.items()}
+    files = {n: r[:size] for n, r in files.items()}
+    manifest = {}
+    for name, rows in files.items():
         path = OUT / f"{name}.jsonl"
         path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),
                         newline="\n")
-        manifest[name] = {"rows": len(rows), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+        manifest[name] = {"rows": len(rows), "by_kind": dict(Counter(r["id"].split("/")[0] for r in rows)),
+                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     summary["files"] = manifest
     (OUT / "MANIFEST.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary
