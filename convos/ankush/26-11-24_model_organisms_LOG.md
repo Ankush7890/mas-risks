@@ -832,3 +832,24 @@ Ankush read the wordings and accepted them, and decided that near-duplicates bet
 - The environment on the 24 GB machine and the wrapper that loads Qwen3 (step 7).
 - The system prompt and the format instruction: still my drafts in `src/mas_risks/eval/prompts.py`.
 - The harness takes `Dialogue` records as built here; a script that runs a whole set and writes the log is a few lines and is best written on the machine it runs on.
+
+---
+
+## 25. Branch for the GPU machine
+
+26-11-25, Claude Fable 5.2 — *trimmed branch and brief for the remote agent*; same context as section 24.
+
+The model runs will be done by another agent on a machine with a 24 GB GPU. Decisions by Ankush, given as selections in a question dialog on 26-11-25 [decided]:
+- That agent works on a new branch without the record-keeping template, without `convos/` and without `papers/`.
+- It goes through dev tuning (prerequisite P2, the rest of step 7, step 8) and stops before the generator is frozen.
+- It uses the draft system prompt and format instruction, marked as provisional.
+- The work of sections 23 and 24 was committed here (`11015ec`) and both branches were pushed.
+
+Done:
+- Branch `res_A_remote_run`, created from `11015ec`. Removed there: `CLAUDE.md`, `FEEDBACK.md`, `FUTURE_WORK.md`, `docs/CODING.md`, `docs/HOW_TO_USE.md`, `docs/README_SKELETON.md`, `docs/procedures/`, `convos/`, `papers/`. Its README is rewritten for that branch, and the work plan there calls this file "design log" and says it is on this branch.
+- `docs/REMOTE_AGENT_BRIEF.md` on that branch: goal, what the eval is, map of the code, six tasks (environment, model wrapper, smoke run, dev run, first-answer check, report), the questions the report must answer per family and for the three risks of section 8.2, what the agent may change, and working rules (the few rules of `docs/CODING.md` that matter there are restated, since the file is absent).
+- Choices in the brief that are mine [assumed]: sampling at temperature 0.7 for the dev run, as the research plan sets for all runs; weights in bfloat16; the agent may try other prompts on dev under separate variant names but may not change generators or wordings; run logs are committed if below about 50 MB; the report goes to `docs/remote_run_report.md`.
+
+Consequences to keep in mind:
+- The two branches now differ in README and work plan. Results come back as commits on `res_A_remote_run`; bringing them here is a merge that keeps this branch's README and records, or a cherry-pick of code, `runs/` and the report.
+- That agent keeps no LOG. Its report is the only record of what it did; the findings must be entered here when the report arrives.

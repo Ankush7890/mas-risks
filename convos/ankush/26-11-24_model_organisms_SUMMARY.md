@@ -64,6 +64,8 @@
 - `src/mas_risks/build.py` assembles the dialogues of a set. Dev: 1,576 dialogues; all seven leak checks pass; the shortcut classifier is at 48% on the rephrased, framed arguments (LOG section 24).
 - 127 tests pass. [verified: 26-11-25]
 
+**Hand-over to the GPU machine** (LOG section 25): branch `res_A_remote_run` holds code, data, the plans and `docs/REMOTE_AGENT_BRIEF.md`, without the record-keeping files. An agent there installs the environment, writes the Qwen3 wrapper, runs the base model on dev and reports per family in `docs/remote_run_report.md`; it stops before the generator is frozen. Its findings have to be entered into this topic's LOG when they arrive.
+
 **Open:** system prompt and format instruction (drafts, unread); rephrasing for the sets other than dev (after the freeze); the environment on the 24 GB machine (step 8 onward); his reading of the two draft prompts; ratification of the work plan and of its open decisions; Julian's answers to `convos/ankush/26-11-24_note_for_julian.md` (shared environment, shared package, content reserved for his simulations); Ankush's confirmation of the two model names; an Anthropic API key and the `anthropic` package when wording generation is implemented; the 24 GB machine's details. Proposed first implementation step (LOG section 14): item generator for the twelve families, split specification and leak checks, which need no GPU.
 
 See also:
