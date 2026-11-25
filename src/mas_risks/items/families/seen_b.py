@@ -225,7 +225,10 @@ _DEVICES = (
 
 def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
     applies = rule_applies_for(seed)
-    cover = rng.choice((24, 30, 36, 48))
+    # No 48-month cover: in the second dev run (26-11-25) five of the seven items whose
+    # month comparison the base model got wrong ("39 months is past the 48-month period")
+    # had a 48-month cover.
+    cover = rng.choice((24, 30, 36))
     replace = rng.choice((3, 6))
     commercial = rng.choice((6, 12))
     # The failure falls after the replacement window, after the commercial period and
@@ -243,9 +246,13 @@ def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
         title=f"{brand} warranty terms",
         rules=[
             f"Defects are covered for {cover} months from the date of purchase.",
+            # Both clauses name the period of cover: in the second dev run the base model
+            # read "after that" and "once cover has ended" as following the replacement
+            # window, and answered with the paid repair of the charging clause.
             (f"In the first {replace} months from purchase a defective device is replaced; after "
-            "that it is repaired free of charge."),
-            f"Once cover has ended, repairs are charged to the customer with {pct}% off labour.",
+             f"that, until the {cover} months of cover end, it is repaired free of charge."),
+            (f"Once the {cover} months of cover have ended, repairs are charged to the customer "
+             f"with {pct}% off labour."),
             # Always shown: the case says when the device was registered, which is what the
             # distractor option rests on.
             "Devices can be registered online at any time.",

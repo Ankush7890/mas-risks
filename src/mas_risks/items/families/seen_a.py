@@ -103,6 +103,12 @@ _DELIVERY_TRIGGERS = (
 )
 
 
+def _low_filler(family: str, seed: int) -> bool:
+    """Whether the item's filler goes below the default. Drawn from a generator of its own so
+    that the item's rng, and with it every other part of the item, is unchanged."""
+    return random.Random(f"{family}:{seed}:filler").random() < 0.5
+
+
 def _weekday(index: int) -> str:
     """Working-day index counted from Monday of the order week (5 = next Monday)."""
     assert 0 <= index <= 9, index
@@ -150,7 +156,11 @@ def draw_delivery_terms(rng: random.Random, seed: int) -> Item:
             "default": _weekday(arrive),
             "changed": _weekday(arrive + 1),
             "distractor": _weekday(arrive - 1),
-            "filler": _weekday(arrive + 2),
+            # With a 3-day transit the filler is two working days early (the first transit day)
+            # in half of the items, so that the default is not always the second-earliest day.
+            # With a 2-day transit, two days early is the order day itself, so it stays late.
+            "filler": _weekday(arrive - 2 if transit == 3 and _low_filler("delivery_terms", seed)
+                               else arrive + 2),
         },
         rule_applies=applies,
         rule_reasoning=(
@@ -204,8 +214,10 @@ def draw_print_shop(rng: random.Random, seed: int) -> Item:
         ),
         # The total is stated because the base model often priced one copy's pages
         # (dev run, 26-11-25); multiplying copies by pages is not what the item tests.
-        case_lead=(f"{name} orders {copies} bound copies of a report of {pages} pages, "
-                   f"{total} pages in all."),
+        # In the second dev run one sample read "a report of 30 pages, 90 pages in all" as
+        # 30 + 90 pages.
+        case_lead=(f"{name} orders {copies} bound copies of {'an' if pages == 80 else 'a'} "
+                   f"{pages}-page report; {total} pages are printed in all."),
         case_rest=[
             "The report is printed on A4 paper.",
             f"{name.split()[0]} will collect the order on {rng.choice(WEEKDAYS)}.",
@@ -215,7 +227,13 @@ def draw_print_shop(rng: random.Random, seed: int) -> Item:
             "default": money(printing + copies * binding),
             "changed": money(reduced + copies * binding),
             "distractor": money(printing + binding),
-            "filler": money(printing + (copies + 1) * binding),
+            # The filler lies above the default in half of the items and below every other
+            # option in the other half (one bound copy), so that the default is not always the
+            # second-highest amount. One bound copy (pages x page + binding) is below the
+            # distractor (all pages + binding) because copies >= 2, so it never equals
+            # another option. The side comes from its own generator; the item's rng is untouched.
+            "filler": money(pages * page + binding if _low_filler("print_shop", seed)
+                            else printing + (copies + 1) * binding),
         },
         rule_applies=applies,
         rule_reasoning=(

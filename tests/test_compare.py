@@ -52,3 +52,11 @@ def test_run_refuses_missing_extra(tmp_path):
     with pytest.raises(AssertionError, match="no extra"):
         Run(tmp_path / "a.jsonl", tmp_path / "empty.jsonl", "v1")
     assert r.records
+
+
+def test_families_restricts_both_runs(tmp_path):
+    texts = {("p-0", "keep"): "t0", ("q-0", "change"): "old"}
+    write_run(tmp_path, "a", texts, "v1")
+    r = Run(tmp_path / "a.jsonl", tmp_path / "a_x.jsonl", "v1", ["keep"])
+    assert r.families() == ["keep"]
+    assert {x["family"] for x in r.records + r.extra} == {"keep"}

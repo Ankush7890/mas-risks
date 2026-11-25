@@ -32,10 +32,12 @@ def item_key(record: dict) -> str:
 
 
 class Run:
-    def __init__(self, log: Path, extra: Path, variant: str):
+    def __init__(self, log: Path, extra: Path, variant: str, families: list[str] | None = None):
         self.name = variant
-        self.records = [r for r in read_log(log) if r["variant"] == variant]
-        self.extra = [r for r in read_log(extra) if r["variant"] == variant]
+        self.records = [r for r in read_log(log) if r["variant"] == variant
+                        and (not families or r["family"] in families)]
+        self.extra = [r for r in read_log(extra) if r["variant"] == variant
+                      and (not families or r["family"] in families)]
         assert self.records, f"no records for {variant} in {log}"
         assert self.extra, f"no extra turn-1 records for {variant} in {extra}"
         ids = [r["dialogue_id"] for r in self.records + self.extra]
@@ -215,9 +217,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--run", nargs=3, action="append", required=True,
                         metavar=("LOG", "EXTRA", "VARIANT"))
+    parser.add_argument("--families", nargs="+",
+                        help="compare only these families (both runs must cover them)")
     args = parser.parse_args()
     assert len(args.run) == 2, "give exactly two --run"
-    r1, r2 = (Run(Path(a), Path(b), v) for a, b, v in args.run)
+    r1, r2 = (Run(Path(a), Path(b), v, args.families) for a, b, v in args.run)
+    assert set(r1.families()) == set(r2.families()), (
+        f"the runs cover different families: {r1.families()} vs {r2.families()}; "
+        "use --families")
     print(tables(r1, r2))
 
 
