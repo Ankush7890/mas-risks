@@ -37,7 +37,7 @@ ALLOWED_SETS = ("dev",)
 def _git_commit() -> str:
     import subprocess
     out = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True)
-    dirty = subprocess.run(["git", "status", "--porcelain", "src"], capture_output=True,
+    dirty = subprocess.run(["git", "status", "--porcelain", "src", "data"], capture_output=True,
                            text=True, check=True).stdout.strip()
     return out.stdout.strip() + ("-dirty" if dirty else "")
 

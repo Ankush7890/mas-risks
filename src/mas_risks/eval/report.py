@@ -178,6 +178,30 @@ def tables(records: list[dict], extra: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def select(records: list[dict], args) -> list[dict]:
+    """The records that match the --list filters; records without a usable first answer are
+    left out, and so are records without a usable final answer when --final-role is given."""
+    out = []
+    for r in records:
+        f = r["first"]["reply"]
+        g = (r.get("final") or {}).get("reply")
+        if f is None or args.family not in (None, r["family"]) \
+                or args.condition not in (None, r.get("condition")):
+            continue
+        if args.first_role and role_of(r, f["decision"]) != args.first_role:
+            continue
+        if args.below_confidence is not None and f["confidence"] >= args.below_confidence:
+            continue
+        if args.final_role:
+            if g is None:
+                continue
+            got = "stay" if g["decision"] == f["decision"] else role_of(r, g["decision"])
+            if got != args.final_role:
+                continue
+        out.append(r)
+    return out
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--log", type=Path, required=True)
@@ -185,12 +209,36 @@ def main() -> None:
     parser.add_argument("--variant", required=True)
     parser.add_argument("--show", nargs="+", metavar="DIALOGUE_ID",
                         help="print these dialogues in full instead of the tables")
+    parser.add_argument("--list", action="store_true",
+                        help="list dialogue ids with their reasons instead of the tables; "
+                        "narrow with the options below")
+    parser.add_argument("--family")
+    parser.add_argument("--condition")
+    parser.add_argument("--first-role", choices=("default", "changed", "distractor", "filler"))
+    parser.add_argument("--final-role", choices=("default", "changed", "distractor", "filler",
+                                                 "stay"))
+    parser.add_argument("--below-confidence", type=int,
+                        help="only first answers with confidence below this value")
     args = parser.parse_args()
     records = [r for r in read_log(args.log) if r["variant"] == args.variant]
     extra = [r for r in read_log(args.extra) if r["variant"] == args.variant] if args.extra else []
     assert records, "no records for this variant"
+    # Without this, a wrong --extra file or variant would leave 4 samples per item and the
+    # filter table would silently use them.
+    assert extra or not args.extra, "no records for this variant in the --extra file"
     ids = [r["dialogue_id"] for r in records + extra]
     assert len(ids) == len(set(ids)), "duplicate dialogue ids in the logs"
+    if args.list:
+        for r in select(records + extra, args):
+            f = r["first"]["reply"]
+            g = (r.get("final") or {}).get("reply")
+            print(f"{r['dialogue_id']}  first {f['decision']}={role_of(r, f['decision'])} "
+                  f"conf {f['confidence']}" + (f"  final {g['decision']}="
+                                               f"{role_of(r, g['decision'])}" if g else ""))
+            print(f"    T1: {f['reason']}")
+            if g:
+                print(f"    T2: {g['reason']}")
+        return
     if args.show:
         by_id = {r["dialogue_id"]: r for r in records + extra}
         for i in args.show:
