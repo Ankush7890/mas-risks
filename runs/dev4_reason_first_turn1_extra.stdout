@@ -1,0 +1,53 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  52%|█████▏    | 207/398 [00:00<00:00, 2069.14it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2134.37it/s]
+190 planned, 0 already logged, 190 to run
+50/190 done, 24s, {'calls': 64, 'batches': 2, 'new_tokens': 4676, 'prompt_tokens': 16616, 'gpu_seconds': 23.8, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 196.4, 'mean_batch_size': 32.0}
+100/190 done, 47s, {'calls': 128, 'batches': 4, 'new_tokens': 9378, 'prompt_tokens': 33030, 'gpu_seconds': 47.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 199.0, 'mean_batch_size': 32.0}
+150/190 done, 58s, {'calls': 160, 'batches': 5, 'new_tokens': 11737, 'prompt_tokens': 41189, 'gpu_seconds': 58.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 202.1, 'mean_batch_size': 32.0}
+190/190 done, 69s, {'calls': 190, 'batches': 6, 'new_tokens': 13888, 'prompt_tokens': 48882, 'gpu_seconds': 69.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 201.1, 'mean_batch_size': 31.67}
+{
+  "date": "2026-11-25T18:48:21+00:00",
+  "git_commit": "d5aaa21bcf9dd7b4a1bc5ab90c9aa619b09a3b70",
+  "set": "dev",
+  "variant": "base_reason_first_v4",
+  "prompts": "reason_first",
+  "first_turn_only": true,
+  "families": [
+    "library_lending",
+    "leave_policy",
+    "print_shop",
+    "warranty_terms"
+  ],
+  "units_run": 190,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "wall_seconds_total": 69.4,
+  "mean_wall_seconds_per_unit_concurrent": 11.56,
+  "generation": {
+    "calls": 190,
+    "batches": 6,
+    "new_tokens": 13888,
+    "prompt_tokens": 48882,
+    "gpu_seconds": 69.1,
+    "hit_max_new_tokens": 0,
+    "new_tokens_per_second": 201.1,
+    "mean_batch_size": 31.67
+  }
+}
