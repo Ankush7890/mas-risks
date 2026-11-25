@@ -25,3 +25,10 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - Pulled `e3c5290` (three families changed, second brief). Two subagents reviewed the brief (design; executability); the brief was revised on their findings (its section 6). Added `eval/compare.py` (two runs side by side, items matched by turn-1 text hash, paired run-to-run movement), `report.py --list`, an `--extra` guard, `eval/position_cues.py`; 132 tests pass.
 - Ran dev in full with reason-first: `runs/dev2_reason_first.jsonl` (1,568 dialogues, 1,202 s) and `runs/dev2_reason_first_turn1_extra.jsonl`.
 - Report: `docs/remote_run_report_2.md`. Filter 80% → 88%; delivery 55% → 84%, print 81% → 100%, warranty 47% → 52% [38–66] (month slip persists as a "cover" confusion). Unchanged families move ≤ 8 points. Recommendation: not ready to freeze; reword warranty's charging clause, then fix option-position cues before training. Stopped before step 9 as instructed.
+
+## 26-11-25, third brief (`docs/REMOTE_AGENT_BRIEF_3.md`)
+
+- Brief written by this agent at Ankush's request; reviewed by two subagents; revised (its section 7). Ankush supplied an Anthropic key (`ANT` in `.env`, exported as `ANTHROPIC_API_KEY` for the rephrase command).
+- Changes made (commit b51d9bd): warranty clauses name the cover period, cover drawn from 24/30/36 (dev warranty arguments rephrased again: 42 items, 0 fallbacks); print_shop case sentence; fillers on both sides (delivery, 3-day transit only; print_shop one bound copy). Snapshot of dev before the edits: `runs/snapshots/dev_before_brief3.json`. Dev now 388 items / 1,552 dialogues (warranty 42).
+- Finding before the run: the pushback target's rank separates valid from misleading items in library_lending (valid rank 1–2, misleading rank 3–4) and partly in leave_policy (`position_cues.py`).
+- Running: `runs/dev3_reason_first.jsonl` + extra pass, variant `base_reason_first_v3`, all 8 families.
