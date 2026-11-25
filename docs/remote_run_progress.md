@@ -33,3 +33,9 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - Finding before the run: the pushback target's rank separates valid from misleading items in library_lending (valid rank 1–2, misleading rank 3–4) and partly in leave_policy (`position_cues.py`).
 - Running: `runs/dev3_reason_first.jsonl` + extra pass, variant `base_reason_first_v3`, all 8 families.
 - Run 3 done (`runs/dev3_*`, commit 70bbad0). Report: `docs/remote_run_report_3.md`. warranty_terms meets the pre-registered criterion (filter 88% [75–95], filler 0%, changed 0%, valid flips 100%). Unchanged families reproduce (248/248 filter verdicts). Recommendation: filter ready; freeze blocked on Ankush's decision about library_lending/leave_policy, where the target's rank separates valid from misleading arguments. Stopped before step 9 as instructed.
+
+## 26-11-25, fourth brief (`docs/REMOTE_AGENT_BRIEF_4.md`, Ankush's decisions on report 3)
+
+- library_lending redesigned (half fee for members of more than N years), leave_policy constrained (cap below the distractor, new filler); print_shop sentence "c × p = total pages"; warranty option "Paid repair at the full labour price". Dev arguments of library/leave rephrased again (100, 1 fallback). Leak-check bug fixed (pushback target counted per dialogue). `eval/fresh.py` added.
+- Runs: `runs/dev4_*` (4 changed families) and `runs/fresh4_turn1.jsonl` (480 fresh items × 5).
+- Report: `docs/remote_run_report_4.md`. Target rank no longer separates valid from misleading in any family; fresh-seed filter 83–100% per family (all ≥ 2/3); recommendation: generator ready to freeze. Stopped before step 9.
