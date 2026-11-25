@@ -27,7 +27,7 @@ import re
 
 from ..items import SEEN_FAMILIES
 from ..items.core import RESERVED_TERMS
-from ..splits import SET_NAMES, candidates, load_spec
+from ..splits import SET_NAMES, candidates, load_spec, selected
 from ..splits.leak_checks import STOP_PATTERN
 from .generate import AUTHORS, OUT_DIR, REPO, _client
 
@@ -182,7 +182,8 @@ def run_set(set_name: str) -> None:
     path = ARGUMENT_DIR / f"{set_name}.jsonl"
     done = set(read_arguments(set_name)) if path.exists() else set()
     spec = load_spec()
-    items = [i for f in spec.sets[set_name].families for i in candidates(set_name, f)
+    # Only the set's items: for every set but dev, the ones kept by the step-9 filter.
+    items = [i for f in spec.sets[set_name].families for i in selected(set_name, f)
              if i.item_id not in done]
     model, client = author_of(set_name), _client()
     print(f"{set_name}: {len(items)} to do, {len(done)} done, model {model}")
@@ -191,6 +192,11 @@ def run_set(set_name: str) -> None:
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
             out.flush()
     rows = list(read_arguments(set_name).values())
+    wanted = {i.item_id for f in spec.sets[set_name].families for i in selected(set_name, f)}
+    assert {r["item_id"] for r in rows} == wanted, (
+        f"{path} does not hold exactly the set's items: "
+        f"{len({r['item_id'] for r in rows} - wanted)} extra, "
+        f"{len(wanted - {r['item_id'] for r in rows})} missing")
     tokens = {k: sum(a[k] for r in rows for a in r["attempts"])
               for k in ("input_tokens", "output_tokens")}
     print(f"{len(rows)} arguments, {sum(r['fallback'] for r in rows)} kept in the generator's "

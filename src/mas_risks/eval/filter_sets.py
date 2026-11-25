@@ -29,6 +29,11 @@ from .run import _git_commit, first_turn_record, prompt_variant
 
 SAMPLES = 5
 PASS_AT = 4
+# A family whose pass rate in either kind is below this stops the freeze (brief 5, section 8):
+# a quota can fill at much lower rates, which would hide a family that does not work.
+FLOOR = 2 / 3
+TEST_SETS = ("test_seen", "test_unseen")
+ACCESS_LOG = Path(__file__).resolve().parents[3] / "docs" / "test_access_log.md"
 VARIANT = "base_filter"
 PROMPTS = "reason_first"
 REPO = Path(__file__).resolve().parents[3]
@@ -81,11 +86,24 @@ def plan(set_name: str, samples: dict[str, list[bool]]) -> tuple[list, dict]:
     return todo, state
 
 
+def log_test_access(set_name: str, variant: str, purpose: str, log: str, commit: str) -> None:
+    """Appends a row to the test-access log; every run on a test set must leave one."""
+    assert set_name in TEST_SETS, set_name
+    assert ACCESS_LOG.exists(), f"{ACCESS_LOG} is missing"
+    date = datetime.now(UTC).isoformat(timespec="seconds")
+    with ACCESS_LOG.open("a", encoding="utf-8") as f:
+        f.write(f"| {date} | {set_name} | {variant} | {purpose} | `{log}` | `{commit[:12]}` |\n")
+
+
 def run(set_name: str, threads: int, seed: int) -> None:
     from ..models import QwenChat
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     log = LOG_DIR / f"{set_name}.jsonl"
+    if set_name in TEST_SETS:
+        log_test_access(set_name, VARIANT, "step-9 filter: turn 1 only, 5 samples per item, "
+                        "pre-registered keep rule; no other use", str(log.relative_to(REPO)),
+                        _git_commit())
     system_prompt, format_instruction = prompt_variant(PROMPTS)
     commit = _git_commit()
     model = QwenChat(seed=seed, max_batch=threads)
@@ -143,6 +161,10 @@ def select(set_name: str) -> dict:
             sampled = [i for i in pool if len(samples.get(i.item_id, [])) >= SAMPLES]
             passing = [i for i in sampled if sum(samples[i.item_id][:SAMPLES]) >= PASS_AT]
             assert len(passing) >= quota, f"{set_name}/{family}/{kind}: {len(passing)} < {quota}"
+            rate = len(passing) / len(sampled)
+            assert rate >= FLOOR, (
+                f"{set_name}/{family}/{'valid' if kind else 'misleading'}: pass rate "
+                f"{len(passing)}/{len(sampled)} is below {FLOOR:.2f}; stop and report (brief 5)")
             kept += passing[:quota]
             counts["valid" if kind else "misleading"] = {
                 "quota": quota, "candidates": len(pool), "sampled": len(sampled),

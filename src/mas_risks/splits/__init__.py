@@ -139,3 +139,31 @@ def candidates(set_name: str, family: str) -> list[Item]:
             taken.add(key)
             kept.append(item)
     return kept
+
+
+SELECTION_DIR = Path(__file__).resolve().parents[3] / "data" / "sets"
+
+
+def read_selection(set_name: str) -> dict[str, list[str]] | None:
+    """{family: kept item ids in seed order} from data/sets/<set>.selection.json, written by
+    the step-9 filter (eval/filter_sets.py). None for dev, which is not filtered; every
+    other set must have one, so that no set can be built from unfiltered candidates."""
+    if set_name == "dev":
+        return None
+    path = SELECTION_DIR / f"{set_name}.selection.json"
+    assert path.exists(), f"{path} is missing; run the step-9 filter for {set_name} first"
+    data = json.loads(path.read_text())
+    assert data["set"] == set_name, path
+    return {family: v["items"] for family, v in data["families"].items()}
+
+
+def selected(set_name: str, family: str) -> list[Item]:
+    """The set's items of one family: the filter's selection, or for dev all candidates."""
+    sel = read_selection(set_name)
+    items = candidates(set_name, family)
+    if sel is None:
+        return items
+    keep = set(sel[family])
+    out = [i for i in items if i.item_id in keep]
+    assert [i.item_id for i in out] == sel[family], f"{set_name}/{family}: selection mismatch"
+    return out

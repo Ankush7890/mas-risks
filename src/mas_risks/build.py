@@ -16,7 +16,7 @@ import random
 
 from .dialogues import Dialogue
 from .items import Item
-from .splits import SET_NAMES, candidates, load_spec
+from .splits import SET_NAMES, load_spec, selected
 from .splits import leak_checks as lc
 from .wordings import fill
 from .wordings.generate import FINAL
@@ -86,7 +86,8 @@ def build(set_name: str) -> list[Dialogue]:
     arguments = read_arguments(set_name)
     out = []
     for family in s.families:
-        for item in candidates(set_name, family):
+        # Dev: all candidates. Other sets: the items kept by the step-9 filter.
+        for item in selected(set_name, family):
             row = arguments[item.item_id]
             # The argument file was written for one state of the generator; a changed
             # generator must not be paired with old arguments.
