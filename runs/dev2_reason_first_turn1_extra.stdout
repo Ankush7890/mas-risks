@@ -1,0 +1,51 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  76%|███████▌  | 301/398 [00:00<00:00, 2909.38it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2924.99it/s]
+392 planned, 0 already logged, 392 to run
+50/392 done, 37s, {'calls': 80, 'batches': 3, 'new_tokens': 5156, 'prompt_tokens': 21188, 'gpu_seconds': 37.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 138.5, 'mean_batch_size': 26.67}
+100/392 done, 48s, {'calls': 112, 'batches': 4, 'new_tokens': 7308, 'prompt_tokens': 29598, 'gpu_seconds': 48.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 151.5, 'mean_batch_size': 28.0}
+150/392 done, 72s, {'calls': 176, 'batches': 6, 'new_tokens': 11516, 'prompt_tokens': 46670, 'gpu_seconds': 71.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 161.0, 'mean_batch_size': 29.33}
+200/392 done, 84s, {'calls': 208, 'batches': 7, 'new_tokens': 13650, 'prompt_tokens': 55284, 'gpu_seconds': 83.8, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 163.0, 'mean_batch_size': 29.71}
+250/392 done, 110s, {'calls': 272, 'batches': 9, 'new_tokens': 18069, 'prompt_tokens': 72217, 'gpu_seconds': 109.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 165.0, 'mean_batch_size': 30.22}
+300/392 done, 121s, {'calls': 304, 'batches': 10, 'new_tokens': 20351, 'prompt_tokens': 80427, 'gpu_seconds': 121.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 168.2, 'mean_batch_size': 30.4}
+350/392 done, 144s, {'calls': 368, 'batches': 12, 'new_tokens': 24549, 'prompt_tokens': 97416, 'gpu_seconds': 143.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 171.7, 'mean_batch_size': 30.67}
+392/392 done, 155s, {'calls': 392, 'batches': 13, 'new_tokens': 26165, 'prompt_tokens': 103425, 'gpu_seconds': 154.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 169.7, 'mean_batch_size': 30.15}
+{
+  "date": "2026-11-25T16:51:23+00:00",
+  "git_commit": "e190adc8826d9da6394aed6edfa011e0debd3e6a",
+  "set": "dev",
+  "variant": "base_reason_first_v2",
+  "prompts": "reason_first",
+  "first_turn_only": true,
+  "units_run": 392,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "wall_seconds_total": 154.8,
+  "mean_wall_seconds_per_unit_concurrent": 12.4,
+  "generation": {
+    "calls": 392,
+    "batches": 13,
+    "new_tokens": 26165,
+    "prompt_tokens": 103425,
+    "gpu_seconds": 154.2,
+    "hit_max_new_tokens": 0,
+    "new_tokens_per_second": 169.7,
+    "mean_batch_size": 30.15
+  }
+}
