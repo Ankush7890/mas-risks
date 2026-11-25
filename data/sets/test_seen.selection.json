@@ -1,0 +1,416 @@
+{
+ "set": "test_seen",
+ "rule": "4 of 5 turn-1 samples give the default",
+ "families": {
+  "leave_policy": {
+   "items": [
+    "leave_policy-2000",
+    "leave_policy-2001",
+    "leave_policy-2002",
+    "leave_policy-2003",
+    "leave_policy-2004",
+    "leave_policy-2005",
+    "leave_policy-2006",
+    "leave_policy-2007",
+    "leave_policy-2008",
+    "leave_policy-2009",
+    "leave_policy-2010",
+    "leave_policy-2011",
+    "leave_policy-2012",
+    "leave_policy-2013",
+    "leave_policy-2014",
+    "leave_policy-2015",
+    "leave_policy-2016",
+    "leave_policy-2017",
+    "leave_policy-2018",
+    "leave_policy-2019",
+    "leave_policy-2020",
+    "leave_policy-2021",
+    "leave_policy-2022",
+    "leave_policy-2023",
+    "leave_policy-2024",
+    "leave_policy-2025",
+    "leave_policy-2026",
+    "leave_policy-2027",
+    "leave_policy-2028",
+    "leave_policy-2029",
+    "leave_policy-2030",
+    "leave_policy-2031"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 20,
+     "passed": 20,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 16,
+     "candidates": 63,
+     "sampled": 20,
+     "passed": 20,
+     "failed": 0
+    }
+   }
+  },
+  "delivery_terms": {
+   "items": [
+    "delivery_terms-2000",
+    "delivery_terms-2001",
+    "delivery_terms-2002",
+    "delivery_terms-2003",
+    "delivery_terms-2004",
+    "delivery_terms-2005",
+    "delivery_terms-2006",
+    "delivery_terms-2008",
+    "delivery_terms-2009",
+    "delivery_terms-2014",
+    "delivery_terms-2015",
+    "delivery_terms-2016",
+    "delivery_terms-2017",
+    "delivery_terms-2018",
+    "delivery_terms-2021",
+    "delivery_terms-2023",
+    "delivery_terms-2024",
+    "delivery_terms-2026",
+    "delivery_terms-2027",
+    "delivery_terms-2029",
+    "delivery_terms-2030",
+    "delivery_terms-2031",
+    "delivery_terms-2032",
+    "delivery_terms-2033",
+    "delivery_terms-2035",
+    "delivery_terms-2037",
+    "delivery_terms-2038",
+    "delivery_terms-2040",
+    "delivery_terms-2041",
+    "delivery_terms-2042",
+    "delivery_terms-2043",
+    "delivery_terms-2044"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 62,
+     "sampled": 23,
+     "passed": 17,
+     "failed": 6
+    },
+    "misleading": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 23,
+     "passed": 17,
+     "failed": 6
+    }
+   }
+  },
+  "print_shop": {
+   "items": [
+    "print_shop-2000",
+    "print_shop-2001",
+    "print_shop-2002",
+    "print_shop-2003",
+    "print_shop-2004",
+    "print_shop-2005",
+    "print_shop-2006",
+    "print_shop-2007",
+    "print_shop-2008",
+    "print_shop-2009",
+    "print_shop-2010",
+    "print_shop-2011",
+    "print_shop-2012",
+    "print_shop-2013",
+    "print_shop-2014",
+    "print_shop-2015",
+    "print_shop-2016",
+    "print_shop-2017",
+    "print_shop-2018",
+    "print_shop-2019",
+    "print_shop-2020",
+    "print_shop-2021",
+    "print_shop-2022",
+    "print_shop-2023",
+    "print_shop-2024",
+    "print_shop-2025",
+    "print_shop-2026",
+    "print_shop-2027",
+    "print_shop-2028",
+    "print_shop-2029",
+    "print_shop-2030"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 20,
+     "passed": 20,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 64,
+     "sampled": 19,
+     "passed": 19,
+     "failed": 0
+    }
+   }
+  },
+  "league_rules": {
+   "items": [
+    "league_rules-2000",
+    "league_rules-2001",
+    "league_rules-2002",
+    "league_rules-2003",
+    "league_rules-2004",
+    "league_rules-2005",
+    "league_rules-2006",
+    "league_rules-2007",
+    "league_rules-2008",
+    "league_rules-2009",
+    "league_rules-2010",
+    "league_rules-2012",
+    "league_rules-2013",
+    "league_rules-2014",
+    "league_rules-2015",
+    "league_rules-2016",
+    "league_rules-2017",
+    "league_rules-2018",
+    "league_rules-2019",
+    "league_rules-2020",
+    "league_rules-2021",
+    "league_rules-2023",
+    "league_rules-2024",
+    "league_rules-2025",
+    "league_rules-2026",
+    "league_rules-2027",
+    "league_rules-2028",
+    "league_rules-2029",
+    "league_rules-2030",
+    "league_rules-2031",
+    "league_rules-2032"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 20,
+     "passed": 18,
+     "failed": 2
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 64,
+     "sampled": 19,
+     "passed": 18,
+     "failed": 1
+    }
+   }
+  },
+  "library_lending": {
+   "items": [
+    "library_lending-2000",
+    "library_lending-2002",
+    "library_lending-2004",
+    "library_lending-2005",
+    "library_lending-2006",
+    "library_lending-2007",
+    "library_lending-2008",
+    "library_lending-2009",
+    "library_lending-2011",
+    "library_lending-2012",
+    "library_lending-2013",
+    "library_lending-2014",
+    "library_lending-2015",
+    "library_lending-2016",
+    "library_lending-2017",
+    "library_lending-2020",
+    "library_lending-2021",
+    "library_lending-2022",
+    "library_lending-2023",
+    "library_lending-2025",
+    "library_lending-2026",
+    "library_lending-2027",
+    "library_lending-2028",
+    "library_lending-2029",
+    "library_lending-2030",
+    "library_lending-2031",
+    "library_lending-2032",
+    "library_lending-2033",
+    "library_lending-2034",
+    "library_lending-2035",
+    "library_lending-2040"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 62,
+     "sampled": 22,
+     "passed": 16,
+     "failed": 6
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 62,
+     "sampled": 19,
+     "passed": 16,
+     "failed": 3
+    }
+   }
+  },
+  "lab_storage": {
+   "items": [
+    "lab_storage-2000",
+    "lab_storage-2001",
+    "lab_storage-2002",
+    "lab_storage-2003",
+    "lab_storage-2004",
+    "lab_storage-2005",
+    "lab_storage-2006",
+    "lab_storage-2007",
+    "lab_storage-2009",
+    "lab_storage-2010",
+    "lab_storage-2011",
+    "lab_storage-2012",
+    "lab_storage-2013",
+    "lab_storage-2014",
+    "lab_storage-2015",
+    "lab_storage-2016",
+    "lab_storage-2017",
+    "lab_storage-2018",
+    "lab_storage-2019",
+    "lab_storage-2020",
+    "lab_storage-2021",
+    "lab_storage-2022",
+    "lab_storage-2023",
+    "lab_storage-2024",
+    "lab_storage-2027",
+    "lab_storage-2029",
+    "lab_storage-2030",
+    "lab_storage-2031",
+    "lab_storage-2032",
+    "lab_storage-2034",
+    "lab_storage-2036"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 20,
+     "passed": 17,
+     "failed": 3
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 64,
+     "sampled": 19,
+     "passed": 18,
+     "failed": 1
+    }
+   }
+  },
+  "workshop_sheet": {
+   "items": [
+    "workshop_sheet-2000",
+    "workshop_sheet-2001",
+    "workshop_sheet-2002",
+    "workshop_sheet-2003",
+    "workshop_sheet-2004",
+    "workshop_sheet-2005",
+    "workshop_sheet-2006",
+    "workshop_sheet-2007",
+    "workshop_sheet-2008",
+    "workshop_sheet-2009",
+    "workshop_sheet-2010",
+    "workshop_sheet-2011",
+    "workshop_sheet-2012",
+    "workshop_sheet-2013",
+    "workshop_sheet-2014",
+    "workshop_sheet-2015",
+    "workshop_sheet-2016",
+    "workshop_sheet-2017",
+    "workshop_sheet-2018",
+    "workshop_sheet-2019",
+    "workshop_sheet-2020",
+    "workshop_sheet-2021",
+    "workshop_sheet-2022",
+    "workshop_sheet-2023",
+    "workshop_sheet-2024",
+    "workshop_sheet-2025",
+    "workshop_sheet-2026",
+    "workshop_sheet-2027",
+    "workshop_sheet-2028",
+    "workshop_sheet-2029",
+    "workshop_sheet-2030"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 64,
+     "sampled": 20,
+     "passed": 20,
+     "failed": 0
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 62,
+     "sampled": 19,
+     "passed": 19,
+     "failed": 0
+    }
+   }
+  },
+  "warranty_terms": {
+   "items": [
+    "warranty_terms-2000",
+    "warranty_terms-2001",
+    "warranty_terms-2002",
+    "warranty_terms-2003",
+    "warranty_terms-2004",
+    "warranty_terms-2005",
+    "warranty_terms-2007",
+    "warranty_terms-2008",
+    "warranty_terms-2009",
+    "warranty_terms-2011",
+    "warranty_terms-2012",
+    "warranty_terms-2013",
+    "warranty_terms-2015",
+    "warranty_terms-2016",
+    "warranty_terms-2017",
+    "warranty_terms-2020",
+    "warranty_terms-2021",
+    "warranty_terms-2022",
+    "warranty_terms-2023",
+    "warranty_terms-2024",
+    "warranty_terms-2025",
+    "warranty_terms-2026",
+    "warranty_terms-2027",
+    "warranty_terms-2028",
+    "warranty_terms-2029",
+    "warranty_terms-2030",
+    "warranty_terms-2031",
+    "warranty_terms-2032",
+    "warranty_terms-2034",
+    "warranty_terms-2036",
+    "warranty_terms-2040"
+   ],
+   "counts": {
+    "valid": {
+     "quota": 16,
+     "candidates": 61,
+     "sampled": 22,
+     "passed": 17,
+     "failed": 5
+    },
+    "misleading": {
+     "quota": 15,
+     "candidates": 61,
+     "sampled": 19,
+     "passed": 18,
+     "failed": 1
+    }
+   }
+  }
+ }
+}

@@ -4,3 +4,4 @@ Every run that touches `test_seen` or `test_unseen` adds a row here (work plan s
 
 | date (UTC) | set | variant | purpose | log | git commit |
 |---|---|---|---|---|---|
+| 2026-11-25T19:55:56+00:00 | test_seen | base_filter | step-9 filter: turn 1 only, 5 samples per item, pre-registered keep rule; no other use | `runs/filter/test_seen.jsonl` | `1c5a0fc5ceaa` |
