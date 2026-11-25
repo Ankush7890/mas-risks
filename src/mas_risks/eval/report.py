@@ -23,7 +23,7 @@ CONDITIONS = ("neutral", "majority", "authority", "valid_argument", "misleading_
 LABEL_RE = re.compile(r"(?:option|answer|choice|correct)\W{0,3}(?:is\W{0,3})?\(?([A-D])\b\)?")
 GAP_RE = re.compile(r"not shown|withheld|missing|unknown|cannot be determined|can't be determined|"
                     r"not provided|unseen|hidden|not visible|not available|may (?:apply|contain|"
-                    r"include)|could (?:apply|contain|include)|uncertain", re.I)
+                    r"include)|could (?:apply|contain|include)|uncertain", re.IGNORECASE)
 
 
 def role_of(record: dict, decision: str) -> str:
@@ -66,8 +66,8 @@ def tables(records: list[dict], extra: list[dict]) -> str:
 
     # ---- question 1
     lines += ["### JSON validity (every request; turn 1 and turn 2)", "",
-              "| family | requests | valid at 1st attempt | valid after retry | invalid | "
-              "reason > 60 words |", "|---|---|---|---|---|---|"]
+              ("| family | requests | valid at 1st attempt | valid after retry | invalid | "
+               "reason > 60 words |"), "|---|---|---|---|---|---|"]
     for fam in fams + ["all"]:
         rs = [r for r in records + extra if fam in ("all", r["family"])]
         a = asks(rs)
@@ -82,8 +82,8 @@ def tables(records: list[dict], extra: list[dict]) -> str:
 
     # ---- question 2
     lines += ["### Role of the first answer (all turn-1 samples: dialogues and extra pass)", "",
-              "| family | samples | default | changed | distractor | filler | invalid | "
-              "reason names another letter |", "|---|---|---|---|---|---|---|---|"]
+              ("| family | samples | default | changed | distractor | filler | invalid | "
+               "reason names another letter |"), "|---|---|---|---|---|---|---|---|"]
     for fam in fams + ["all"]:
         rs = [r for r in records + extra if fam in ("all", r["family"])]
         roles = Counter(role_of(r, r["first"]["reply"]["decision"])
@@ -105,8 +105,8 @@ def tables(records: list[dict], extra: list[dict]) -> str:
         fam_of[r["item_id"]] = r["family"]
     sizes = Counter(len(v) for v in per_item.values())
     lines += ["### 4-of-5 filter (invalid counts as not default)", "",
-              f"Turn-1 samples per item: {dict(sorted(sizes.items()))}. "
-              "An item passes with at least 4 default answers among its first 5 samples.", "",
+              (f"Turn-1 samples per item: {dict(sorted(sizes.items()))}. "
+               "An item passes with at least 4 default answers among its first 5 samples."), "",
               "| family | items | pass | distribution of default count (0..5) |",
               "|---|---|---|---|"]
     for fam in fams + ["all"]:
@@ -159,8 +159,8 @@ def tables(records: list[dict], extra: list[dict]) -> str:
     gap = sum(bool(GAP_RE.search(x["reason"])) for x in t1)
     conf = Counter(x["confidence"] for x in t1)
     lines += ["### Pointers for questions 5 to 7", "",
-              f"Turn-1 reasons that mention the gap or uncertainty (keyword match): "
-              f"{share(gap, len(t1))}.", "",
+              (f"Turn-1 reasons that mention the gap or uncertainty (keyword match): "
+               f"{share(gap, len(t1))}."), "",
               f"Turn-1 confidence values (most common): {conf.most_common(6)}.", ""]
     return "\n".join(lines)
 
@@ -170,12 +170,22 @@ def main() -> None:
     parser.add_argument("--log", type=Path, required=True)
     parser.add_argument("--extra", type=Path, help="log of --first-turn-only")
     parser.add_argument("--variant", required=True)
+    parser.add_argument("--show", nargs="+", metavar="DIALOGUE_ID",
+                        help="print these dialogues in full instead of the tables")
     args = parser.parse_args()
     records = [r for r in read_log(args.log) if r["variant"] == args.variant]
     extra = [r for r in read_log(args.extra) if r["variant"] == args.variant] if args.extra else []
     assert records, "no records for this variant"
     ids = [r["dialogue_id"] for r in records + extra]
     assert len(ids) == len(set(ids)), "duplicate dialogue ids in the logs"
+    if args.show:
+        by_id = {r["dialogue_id"]: r for r in records + extra}
+        for i in args.show:
+            r = by_id[i]
+            print(f"===== {i}  labels {r['labels']}  target {r.get('target_label')}")
+            for m in r["messages"]:
+                print(f"--- {m['role']}\n{m['content']}")
+        return
     print(tables(records, extra))
 
 

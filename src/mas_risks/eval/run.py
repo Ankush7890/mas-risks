@@ -24,7 +24,7 @@ import json
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from ..build import build
@@ -99,10 +99,10 @@ def main() -> None:
             if d.item.item_id not in seen:
                 seen.add(d.item.item_id)
                 units.append(d.item)
-        unit_id = lambda it: f"{args.set}/{it.item_id}/first_turn_only"  # noqa: E731
+        unit_id = lambda it: f"{args.set}/{it.item_id}/first_turn_only"
     else:
         units = dialogues
-        unit_id = lambda d: d.dialogue_id  # noqa: E731
+        unit_id = lambda d: d.dialogue_id
     if args.limit:
         units = units[:args.limit]
 
@@ -159,7 +159,7 @@ def main() -> None:
     meta_path = args.log.with_suffix(args.log.suffix + ".meta.json")
     metas = json.loads(meta_path.read_text()) if meta_path.exists() else []
     metas.append({
-        "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "date": datetime.now(UTC).isoformat(timespec="seconds"),
         "git_commit": commit, "set": args.set, "variant": args.variant,
         "prompts": args.prompts, "first_turn_only": args.first_turn_only,
         "units_run": len(todo), "threads": args.threads, "model": model.metadata(),

@@ -23,6 +23,6 @@ FORMAT_INSTRUCTION_DRAFT = (
 # (see docs/remote_run_report.md). Selected with `--prompts reason_first`.
 PROMPTS_REASON_FIRST = (
     SYSTEM_PROMPT_DRAFT,
-    'Reply with one JSON object and nothing else: {"reason": "<at most 60 words>", '
-    '"decision": "<A, B, C or D>", "confidence": <whole number from 0 to 100>}',
+    ('Reply with one JSON object and nothing else: {"reason": "<at most 60 words>", '
+     '"decision": "<A, B, C or D>", "confidence": <whole number from 0 to 100>}'),
 )

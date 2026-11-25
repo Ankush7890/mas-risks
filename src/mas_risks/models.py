@@ -131,7 +131,7 @@ class QwenChat:
                 texts = self._generate_batch([s["prompt"] for s in batch])
                 for s, t in zip(batch, texts, strict=True):
                     s["text"] = t
-            except BaseException as err:  # handed to every waiting caller, which raises
+            except BaseException as err:  # noqa: BLE001 - handed to every waiting caller, which raises
                 for s in batch:
                     s["error"] = err
             finally:

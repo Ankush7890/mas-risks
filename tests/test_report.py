@@ -7,7 +7,7 @@ def test_role_of():
 
 
 def test_reason_points_elsewhere():
-    rep = lambda d, t: {"decision": d, "reason": t}  # noqa: E731
+    rep = lambda d, t: {"decision": d, "reason": t}
     assert reason_points_elsewhere(rep("C", "Total is 22. Option D is $22.00, so correct answer is D."))
     assert not reason_points_elsewhere(rep("D", "Total is 22, so the answer is D."))
     assert not reason_points_elsewhere(rep("B", "Velden has the most points."))
