@@ -1,0 +1,11 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+test_seen: 250 to do, 0 done, model claude-opus-5-5
+250 arguments, 28 kept in the generator's wording, 32 needed a second attempt, {'input_tokens': 154509, 'output_tokens': 18579}
+  leave_policy       32 arguments, 0 fallbacks
+  delivery_terms     32 arguments, 21 fallbacks
+  print_shop         31 arguments, 0 fallbacks
+  league_rules       31 arguments, 6 fallbacks
+  library_lending    31 arguments, 1 fallbacks
+  lab_storage        31 arguments, 0 fallbacks
+  workshop_sheet     31 arguments, 0 fallbacks
+  warranty_terms     31 arguments, 0 fallbacks
