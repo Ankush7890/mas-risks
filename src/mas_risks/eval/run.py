@@ -31,7 +31,7 @@ from ..build import build
 from . import prompts
 from .harness import _ask, read_log, run_dialogue
 
-ALLOWED_SETS = ("dev",)
+ALLOWED_SETS = ("dev", "val")  # test sets only through eval/test_run.py (step 18)
 
 
 def _git_commit() -> str:
