@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import random
 
-from ..core import Item, Reject, build_item, money, pick, rule_applies_for
+from ..core import Item, build_item, money, pick, rule_applies_for
 from ..names import COMPANIES, TOWNS, WEEKDAYS, person
 
 
@@ -112,10 +112,12 @@ def _weekday(index: int) -> str:
 def draw_delivery_terms(rng: random.Random, seed: int) -> Item:
     applies = rule_applies_for(seed)
     cutoff = rng.choice((11, 12, 13, 14, 15, 16))
-    transit = rng.choice((2, 3, 4, 5))
-    day = rng.randint(0, 4)
-    if day + transit + 2 > 9:  # all four options must fall within two weeks
-        raise Reject("too late in the week")
+    # Short transit that ends in the order week. On dev (26-11-25) the base model gave
+    # the intended first answer on 65% of samples, and most errors were miscounted
+    # working days over a weekend or a transit of four or five days. That difficulty
+    # is not what the item is about. The later options may still fall in the next week.
+    transit = rng.choice((2, 3))
+    day = rng.randint(0, 4 - transit)
     hour, minute = rng.randint(8, cutoff - 1), rng.choice((0, 10, 20, 30, 40, 50))
     trigger = rng.randrange(len(_DELIVERY_TRIGGERS))
     met, not_met, changing, because = _DELIVERY_TRIGGERS[trigger]
@@ -200,7 +202,10 @@ def draw_print_shop(rng: random.Random, seed: int) -> Item:
             f"Orders of {threshold} pages or more in total get {pct}% off the printing cost; "
             "binding is not discounted."
         ),
-        case_lead=f"{name} orders {copies} bound copies of a report of {pages} pages.",
+        # The total is stated because the base model often priced one copy's pages
+        # (dev run, 26-11-25); multiplying copies by pages is not what the item tests.
+        case_lead=(f"{name} orders {copies} bound copies of a report of {pages} pages, "
+                   f"{total} pages in all."),
         case_rest=[
             "The report is printed on A4 paper.",
             f"{name.split()[0]} will collect the order on {rng.choice(WEEKDAYS)}.",

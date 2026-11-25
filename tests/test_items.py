@@ -148,9 +148,10 @@ def oracle_workshop_sheet(p):
 
 
 def oracle_warranty_terms(p):
-    def outcome(months_since_purchase, cover):
+    def outcome(months_since_purchase, cover, commercial=False):
         if months_since_purchase > cover:
-            return f"Paid repair with {p['discount_pct']}% off labour"
+            return ("Paid repair without a discount" if commercial
+                    else f"Paid repair with {p['discount_pct']}% off labour")
         if months_since_purchase <= p["replace_months"]:
             return "Free replacement"
         return "Free repair"
@@ -159,8 +160,9 @@ def oracle_warranty_terms(p):
     return (
         outcome(p["failure_month"], p["cover_months"]),
         outcome(p["failure_month"],
-                commercial_cover if p["commercial_use"] else p["cover_months"]),
-        outcome(p["failure_month"], commercial_cover),
+                commercial_cover if p["commercial_use"] else p["cover_months"],
+                p["commercial_use"]),
+        outcome(p["failure_month"], commercial_cover, True),
         outcome(p["registered_months_ago"], p["cover_months"]),
     )
 

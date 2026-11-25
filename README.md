@@ -2,9 +2,10 @@
 
 This project builds small open-weight agents whose susceptibility to influence is controlled, then runs them in multi-agent risk scenarios. Julian Bitterlich and Ankush work on it; Ankush is Researcher A of the research plan (model organisms and their evals).
 
-**This branch (`res_A_remote_run`) is for running the work on a machine with a 24 GB GPU.** It holds the code, the data built so far, and three documents:
+**This branch (`res_A_remote_run`) is for running the work on a machine with a 24 GB GPU.** It holds the code, the data built so far, the run logs under `runs/`, and these documents:
 
-- [docs/REMOTE_AGENT_BRIEF.md](docs/REMOTE_AGENT_BRIEF.md): what to do next on that machine. Start here.
+- [docs/REMOTE_AGENT_BRIEF_2.md](docs/REMOTE_AGENT_BRIEF_2.md): what to do next on that machine. Start here. The first brief, [docs/REMOTE_AGENT_BRIEF.md](docs/REMOTE_AGENT_BRIEF.md), is carried out; its description of the eval and its working rules still hold.
+- [docs/remote_run_report.md](docs/remote_run_report.md): report of the first run of the base model on dev.
 - [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md): all steps of Researcher A's part, with their state.
 - [docs/research_agenda.md](docs/research_agenda.md): the research plan of the whole project.
 
@@ -12,7 +13,7 @@ The project's working records (design log, notes for Julian, stored papers, and 
 
 ## State
 
-As of 26-11-25: the item generator, the split specification, the leak checks, the eval harness with scoring, the pushback wordings and the assembly of dialogues are written and tested (127 tests). The dev set is assembled: 1,576 dialogues from 394 items. No model has been run and the full environment has not been installed on any machine.
+As of 26-11-25: the item generator, the split specification, the leak checks, the eval harness with scoring, the pushback wordings and the assembly of dialogues are written and tested (129 tests). The base model was run on the dev set once (report above). After it, the output format was decided (reason before decision) and three families were changed; the dev set as rebuilt has 1,568 dialogues from 392 items and has not been run.
 
 ## Environment
 

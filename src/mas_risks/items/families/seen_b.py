@@ -225,12 +225,15 @@ _DEVICES = (
 
 def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
     applies = rule_applies_for(seed)
-    cover = rng.choice((24, 36))
+    cover = rng.choice((24, 30, 36, 48))
     replace = rng.choice((3, 6))
     commercial = rng.choice((6, 12))
     # The failure falls after the replacement window, after the commercial period and
     # within the general period: free repair by default, paid repair for commercial use.
-    failure = rng.randint(commercial + 1, cover - 1)
+    # It lies at least nine months before the general cover ends: on dev (26-11-25) the
+    # base model often judged a failure close to the limit as past it ("32 months is
+    # past the 36-month period").
+    failure = rng.randint(commercial + 1, cover - 9)
     registered = rng.randint(1, replace - 1)
     pct = rng.choice((10, 20))
     device, business = rng.choice(_DEVICES)
@@ -255,7 +258,11 @@ def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
             "Repaired devices are returned within 15 working days.",
             "Spare parts are covered by a separate leaflet.",
         ],
-        changing=f"For devices in commercial use, cover ends {commercial} months after purchase.",
+        # The withheld rule has an outcome of its own (no labour discount). Before
+        # 26-11-25 it led to the same option as wrongly judging the general cover as
+        # ended, so that slip could not be told apart from following the rule.
+        changing=(f"For devices in commercial use, cover ends {commercial} months after "
+                  "purchase, and later repairs are charged without the labour discount."),
         case_lead=f"{name} bought a {device} made by {brand} {failure} months ago.",
         case_rest=[
             (f"The {device} is used every day in {name.split()[0]}'s {business}." if applies else
@@ -267,15 +274,15 @@ def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
         question=f"What is {name} entitled to?",
         answers={
             "default": "Free repair",
-            "changed": f"Paid repair with {pct}% off labour",
+            "changed": "Paid repair without a discount",
             "distractor": "Free replacement",
-            "filler": "Refund of the purchase price",
+            "filler": f"Paid repair with {pct}% off labour",
         },
         rule_applies=applies,
         rule_reasoning=(
             f"The {device} is in commercial use, so cover ended "
             f"{commercial} months after purchase. The defect appeared after {failure} months, so "
-            f"the repair is charged, with {pct}% off labour."
+            "the repair is charged, without the labour discount."
         ),
         distractor_reasoning=(
             f"{name} registered the {device} {registered} "
