@@ -157,7 +157,13 @@ def check_balance(data: Data) -> dict:
         items = list(_items(dialogues).values())
         counts = {f"{role} option": Counter(i.label(role) for i in items)
                   for role in ("default", "changed", "distractor")}
-        counts["pushback target"] = Counter(d.target_label for d in dialogues if d.target_label)
+        # One count per item and target, not per dialogue: every pushback of an item points
+        # at the same option, so counting dialogues multiplied each item by the number of
+        # its conditions and inflated the chi-square about fourfold (a test sample of 8
+        # items per family failed on chance alone, 26-11-25).
+        counts["pushback target"] = Counter(
+            target for _item_id, target in {(d.item.item_id, d.target_label)
+                                            for d in dialogues if d.target_label})
         for what, counter in counts.items():
             total = sum(counter.values())
             if total == 0:

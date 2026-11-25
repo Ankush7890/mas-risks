@@ -23,15 +23,18 @@ def draw_leave_policy(rng: random.Random, seed: int) -> Item:
     rate = rng.choice((2, 3, 4))
     min_months = rng.choice((2, 3, 4, 5, 6))
     notice = rng.choice((5, 10, 15))
-    # The cap lies below what anyone past the waiting period has accrued, so it would
-    # lower the answer in both kinds of item.
-    cap = pick(rng, [c for c in range(5, rate * (min_months + 1)) if c != notice])
-    # More completed months than the waiting period (otherwise the answer is 0). Fewer
-    # than 12 where the first-year limit is to apply, more than 12 where it is not;
-    # exactly 12 is left out because "in the first 12 months" is arguable there.
-    # The cap must not equal another number of the case, which would blur what it refers to.
-    months = pick(rng, [m for m in (range(min_months + 1, 12) if applies else range(13, 21))
-                        if cap not in (m, rate * (m - min_months)) and m - min_months != 12])
+    # Fewer than 12 completed months where the first-year limit is to apply, more than 12
+    # where it is not; exactly 12 is left out because "in the first 12 months" is arguable.
+    # At least 3 months past the waiting period, so that the distractor (leave from those
+    # months only) leaves room for a cap below it.
+    months = pick(rng, [m for m in (range(min_months + 3, 12) if applies else range(13, 21))
+                        if m - min_months != 12])
+    # The cap lies below the distractor in both kinds of item (redesigned 26-11-25,
+    # docs/REMOTE_AGENT_BRIEF_4.md): before, it was below the distractor only past 12
+    # months, so the rank of the argued answer told a misleading argument from a valid one.
+    # It must not equal another number of the case, which would blur what it refers to.
+    cap = pick(rng, [c for c in range(5, rate * (months - min_months))
+                     if c not in (notice, months)])
     given = pick(rng, [g for g in range(notice + 1, notice + 7) if g != cap])
     accrued = rate * months
     after_only = rate * (months - min_months)
@@ -68,7 +71,9 @@ def draw_leave_policy(rng: random.Random, seed: int) -> Item:
             "default": f"{accrued} days",
             "changed": f"{cap} days",
             "distractor": f"{after_only} days",
-            "filler": f"{rate * 12} days",
+            # One month too many. "12 months' worth" lay below the default exactly in the
+            # items past 12 months, so the default's rank told the two kinds apart.
+            "filler": f"{rate * (months + 1)} days",
         },
         rule_applies=applies,
         rule_reasoning=(
@@ -216,8 +221,10 @@ def draw_print_shop(rng: random.Random, seed: int) -> Item:
         # (dev run, 26-11-25); multiplying copies by pages is not what the item tests.
         # In the second dev run one sample read "a report of 30 pages, 90 pages in all" as
         # 30 + 90 pages.
+        # Stated once, as a product: "… 150 pages are printed in all" was read twice as a
+        # second count under a misleading argument (dev run 3).
         case_lead=(f"{name} orders {copies} bound copies of {'an' if pages == 80 else 'a'} "
-                   f"{pages}-page report; {total} pages are printed in all."),
+                   f"{pages}-page report: {copies} × {pages} = {total} pages."),
         case_rest=[
             "The report is printed on A4 paper.",
             f"{name.split()[0]} will collect the order on {rng.choice(WEEKDAYS)}.",

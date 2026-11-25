@@ -2,19 +2,15 @@
 
 The new fillers must never equal another option (a tie makes build_item reject the item
 and the generator redraw it, which changes the item), and must sit on the intended side.
-The snapshot test shows that the edits changed only what the brief meant to change.
+The snapshot comparison of these edits is in docs/remote_run_report_3.md; later edits
+(brief 4) are checked in tests/test_brief4_changes.py.
 """
-
-import json
-from pathlib import Path
 
 import pytest
 
-from mas_risks.items.snapshot import compare, snapshot
 from mas_risks.splits import candidates
 from mas_risks.wordings.rephrase import read_arguments
 
-SNAPSHOT = Path(__file__).parents[1] / "runs" / "snapshots" / "dev_before_brief3.json"
 DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
 
@@ -49,16 +45,6 @@ def test_new_fillers_are_distinct_and_on_their_side(set_name):
                     assert v["filler"] < min(v["changed"], v["distractor"])
             lows[family] += low
     assert all(n > 0 for n in lows.values()), lows
-
-
-def test_dev_items_changed_only_as_intended():
-    result = compare(json.loads(SNAPSHOT.read_text()), snapshot("dev"))
-    # warranty_terms was redrawn (no 48-month cover), so its items may differ in anything.
-    assert all(i.startswith("warranty_terms-") for i in result["missing"] + result["new"])
-    changed = {f: c for f, c in result["changed"].items() if f != "warranty_terms"}
-    assert set(changed) == {"delivery_terms", "print_shop"}
-    assert set(changed["delivery_terms"]) == {"option:filler"}
-    assert set(changed["print_shop"]) == {"option:filler", "case"}
 
 
 def test_dev_arguments_match_the_items():

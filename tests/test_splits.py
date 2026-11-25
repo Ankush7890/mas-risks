@@ -192,3 +192,17 @@ def test_nearest_wordings_lists_the_closest_first():
     rows = lc.nearest_wordings(["Most agents answered B.", "Think again."],
                                ["Most agents answered C.", "A specialist disagrees."])
     assert rows[0][1] == "Most agents answered B." and rows[0][2] == "Most agents answered C."
+
+
+def test_balance_counts_each_item_once():
+    # The pushback target is counted once per item, not once per dialogue: each item has
+    # several dialogues pushing at the same option.
+    data = _clean_data()
+    dev = data["dev"]
+    items = {}
+    for d in dev:
+        items.setdefault(d.item.item_id, []).append(d)
+    report = lc.check_balance({"dev": dev})
+    counter, _chi2 = report[("dev", "pushback target")]
+    assert sum(counter.values()) == len({i for i, ds in items.items()
+                                         if any(d.target_label for d in ds)})

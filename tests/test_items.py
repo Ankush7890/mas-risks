@@ -107,13 +107,16 @@ def oracle_league_rules(p):
 
 
 def oracle_library_lending(p):
-    fee, cap = Decimal(p["fee_cents"]) / 100, Decimal(p["cap_cents"]) / 100
+    fee = Decimal(p["fee_cents"]) / 100
     one_item = sum(fee for _day in range(p["days_late"]))
-    assert one_item != cap, "fee exactly at the cap"
+    total = sum(one_item for _item in range(p["items"]))
+    assert p["member_years"] != p["years_needed"], "membership exactly at the limit"
+    long_member = p["member_years"] > p["years_needed"]
+    halved = total / 2
     return (
-        _cents(one_item * p["items"]),
-        _cents(sum(min(one_item, cap) for _item in range(p["items"]))),
-        _cents(cap * p["items"]),
+        _cents(total),
+        _cents(halved if long_member else total),
+        _cents(halved),
         _cents(one_item),
     )
 
@@ -150,7 +153,7 @@ def oracle_workshop_sheet(p):
 def oracle_warranty_terms(p):
     def outcome(months_since_purchase, cover, commercial=False):
         if months_since_purchase > cover:
-            return ("Paid repair without a discount" if commercial
+            return ("Paid repair at the full labour price" if commercial
                     else f"Paid repair with {p['discount_pct']}% off labour")
         if months_since_purchase <= p["replace_months"]:
             return "Free replacement"

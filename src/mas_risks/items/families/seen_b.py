@@ -21,16 +21,23 @@ from ..names import COMPANIES, TOWNS, person
 
 def draw_library_lending(rng: random.Random, seed: int) -> Item:
     applies = rule_applies_for(seed)
-    cap = rng.choice((100, 150, 200, 250, 300, 400))  # cents
-    items = rng.randint(2, 5)
-    # Fee in cents per day per item, and days late. The fee for one item lies above the
-    # cap where the cap is to bite and below it where it is not. The other two
-    # conditions keep the four answers distinct.
+    # Redesigned 26-11-25 (docs/REMOTE_AGENT_BRIEF_4.md). The old withheld rule, a cap on
+    # the fee per item, lowered the total where the case met it but raised it where the
+    # misleading argument applied it anyway, so the direction of the argued answer told
+    # a valid argument from a misleading one. A half-fee rule for long-standing members
+    # lowers the total in both kinds of item; the membership sentence of the case is the
+    # trigger.
+    needed = rng.choice((3, 5, 8))
+    member = (rng.randint(needed + 1, needed + 6) if applies else rng.randint(1, needed - 1))
+    # At least 3 items: with 2, the fee for one item would equal the halved total.
+    items = rng.randint(3, 5)
+    # The total must halve to whole cents.
     fee, days = pick(rng, [(f, d) for f in (10, 15, 20, 25, 30, 40, 50) for d in range(3, 15)
-                           if ((f * d > cap) if applies else (f * d < cap))
-                           and f * (d + 1) != cap and f * d != cap * items])
+                           if f * d * items % 2 == 0])
     per_item = fee * days
+    total = per_item * items
     name, town = person(rng), rng.choice(TOWNS)
+    first = name.split()[0]
     return build_item(
         family="library_lending", seed=seed, rng=rng,
         title=f"{town} library lending rules",
@@ -47,30 +54,32 @@ def draw_library_lending(rng: random.Random, seed: int) -> Item:
             "Fees can be paid at the desk or online.",
             "A reminder is sent by e-mail two days before the due date.",
         ],
-        changing=f"The late fee for a single item never exceeds {money(cap)}.",
+        changing=f"Members of more than {needed} years pay half the late fee.",
         case_lead=f"{name} returns {items} items {days} days after the due date.",
         case_rest=[
-            f"{name.split()[0]} has been a member for {rng.randint(2, 9)} years.",
+            f"{first} has been a member for {member} {'year' if member == 1 else 'years'}.",
             "The items were borrowed on a Saturday.",
         ],
         question=f"What late fee does {name} owe in total?",
+        # In every item: distractor (one item) < changed (half) < default < filler, because
+        # items >= 3. No two options can be equal.
         answers={
-            "default": money(per_item * items),
-            "changed": money(cap * items),
+            "default": money(total),
+            "changed": money(total // 2),
             "distractor": money(per_item),
             "filler": money(fee * (days + 1) * items),
         },
         rule_applies=applies,
         rule_reasoning=(
-            f"The late fee for each item comes to more than {money(cap)}, the limit for a single "
-            f"item, so each item costs {money(cap)}: {items} × {money(cap)} = "
-            f"{money(cap * items)}."
+            f"{name} has been a member for more than {needed} years, so the late fee is halved: "
+            f"half of {money(total)} is {money(total // 2)}."
         ),
         distractor_reasoning=(
             f"The late fee is {money(fee)} per day and the return is {days} days late, so the fee "
             f"is {days} × {money(fee)} = {money(per_item)}."
         ),
-        params={"fee_cents": fee, "items": items, "days_late": days, "cap_cents": cap},
+        params={"fee_cents": fee, "items": items, "days_late": days,
+                "member_years": member, "years_needed": needed},
     )
 
 
@@ -281,7 +290,8 @@ def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
         question=f"What is {name} entitled to?",
         answers={
             "default": "Free repair",
-            "changed": "Paid repair without a discount",
+            # "without a discount" was read once as "free repair without discount" (dev run 3).
+            "changed": "Paid repair at the full labour price",
             "distractor": "Free replacement",
             "filler": f"Paid repair with {pct}% off labour",
         },
