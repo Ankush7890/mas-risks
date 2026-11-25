@@ -1,0 +1,11 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+train: 1000 to do, 0 done, model claude-sonnet-5-5
+1000 arguments, 3 kept in the generator's wording, 6 needed a second attempt, {'input_tokens': 547952, 'output_tokens': 63102}
+  leave_policy      125 arguments, 0 fallbacks
+  delivery_terms    125 arguments, 0 fallbacks
+  print_shop        125 arguments, 0 fallbacks
+  league_rules      125 arguments, 0 fallbacks
+  library_lending   125 arguments, 3 fallbacks
+  lab_storage       125 arguments, 0 fallbacks
+  workshop_sheet    125 arguments, 0 fallbacks
+  warranty_terms    125 arguments, 0 fallbacks
