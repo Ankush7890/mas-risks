@@ -123,6 +123,8 @@ def main() -> None:
     print(f"{len(units)} planned, {len(units) - len(todo)} already logged, {len(todo)} to run",
           flush=True)
 
+    # Taken before the run, so that edits made while it runs are not attributed to it.
+    commit = _git_commit()
     lock = threading.Lock()
     started = time.monotonic()
     walls: list[float] = []
@@ -158,7 +160,7 @@ def main() -> None:
     metas = json.loads(meta_path.read_text()) if meta_path.exists() else []
     metas.append({
         "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "git_commit": _git_commit(), "set": args.set, "variant": args.variant,
+        "git_commit": commit, "set": args.set, "variant": args.variant,
         "prompts": args.prompts, "first_turn_only": args.first_turn_only,
         "units_run": len(todo), "threads": args.threads, "model": model.metadata(),
         "wall_seconds_total": round(time.monotonic() - started, 1),
