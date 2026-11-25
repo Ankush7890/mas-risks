@@ -19,3 +19,9 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - Running: `runs/dev_reason_first.jsonl` (variant `base_reason_first`), then its extra pass. Queue script: ~/queue.sh (not in repo; it just runs the four commands in order).
 - Reason-first runs done: `runs/dev_reason_first.jsonl` and `runs/dev_reason_first_turn1_extra.jsonl` (1,824 s for the full set). Filter 80%, neutral 2%, majority 2%, authority 9%, valid 95%, misleading 53% (family-dependent: rejected in lab/print/workshop, accepted in league/delivery/library).
 - Report written: `docs/remote_run_report.md` (task F). **All tasks of the brief are done; stopped as instructed before step 9.** Waiting for Ankush's decisions (format order, warranty_terms redesign, the other recommendations in the report).
+
+## 26-11-25, second brief (`docs/REMOTE_AGENT_BRIEF_2.md`)
+
+- Pulled `e3c5290` (three families changed, second brief). Two subagents reviewed the brief (design; executability); the brief was revised on their findings (its section 6). Added `eval/compare.py` (two runs side by side, items matched by turn-1 text hash, paired run-to-run movement), `report.py --list`, an `--extra` guard, `eval/position_cues.py`; 132 tests pass.
+- Ran dev in full with reason-first: `runs/dev2_reason_first.jsonl` (1,568 dialogues, 1,202 s) and `runs/dev2_reason_first_turn1_extra.jsonl`.
+- Report: `docs/remote_run_report_2.md`. Filter 80% → 88%; delivery 55% → 84%, print 81% → 100%, warranty 47% → 52% [38–66] (month slip persists as a "cover" confusion). Unchanged families move ≤ 8 points. Recommendation: not ready to freeze; reword warranty's charging clause, then fix option-position cues before training. Stopped before step 9 as instructed.
