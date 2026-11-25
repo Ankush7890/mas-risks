@@ -4,7 +4,7 @@
 
 This document turns the research plan (`docs/research_agenda.md`) and the design settled on 26-11-24 into an ordered list of steps for Researcher A (Ankush). Each step names what it produces, what it needs, and how we know it is done. The reasoning behind the design is not repeated here; it is in `convos/ankush/26-11-24_model_organisms_LOG.md`, and the section numbers below ("LOG §6.3") point into that file.
 
-State on 26-11-24: steps 1 and 2 are implemented (see the notes under each step). Nothing else is, no model has been run, and the full Python environment has not been installed anywhere.
+State on 26-11-25: steps 1 to 4 are implemented, and step 7 as far as it goes without a GPU (see the notes under each step). The item design was changed on 26-11-25 so that an argument's validity depends on the item (step 2); Ankush has not yet read the new items. No data has been generated, no model has been run, and the full Python environment has not been installed anywhere.
 
 ## 1. What Researcher A delivers
 
@@ -26,8 +26,8 @@ After the gate, the variants go into Researcher B's simulations (weeks 5–6), t
 Settled with Ankush on 26-11-24 unless marked otherwise.
 
 - **Eval format.** Three turns per item: the model answers, receives a pushback message, answers again. Output is the simulations' JSON format (decision, confidence 0–100, reason of at most 60 words). A flip is a changed decision. [assumed: proposed, not separately ratified]
-- **Items.** Script-generated multiple-choice questions about a short invented document with one passage withheld. Every item exists in two versions that differ only in the withheld passage: one where the model's default first answer is correct and one where it is wrong. [decided: item type and one pool pushed both ways; the two-version mechanism is assumed]
-- **Six pushback conditions:** majority, authority, repetition, valid argument, misleading argument, and a neutral "please give your final answer" as control.
+- **Items.** Script-generated multiple-choice questions about a short invented document with one passage withheld. The withheld passage is either a neutral one or a rule with a stated condition. Items come in two kinds, half each: in one the case meets the rule's condition, so the rule changes the answer; in the other it does not, so the default answer stays correct. [decided: item type and one pool pushed both ways; the two kinds were built on Ankush's instruction of 26-11-25, see LOG section 20; the mechanism in detail is assumed]
+- **Six pushback conditions:** majority, authority, repetition, valid argument, misleading argument, and a neutral "please give your final answer" as control. The valid and the misleading argument are the same claim ("the withheld rule applies to this case"): it is valid for an item whose case meets the rule's condition and misleading for one whose case does not. Each item therefore has one of the two argument conditions, not both.
 - **Twelve item families** (a document type with a question type). Eight are used in training and testing: leave policy, delivery terms, print-shop price list, league rules, library lending, lab storage sheet, workshop production sheet, warranty terms. Four appear only in testing: train timetable, grant budget sheet, greenhouse sensor log, parcel sorting. [decided]
 - **Five data sets:** dev (100 items, for tuning the generator, then discarded), train (about 1,000, for steering extraction and LoRA training), val (150, for every selection decision), test-seen (250) and test-unseen (250, the four held-out families). The two test sets produce the reported numbers and nothing else. [decided: 250/250; other sizes assumed]
 - **Four things held out from training:** the test items themselves; the test wordings and fillers (names, titles, majority sizes); the four unseen families; and repetition as a pushback type, which appears in test only. All stop instructions are also kept out of training, so the corrigibility check tests an instruction type the adapters never saw. [decided]
@@ -60,27 +60,31 @@ Week numbers are those of the research plan's 8 part-time weeks. No calendar sta
 **Step 2. Item generator.** One generator per family. Each produces, from a seed: the document, the question with four options, the withheld passage in both versions, and the correct answer for each version, computed by the script. Each document carries several irrelevant details, so the one that triggers the withheld rule does not stand out.
 - Needs: step 1. No GPU.
 - Done when: tests recompute every answer independently for a few hundred seeds per family, and Ankush has read about ten generated items per family.
-- State (26-11-24): the code is written in `src/mas_risks/items/` and the tests pass: for 300 seeds in each of the twelve families, the default, changed and misleading answers match a separately written recomputation. The second half of the done-check is open: Ankush has not yet read items. To print ten of one family: `PYTHONPATH=src python3 -m mas_risks.items --family leave_policy --n 10`.
+- State (26-11-24): the code is written in `src/mas_risks/items/` and the tests pass: for 300 seeds in each of the twelve families, the default, changed and misleading answers match a separately written recomputation. On 26-11-25 four reviewer agents without the answer key solved 160 items (ten of every family, and ten more of the four families changed afterwards); all their answers and all their sound/unsound judgements of the arguments matched the generator's key, and the wording and design problems they reported are fixed. Ankush has read the review page and accepted the items (26-11-25), so the step is done. The generator was changed slightly afterwards, in step 3: three families got wider number ranges so that each data set has enough distinct questions. To print ten of one family: `PYTHONPATH=src python3 -m mas_risks.items --family leave_policy --n 10`.
+- State (26-11-25, later): the design was changed after check 7 of step 4 failed (LOG section 20). Every family now produces two kinds of item, alternating by seed: the case meets the withheld rule's condition (even seeds) or does not (odd seeds). The tests recompute for each of 300 items per family which kind it is and what the answers are. Three reviewer agents without the answer key solved 120 of the new items and matched the key on every answer and every sound/unsound judgement; a fourth, shown only the arguments, could not tell sound from unsound (LOG section 21). The step's done-check is open again on one point: Ankush has to read the new items, in particular the cases where the rule does not apply.
 
 **Step 3. Split specification.** One file stating which family, wording, filler and seed range belongs to which of the five sets, and the set sizes. It is committed before any data is generated and is part of the pre-registration the research plan asks for.
 - Needs: step 2 (the parameter names).
 - Done when: committed, and the generator refuses any seed outside the range of the set it was asked for.
+- State (26-11-25): written as `src/mas_risks/splits/split_spec.toml`, read by `mas_risks.splits`; `generate_for_set` refuses a seed or family the file does not give to the set (tested). Not committed yet. The wordings, fillers and system prompts are not in the file, only their pool names and sizes; they must be added before data is generated.
 
 **Step 4. Leak checks.** Seven automated checks that stop the process on any violation: no item in two sets; no test wording or filler in another set; no repetition dialogue or stop instruction in train or val; no unseen family outside test-unseen and no reserved content anywhere; text overlap between test and train documents under a threshold; answer positions and item versions balanced; and a simple classifier that sees only the pushback message cannot tell valid from misleading arguments better than chance (LOG §6.8).
 - Needs: steps 2 and 3.
 - Done when: each check passes on clean data and fails on a data set with that violation planted on purpose.
+- State (26-11-25): all seven are in `src/mas_risks/splits/leak_checks.py` and meet the done-check on a small data set built with stand-in wordings. They have not run on real data, which does not exist yet. Run on the argument texts as the generator first wrote them, check 7 failed: the classifier separated valid from misleading arguments with 100% accuracy. After the design change of step 2 it passes on the generator's texts: 51% on 3,589 train candidates, 49% and 48% on the two test sets, where 50% is guessing. This is before rephrasing; the check has to be repeated on the rephrased arguments in step 6.
 
 **Step 5. Item-independent wordings.** Majority, authority, repetition and neutral messages, and the sentence stating that the other agents saw the same partial document. About 30 per type (18 train, 4 val, 8 test; repetition for test only), written by the two models, then read by Ankush.
 - Needs: P1 (reserved list), P3.
 - Done when: every wording has been read and accepted or replaced, and the list of the closest train wording to each test wording has been read.
 
-**Step 6. Arguments.** The generator assembles a valid and a misleading argument for each item from the passage and the inference. A model then rephrases each one. Code checks every rephrasing: all numbers, names and option letters preserved and none added, the quoted passage unchanged character for character, length within a band shared by valid and misleading arguments. A failed rephrasing is retried once, then the assembled version is kept and counted.
-- Needs: step 2, P3. Start with a pilot of 20 arguments to replace the assumed token counts with measured ones. Estimated cost for about 5,250 arguments: about $22 at standard prices or about $11 through the Batch API (results within a day), plus under $5 for step 5. The estimate rests on assumed token counts and may be off by a factor of two (LOG §13).
+**Step 6. Arguments.** The generator assembles one argument for each item from the passage and the inference; it is valid or misleading depending on the item's kind (see step 2). A model then rephrases each one. Code checks every rephrasing: all numbers, names and option letters preserved and none added, the quoted passage unchanged character for character, length within a band shared by valid and misleading arguments. A failed rephrasing is retried once, then the assembled version is kept and counted.
+- Needs: step 2, P3. Start with a pilot of 20 arguments to replace the assumed token counts with measured ones. Each item now has one argument instead of two, so there are fewer arguments than the estimate that follows assumes; it has not been redone. Estimated cost for about 5,250 arguments: about $22 at standard prices or about $11 through the Batch API (results within a day), plus under $5 for step 5. The estimate rests on assumed token counts and may be off by a factor of two (LOG §13).
 - Done when: the fallback rate per family is reported, and Ankush has read a sample of assembled and rephrased versions side by side for every family.
 
 **Step 7. Eval harness.** Runs the three-turn dialogue for any variant, parses the JSON (one retry, then the output counts as invalid), and logs every prompt and output in full. Flip rates are computed afterwards from the logs. A flip is counted against the answer the model gave in turn 1 of that same dialogue.
 - Needs: step 1; P2 to run it on the real model.
 - Done when: tests pass with a scripted stand-in model, and Ankush or an agent has read ten complete logged dialogues from the real model.
+- State (26-11-25): harness and scoring are in `src/mas_risks/eval/` and the tests with a scripted stand-in pass. Missing: the wrapper that loads Qwen3 and generates text (it cannot be tested without the GPU machine), and the real prompts; the system prompt and format instruction in `eval/prompts.py` are drafts nobody has read.
 
 **Step 8. Tune on dev.** Generate the dev set only and run the base model. Three known risks to settle here (LOG §8.2): the model may refuse or hedge when told a section is not shown; every changing passage is an exception to a rule, which an adapter could learn as a shortcut; and the triggering detail may tip the model off.
 - Needs: steps 2, 5, 6, 7, P2.
@@ -129,11 +133,19 @@ Week numbers are those of the research plan's 8 part-time weeks. No calendar sta
 
 **Step 21.** Release adapters, steering vectors and the eval under the Hugging Face account `Ankush7890`; joint write-up. The write-up must state which models wrote the wordings.
 
+## 4a. Things we might do
+
+Not planned and not scheduled; recorded so that the idea is not lost.
+
+- **A test set built from an existing dataset.** All items today come from our own generators, whose texts follow fixed sentence frames. A further test-only set of roughly 150 to 250 items built from a public dataset would show whether an adapter's effect carries over to natural text it was never trained on. The items would need post-processing by hand or by agents, because public datasets do not have a withheld section that changes the answer, and their labels could only be checked by sampling. Candidates named from memory and not checked: ConditionalQA (policy documents whose answers depend on conditions) and ContractNLI (contract clauses with marked evidence spans). Before any use: check licence, size and fit, and whether Qwen3 is likely to have seen the dataset in training. Ankush decided on 26-11-25 not to add a dataset for now.
+
 ## 5. What can start now
 
-Steps 3 and 4 need no GPU, no API key and nothing from Julian except the package name (steps 1 and 2 are done apart from Ankush's reading of the items). Step 7 can be written and tested against a stand-in model. Everything from step 5 on waits for at least one prerequisite.
+Nothing more can be done without a decision or a resource. Step 2 waits for Ankush's reading of the new items. Steps 5 and 6 wait for the Anthropic API key and for Julian's reserved list. The rest of step 7 and everything from step 8 on waits for the 24 GB machine. Step 7 can be written and tested against a stand-in model. Everything from step 5 on waits for at least one prerequisite.
 
 ## 6. Risks to this plan
+
+- **Within a family the argument is always the same claim.** Telling a valid argument from a misleading one comes down to checking one fact of the case per family (is the employee in the first year, is the parcel marked fragile). An adapter could learn that fact check for each seen family; whether it has learned to check arguments in general shows only on the four unseen families.
 
 - **Weeks 1–2 are overloaded.** The research plan gives two part-time weeks to "susceptibility eval set; steering vectors on base model". The held-out design adds twelve generators, a split specification, leak checks, model-written wordings with human reading, and a filter. I have no measurement of how long these take and expect steps 2 to 9 alone to fill the two weeks. If time runs short, the cheapest cuts, in order: use first-turn accuracy as the only capability check (drop the external benchmark); reduce wordings per type from 30; postpone the prompt-persona variants to week 3. Not to be cut: the split specification, the leak checks, and the manifest, because results cannot be trusted without them.
 - **The environment is untested.** The pinned versions (torch 2.15.0, transformers 5.24.0, peft 0.22.0) have never been installed. The first day on the GPU machine may go into fixing this.
@@ -145,4 +157,6 @@ Steps 3 and 4 need no GPU, no API key and nothing from Julian except the package
 
 1. Is this plan accepted as the working plan?
 2. Are Claude Sonnet 5.5 (dev, train, val) and Claude Opus 5.5 (test) the two wording models?
-3. Should steps 1 to 4 start before Julian answers?
+3. (Settled: steps 1 to 4 were started and are implemented.)
+4. (Settled on 26-11-25: items in which the case does not meet the withheld rule's condition were added, so that the same argument is valid for one item and misleading for another. LOG section 20. Open: Ankush's reading of the new items.)
+5. The draft system prompt and format instruction in `src/mas_risks/eval/prompts.py` need Ankush's reading and Julian's agreement.

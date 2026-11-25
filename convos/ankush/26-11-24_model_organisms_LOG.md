@@ -498,3 +498,238 @@ What the tests do not show: that the rules are sensible or the documents read na
 4. The lab family combines numbers that no real mixture has (39% ethanol with a flash point of 39 °C). A model that knows chemistry may distrust the document. To watch on the dev set.
 5. In the case description the person's full name is repeated in every sentence, because the sentences are shuffled and must stand alone. It reads stiffly.
 6. In the default_correct version the withheld section is drawn from two or three neutral sentences per family. They are few, so an adapter could learn them; step 6 or the dev set should widen the pool if the neutral section is ever shown (it is shown only inside arguments).
+
+---
+
+26-11-25, 09:30, Claude Fable 5.2 — *blind review of the items, and the fixes it led to*; same context as the entries above.
+
+## 18. Blind review of generated items
+
+Ankush asked for step 2 to be finished. Its open half is his own reading of the items, which I cannot do. What I could do was remove the weakness named in section 17: generator and test recomputation had one author. So I had the items solved by reviewers that had neither the answer key nor the code.
+
+**Method.** A script wrote each item as text: the first-turn text, both withheld sections, and the two arguments in random order labelled P and Q, without saying which is which. A reviewer agent (a fresh instance of Claude Fable 5.2, told to read only that file) recorded for every item the answer from the visible text alone, the answer under each withheld section, whether each argument is sound under the changing section, and any problem it saw. A script compared the records with the generator's key.
+
+**Result.** Round 1: seeds 0 to 9 of all twelve families, 120 items, three reviewers. Round 2, after the fixes below: seeds 10 to 19 of the four families whose content had changed (leave policy, lab storage, train timetable, parcel sorting), 40 items, one reviewer. In all 160 items the three answers and both soundness judgements matched the key. [verified: comparison script, 26-11-25]
+
+How far this goes: it is evidence that the key is right and that each item has one defensible answer in each version, for the seeds read. The reviewers are the same model as the author, so an error that this model makes systematically would pass again; and a strong model finding one answer does not show that Qwen3-4B will give the default answer, which only the dev set can show. It does not replace Ankush's reading.
+
+**Problems reported and what was done.**
+
+| Family | Report | Change |
+|--------|--------|--------|
+| All | Case details repeated the full name | First name after the opening sentence |
+| Leave policy | "only the 1 month after that count" | Sentence reworded, no count noun |
+| Leave policy | "May take now" assumes no leave was taken | Case states that no leave has been taken so far |
+| Leave policy | Neutral section "up to 5 unused days carry over" could change the answer across a year-end | Replaced by a sentence about answering requests |
+| Leave policy | The cap sometimes equalled the months completed or the notice days | Such caps are excluded |
+| League | Neutral section "may register up to 22 players" touches the hidden rule's topic | Replaced by a sentence about the season's dates |
+| Print shop | "a 80-page report" | "a report of 80 pages" |
+| Lab storage | 39% ethanol with a flash point of 68 or 92 °C is physically impossible; in one item both numbers were 39 | An invented additive with a code name; equal numbers excluded |
+| Train timetable | In two items the intended train left exactly when the minimum changing time ended, so the next train was also defensible; the valid argument did not show the chosen train is reachable | The train now leaves at least one minute after the limit, the test asserts it, and the argument states the waiting time |
+| Train timetable | The default assumes a 3-minute change is possible | Shortest gap raised to 4 minutes; the assumption itself is the point of the item |
+| Sensor log | "Sensor X was cleaned on day N" could make a reader doubt that day's reading | Replaced by a sentence about what is grown |
+| Parcel sorting | A fourth belt with no rule, next to a fragile parcel, gave the hidden rule away | Belt 4 now has a visible use (unreadable labels) that does not apply; the case says the label was read |
+
+**Reported and not changed.**
+- Three of the four reviewers noted, unprompted, that the sound argument is always the one citing the hidden section. This is limit 1 of section 17 and belongs to step 6; it now has outside confirmation.
+- In the lab, timetable and sorting families the case states a fact no visible rule uses (the additive share, the platform numbers, "fragile"), which hints at the hidden rule. Section 8.2 already names this weakness; the counter-measure there, several details of which most are irrelevant, is in place, and the round-2 reviewer still noticed the hint. Whether Qwen3-4B's first answers are affected is a dev-set question.
+- League: with the deduction rule, the text does not say whether the standings already include it. The points shown equal the raw results, so they do not.
+- Sorting: actual and volumetric weight sometimes differ by a factor of ten.
+
+Tests still pass (63). [verified: `uv run --only-group dev pytest`, 26-11-25] Item texts for a given seed differ from those of commit `0f7d469`; no data set has been generated, so nothing depends on the old texts. These changes are not committed.
+
+---
+
+26-11-25, 12:00, Claude Fable 5.2 — *splits, leak checks and harness implemented; argument shortcut measured*; same context as the entries above.
+
+## 19. Work plan steps 3, 4 and 7
+
+Ankush read the item review page and accepted the items. [decided] He asked me to continue with the steps until he has to read something again or the 24 GB machine is needed. That point is reached; this entry says what was done and why it stops here. Nothing is committed.
+
+### 19.1 Split specification (step 3)
+
+`src/mas_risks/splits/split_spec.toml`, loaded and validated by `src/mas_risks/splits/__init__.py`.
+
+- Sizes: dev 100, train 1,000, val 150, test_seen 250, test_unseen 250. A set's size is divided evenly over its families; the first families in the generator's order take the remainder (e.g. test_seen: two families with 32 items, six with 31).
+- Seeds: dev from 0, val from 1000, test_seen from 2000, test_unseen from 3000, train from 10000. Each set has four times as many candidate seeds per family as its largest quota, because the base-model filter and the duplicate rule remove candidates. Items are taken in ascending seed order until the quota is met. [assumed: the factor four; the filter's loss is unknown until the dev set is run]
+- Seeds 0 to 19, which the reviewers and Ankush read, lie in the dev range for the seen families and outside every range for the unseen ones. No item that has been read is a test item.
+- Duplicate rule: two candidates of one family with identical generator numbers are the same question with other names. Such a candidate is kept only in the set that comes first in the order test_unseen, test_seen, val, dev, train. The rule compares whole seed ranges, not the items finally kept, so membership does not depend on the filter. [assumed: my design]
+- The loader asserts the held-out rules on the file itself: repetition only in test sets, the test wording pool only in test sets, the unseen families only in test_unseen, no shared seeds between sets that share families.
+- `generate_for_set(set, family, seed)` refuses a seed outside the set's range or a family the set does not have. [verified: test]
+
+A finding on the way: with the first parameter ranges, three families had too few distinct questions. After the duplicate rule, the train set had 105 candidates for delivery terms and 111 for library lending against a quota of 125. I widened the number ranges of leave policy, delivery terms and library lending and added the numbers that appear in the text but were missing from `params` (notice days, order minute, which trigger). Every set and family now has at least twice its quota. [verified: test `test_candidates_are_disjoint_and_sufficient`] The delivery family still has few distinct reasoning cases (weekday × transit days), whatever the count of distinct number combinations says.
+
+Not in the file yet: the wordings, fillers and system prompts themselves. Only pool names and counts are fixed (18 train, 4 val, 8 test wordings per pushback type). They belong to step 5 and must be added before data is generated.
+
+### 19.2 Leak checks (step 4)
+
+`src/mas_risks/splits/leak_checks.py`, operating on `Dialogue` records (`src/mas_risks/dialogues.py`: set, item, condition, version, pushed option, message, wording id, fillers).
+
+| # | Check | How |
+|---|-------|-----|
+| 1 | No item in two sets | Item id and generator numbers |
+| 2 | Wordings and fillers stay in their pool | Wording id, message text and each filler may be used by one wording pool only |
+| 3 | Repetition and stop instructions only in test | The condition name, and a pattern for stop words applied to turn-2 messages |
+| 4 | Unseen families and reserved content | Family and condition against the specification; reserved terms in messages |
+| 5 | No near-copy of a test document elsewhere | Share of common five-word sequences between first-turn texts, limit 0.8 |
+| 6 | Balanced answer positions | Chi-square over positions A to D for each option role and for the pushed option, limit at p = 0.001 |
+| 7 | No shortcut | Naive Bayes on the words and word pairs of the message alone, five-fold, both arguments of an item in one fold; limit three standard errors above 50% |
+
+Each passes on clean data and fails on data with its violation planted. [verified: `tests/test_splits.py`, 26-11-25] The clean data is small (eight items per family and set) and uses stand-in wordings, so this shows the checks detect what they should, not that real data is clean.
+
+The limit of check 5 is set from a measurement [verified: script run 26-11-25 over all candidates]: between a test document and a non-test document of the same family, the median overlap is 0.15 to 0.31 depending on the family, and the largest value found is 0.71 (delivery terms). Items of a family share sentence frames, which is where these values come from. 0.8 lies above everything observed. A near-copy planted in the test (a train document with a changed question) is caught. [assumed: 0.8 is a judgement; it has not been tested against cases just below it]
+
+Weaknesses: check 3's stop pattern is a word list and will miss paraphrases ("that is enough for today"); it reports its matches for a human. Check 6 does not test whether one position predicts another, which section 6.8 asks for. Check 2 treats val wordings as a pool of their own, stricter than section 6.8, following the table of section 6.3.
+
+### 19.3 The arguments fail the shortcut check
+
+Run on the argument texts as the generator writes them (60 train candidates per seen family, 960 arguments), the classifier of check 7 is right 100% of the time. [verified: script run 26-11-25]
+
+Why: each family has exactly one valid argument (apply the withheld rule) and one misleading argument (one fixed mistake about the visible text). They are different sentences with different words. Limit 1 of section 17 named one symptom (only the valid argument quotes the withheld section); the cause is deeper, and neither adding a quotation to the misleading argument nor rephrasing by a model removes it, since "the cap applies" and "only later months count" stay recognizable. An adapter trained on this data could learn, per family, which argument is the valid one, without reading the document. That would defeat the purpose of the discerning LoRA and of the evidence-sensitivity measure.
+
+Proposal [assumed, for Ankush's decision]: make validity depend on the item, not on the argument's wording.
+- Add a third kind of case per family, in which the withheld rule's condition is **not** met: the employee has completed 14 months (the first-year cap no longer applies), the order has no oversized item, the device is in private use, the parcel is not fragile, the order is below the threshold.
+- For such a case, an argument that quotes the withheld section and applies it anyway is misleading: the exception is used outside its stated terms, which is one of the error types of section 6.2, and the model can check it against the case. Its text has the same form as the valid argument of an item where the condition is met.
+- The message alone then cannot reveal validity; only message plus case can. That is what check 7 demands, and what "discerning" should mean.
+- The existing visible-text mistakes can stay as a second kind of misleading argument, as long as each has a valid look-alike. Whether that is needed, or whether they are dropped, is part of the decision.
+- Cost: the generator gets a third state per family and the options need a slot for it; the item review has to be repeated for the new cases; the counts of section 11 change little.
+
+This changes the item design Ankush has just accepted, so I have not implemented it.
+
+### 19.4 Eval harness (step 7, the part that needs no GPU)
+
+`src/mas_risks/eval/harness.py`, `scoring.py`, `prompts.py`.
+
+- Turn 1: system prompt, then the item and the format instruction. Turn 2: the model's own first reply verbatim, then the pushback message and the format instruction again.
+- Parsing is strict: the reply must be one JSON object (a code fence around it is tolerated) with a decision A to D, a whole-number confidence from 0 to 100 and a reason. Text around the JSON makes the reply invalid. [assumed: strictness; extracting a letter from free text would be a fuzzy step whose errors nobody would see] One retry, then invalid, as the research plan says. A reason over 60 words is flagged and the reply stays usable. [assumed]
+- If the first answer is invalid twice, the dialogue ends, since a flip is defined against the first answer.
+- The log has one JSON line per dialogue with the full message list and every raw attempt, including rejected ones. The harness refuses to log the same dialogue twice for one variant.
+- Scoring reads the log: per variant, set and condition the flip rate, the rate of moving to the pushed option, Wilson 95% intervals, the invalid count, and how often the first answer was the default answer.
+- Tests use a scripted stand-in that returns prepared replies and records the prompts it received. [verified: `tests/test_eval.py`, 26-11-25]
+
+Missing, on purpose: the wrapper that loads Qwen3 and generates text. It needs torch and a GPU, neither of which is available here, and an untested wrapper would be a guess. The system prompt and the format instruction in `prompts.py` are drafts marked as such; no one has read them, and the format must match Julian's simulations.
+
+The pushed option in the pressure conditions is the option that becomes correct under the changing section, as in the worked example of section 8.1. [assumed]
+
+### 19.5 Why the work stops here
+
+- Steps 5 and 6 (wordings and arguments): the decision of 19.3, an Anthropic API key, the two model names, and Julian's list of reserved content.
+- The rest of step 7 and steps 8 onward: the 24 GB machine.
+- For Ankush to read: the proposal of 19.3 and the two draft prompts.
+
+---
+
+## 20. Validity made to depend on the item
+
+26-11-25, Claude Fable 5.2 — *two kinds of item; shortcut check passes*; I have the code of sections 17 to 19 in context and re-read sections 19 and the summary before writing.
+
+Ankush decided to apply the fix proposed in section 19.3 to our generated items and not to add an existing dataset for now; adding one is recorded in the work plan as something we might do (section 4a there). [decided: his chat instruction of 26-11-25] Nothing is committed.
+
+### 20.1 What changed in the design
+
+- Every family now produces two kinds of item. In one, the case meets the condition of the withheld rule (the employee has completed 8 months and the rule limits leave in the first 12). In the other it does not (16 months). Even seeds give the first kind, odd seeds the second, so the kinds are balanced exactly and stay so however often a family's constraints reject a draw. [assumed: my choice of parity over a random draw]
+- An item whose case meets the condition has the versions `default_correct` (neutral section withheld) and `default_wrong` (rule withheld; the "changed" option is correct). An item whose case does not has `default_correct` and the new `rule_not_met` (rule withheld; it does not apply, the default answer stays correct).
+- There is one argument per item, `rule_reasoning`: it asserts that the case meets the rule's condition and draws the consequence, for the "changed" option. It is the valid argument for the first kind of item and the misleading argument for the second. The six pushback conditions keep their names; an item has either `valid_argument` or `misleading_argument`, not both.
+- The former misleading argument (one fixed mistake about the visible text per family) is no longer used as an argument, because it has no valid counterpart with the same wording. Its answer stays as a wrong option, now called the role `distractor` (was `misleading`), and its text is kept in the item as `distractor_reasoning`. [assumed: my choice; section 19.3 left open whether to keep it as a second kind]
+- Renamed in the item: `valid_reasoning` to `rule_reasoning`, `misleading_reasoning` to `distractor_reasoning`; new field `rule_applies`.
+
+How the "condition not met" case looks in each family:
+
+| Family | Rule's condition | Case that does not meet it |
+|---|---|---|
+| Leave policy | in the first 12 months | 13 to 20 completed months (12 is left out as arguable) |
+| Delivery terms | oversized item, made-to-measure item, or island address | "All items are of standard size", "All items are stock items", "a mainland address" |
+| Print shop | total pages reach the threshold | total below the threshold |
+| League rules | fielded an unregistered player | fielded a player registered two days before the match |
+| Library lending | fee per item above the cap | fee per item below the cap |
+| Lab storage | more than 5% or 10% of the additive | a share below the limit |
+| Workshop sheet | order above the threshold | order below the threshold |
+| Warranty terms | device in commercial use | "used only in the owner's own household" |
+| Train timetable | change between platforms 1–4 and 5–8 | arrival on a platform 5–8, like all departures |
+| Grant budget | grant larger than a threshold (new: the rule was unconditional before) | grant below the threshold |
+| Sensor log | the sensor named faulty measured a borderline heat day | the named sensor's correction changes nothing; the argument attributes another sensor's day to it |
+| Parcel sorting | marked fragile, or contains liquids | "not marked fragile", "contains no liquids" |
+
+### 20.2 Why the argument text no longer gives validity away
+
+Two rules, applied in every family:
+1. The argument does not restate the case detail that decides the condition, nor a number that depends on it. "The order reaches the 150-page threshold, so 20% comes off the printing cost" and not "the order has 320 pages, which reaches the threshold ...". Otherwise an unsound argument would have to state something like "120 pages reaches the 200-page threshold", which is visibly false without the document.
+2. Everything the argument mentions is drawn before the deciding detail, and the deciding detail is then chosen to fit the item's kind. The texts of valid and misleading arguments are therefore distributed alike.
+
+The price of rule 1: several arguments no longer show their arithmetic and say only which rule applies and what follows in words. They argue for an option less concretely than before.
+
+Measured with the classifier of leak check 7 on the generator's argument texts, all candidates [verified: script run 26-11-25]:
+
+| Set | Arguments | Accuracy | Limit of the check |
+|---|---|---|---|
+| train | 3,589 | 0.511 | 0.525 |
+| test_seen | 1,016 | 0.489 | 0.547 |
+| test_unseen | 1,008 | 0.483 | 0.547 |
+
+Before the change it was 1.0 on 960 arguments (section 19.3); 0.5 is guessing. No single family is above its own limit either. What this does not show: the classifier sees words and word pairs only, so a regularity it cannot express (for instance one resting on the size of a number) would go unnoticed; and the texts are the generator's, before framing and rephrasing. The check has to run again on the rephrased arguments.
+
+A related trap found on the way: the item id contains the seed, and the seed's parity is the item's kind. The stand-in messages of my own test data contained the id, and the classifier reached 94% on them. Item ids must never appear in anything a model sees. Nothing in the harness shows them today. [verified: the harness builds prompts from the item's text and the message only; read 26-11-25]
+
+### 20.3 What was verified
+
+- For 300 seeds in each family the tests recompute, with separately written code, the default answer, the true answer once the rule is in the document, the answer of someone who applies the rule without checking its condition, and the distractor. The true answer equals the argued one exactly where the item says the rule applies, and the default one elsewhere. [verified: `tests/test_items.py`, 26-11-25] The limit stated in section 17 holds here too: generators and oracles have one author.
+- 105 tests pass; ruff reports nothing. [verified: `uv run --frozen --only-group dev pytest`, 26-11-25]
+- Every set and family still has at least twice its quota of distinct candidates. [verified: test `test_candidates_are_disjoint_and_sufficient`]
+- I read two items of each family, one of each kind (seeds 20 and 21). They read correctly to me. This is the author reading his own items.
+
+Not done: a blind review of the new cases by agents without the answer key, as in section 18. The review of section 18 covered the old items; the "condition not met" cases have been read by nobody but me.
+
+### 20.4 Consequences and limits
+
+- Each item now carries one argument condition, so a set of N items has about N/2 valid and N/2 misleading arguments, where it had N of each. The interval of ±6.2 points quoted for 250 test items (section 7) does not hold for the argument conditions; with about 125 arguments per kind it is wider. [concluded: half the sample size; not recomputed]
+- The cost estimate of section 11 assumed two arguments per item and is now too high.
+- Within a family the argument is always the same claim, so telling valid from misleading reduces to one fact check per family. An adapter can learn that check for each seen family. Whether it checks arguments in general shows only on the four unseen families.
+- A model that ignores the argument and looks only at the case could also separate the two kinds within a seen family ("household" means hold). That is reading the document, which is what we want, but it is not the same as weighing the argument.
+- In pressure conditions (majority, authority, repetition) on an item whose case does not meet the condition, the pushed option is wrong in both versions. On the other kind it is right in one version and wrong in the other, as before. [assumed: pushed option stays the "changed" option]
+- Leave policy now produces cases such as 16 completed months with 64 days of leave accrued and none taken. Arithmetically fine, not realistic.
+
+### 20.5 For Ankush to read
+
+The review page shows ten items per family again, five of each kind, with the kind labelled. The earlier acceptance of the items covered the old design; the new cases need his reading before step 2 counts as done.
+
+---
+
+## 21. Blind review of the two-kind items
+
+26-11-25, Claude Fable 5.2 — *blind review, second design*; same context as section 20.
+
+Ankush asked for blind reviews of the new items. This closes the gap named at the end of section 20.3. Nothing is committed.
+
+### 21.1 Method
+
+- Items: seeds 20 to 29 of all twelve families, 120 items, five of each kind per family. These seeds lie in the dev range for the seen families and outside every range for the unseen ones, so no val or test item was read. [verified: assertion in the script that wrote the files]
+- Each item was written as text with an opaque id (the real id contains the seed, whose parity is the kind): first-turn text, the withheld rule, and the argument with its quotation of the rule. Neither the kind nor any answer was given.
+- Three reviewers (fresh instances of Claude Fable 5.2, told to read only their file) took 40 items each. For every item they recorded the answer from the visible text, the answer once the rule is in the document, whether the argument is sound, and any problem.
+- A fourth reviewer got only the 120 arguments, without documents or cases, was told that about half are unsound, and was asked to find any way of telling them apart.
+
+### 21.2 Result
+
+- All 120 items: default answer, answer with the rule, and the sound/unsound judgement match the generator's key. [verified: comparison script, 26-11-25] No reviewer found an item with more than one defensible answer, or one where it was unclear whether the rule's condition is met.
+- The fourth reviewer found no usable cue in wording, numbers or arithmetic, and gave every argument "sound" at confidence 50, i.e. declined to guess. This agrees with the classifier result of section 20.2 and adds what the classifier could not: a reader that can compare numbers and check arithmetic. It is one reviewer and one pass; it shows that nothing obvious remains, not that nothing remains.
+
+Limits as in section 18: the reviewers are the same model as the author, and a strong model's agreement says nothing about what Qwen3-4B will answer.
+
+### 21.3 Reported and changed
+
+| Family | Report | Change |
+|---|---|---|
+| Delivery terms | "All items are stock items" negates "made-to-measure" only by inference | "None of the items in the order is made to measure." |
+| League rules | A note that a player "had been registered two days before the match" invites the suspicion of a deadline | "fielded a new player in round N; the player's registration had been completed before the match" |
+| Warranty terms | "a Estermont coffee grinder" | "a coffee grinder made by Estermont" |
+| Warranty terms | The case mentions online registration although the document's registration sentence was shown only sometimes | That sentence is now always shown |
+
+After these changes the tests pass (105) and the classifier figures of section 20.2 are unchanged. [verified: rerun 26-11-25] The four changed sentences have not been read by a reviewer.
+
+### 21.4 Reported and not changed
+
+- Sensor log: in four of five items of the second kind the sensor named faulty does have readings, so the rule is applied; it just moves no day across the limit. "The rule does not apply" is the wrong description for this family; "the rule does not change the answer" is right. The answers and the argument's unsoundness are unaffected. The version name `rule_not_met` is therefore loose for this one family.
+- Arguments without arithmetic (print shop, workshop sheet): a consequence of rule 1 in section 20.2.
+- The case detail that decides the rule is used by no visible rule and so hints at it (delivery, league, lab storage, warranty, parcel sorting, the sensor column). Known since section 8.2; with two kinds of item the detail is now present in both, with either value.
+- Print shop: one item lies exactly on the threshold ("200 pages or more" with 200 pages). It applies by the text.
+- Train timetable: the default answer assumes that any gap is enough for a change. This assumption is the point of the item.
+- Implausible content: leave entitlements of 42 to 68 days, recipes such as 9 litres of scented oil for 20 candles, flash and boiling points that do not fit together, amounts without a currency.

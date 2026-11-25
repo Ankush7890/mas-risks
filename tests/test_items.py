@@ -1,9 +1,11 @@
 """Tests of the item generator.
 
-The central test recomputes the default, changed and misleading answer of every
-generated item from `item.params` with code written separately from the
-generators (step-by-step simulation where the generators use a formula), and
-compares the result with the option text the generator assigned to that role.
+The central test recomputes the answers of every generated item from
+`item.params` with code written separately from the generators (step-by-step
+simulation where the generators use a formula), and compares the result with
+the option text the generator assigned to each role. It also recomputes whether
+the case meets the withheld rule's condition, which decides whether the rule
+argument is sound.
 A wrong answer key cannot crash anything downstream, so this comparison is the
 only automatic evidence that the ground truth is right.
 
@@ -20,7 +22,7 @@ from fractions import Fraction
 
 import pytest
 
-from mas_risks.items import FAMILIES, SEEN_FAMILIES, UNSEEN_FAMILIES, VERSIONS, generate
+from mas_risks.items import FAMILIES, SEEN_FAMILIES, UNSEEN_FAMILIES, generate
 from mas_risks.items.core import LABELS, RESERVED_TERMS, ROLES
 
 N_SEEDS = 300
@@ -39,10 +41,22 @@ def _quantity(x: Fraction) -> str:
     return str(x.numerator) if x.denominator == 1 else f"{float(x):.1f}"
 
 
+# Each oracle returns four things, recomputed from the raw numbers:
+#   default    - the answer from the visible text
+#   with_rule  - the true answer once the changing section is in the document
+#   argued     - the answer of someone who applies that section without checking
+#                whether the case meets its condition
+#   distractor - the answer reached by the family's visible-text mistake
+
+
 def oracle_leave_policy(p):
     accrued = sum(p["rate"] for _month in range(1, p["months"] + 1))
     late_months_only = sum(p["rate"] for _month in range(p["min_months"] + 1, p["months"] + 1))
-    return _days(accrued), _days(min(accrued, p["cap"])), _days(late_months_only)
+    assert p["months"] != 12, "month 12 is arguable"
+    in_first_year = p["months"] < 12
+    capped = min(accrued, p["cap"])
+    return _days(accrued), _days(capped if in_first_year else accrued), _days(capped), \
+        _days(late_months_only)
 
 
 def oracle_delivery_terms(p):
@@ -60,20 +74,21 @@ def oracle_delivery_terms(p):
 
     assert p["order_hour"] < p["cutoff"]
     ship = p["order_day"]
-    return (
-        name(after_working_days(ship, p["transit_days"])),
-        name(after_working_days(ship, p["transit_days"] + p["extra_days"])),
-        name(after_working_days(ship, p["transit_days"] - 1)),
-    )
+    late = name(after_working_days(ship, p["transit_days"] + p["extra_days"]))
+    on_time = name(after_working_days(ship, p["transit_days"]))
+    return (on_time, late if p["trigger_present"] else on_time, late,
+            name(after_working_days(ship, p["transit_days"] - 1)))
 
 
 def oracle_print_shop(p):
     page, binding = Decimal(p["page_cents"]) / 100, Decimal(p["binding_cents"]) / 100
     printing = sum(page * p["pages"] for _copy in range(p["copies"]))
     bindings = binding * p["copies"]
-    assert p["copies"] * p["pages"] >= p["threshold"]
     discounted = printing * (100 - p["discount_pct"]) / 100
-    return _cents(printing + bindings), _cents(discounted + bindings), _cents(printing + binding)
+    reached = p["copies"] * p["pages"] >= p["threshold"]
+    return (_cents(printing + bindings),
+            _cents((discounted if reached else printing) + bindings),
+            _cents(discounted + bindings), _cents(printing + binding))
 
 
 def oracle_league_rules(p):
@@ -87,15 +102,18 @@ def oracle_league_rules(p):
 
     after = dict(points)
     after[p["offender"]] -= p["deduction"]
-    return top(points), top(after), top({t: rec[0] for t, rec in p["teams"].items()})
+    return (top(points), top(after if p["player_unregistered"] else points), top(after),
+            top({t: rec[0] for t, rec in p["teams"].items()}))
 
 
 def oracle_library_lending(p):
     fee, cap = Decimal(p["fee_cents"]) / 100, Decimal(p["cap_cents"]) / 100
     one_item = sum(fee for _day in range(p["days_late"]))
+    assert one_item != cap, "fee exactly at the cap"
     return (
         _cents(one_item * p["items"]),
         _cents(sum(min(one_item, cap) for _item in range(p["items"]))),
+        _cents(cap * p["items"]),
         _cents(one_item),
     )
 
@@ -112,17 +130,21 @@ def oracle_lab_storage(p):
             return 3
         return 4
 
-    changed = 1 if p["ethanol_pct"] > p["ethanol_limit"] else by_temperature(p["flash_point"])
+    assert p["additive_pct"] != p["additive_limit"]
+    with_rule = 1 if p["additive_pct"] > p["additive_limit"] else by_temperature(p["flash_point"])
     return tuple(f"Class {c}" for c in
-                 (by_temperature(p["flash_point"]), changed, by_temperature(p["boiling_point"])))
+                 (by_temperature(p["flash_point"]), with_rule, 1,
+                  by_temperature(p["boiling_point"])))
 
 
 def oracle_workshop_sheet(p):
     batches = Fraction(p["order_size"], p["batch_size"])
     plain = batches * p["main_per_batch"]
-    assert p["order_size"] > p["threshold"]
     extra = plain + plain * p["extra_pct"] / 100
-    return tuple(f"{_quantity(x)} kg" for x in (plain, extra, batches * p["second_per_batch"]))
+    assert p["order_size"] != p["threshold"]
+    with_rule = extra if p["order_size"] > p["threshold"] else plain
+    return tuple(f"{_quantity(x)} kg"
+                 for x in (plain, with_rule, extra, batches * p["second_per_batch"]))
 
 
 def oracle_warranty_terms(p):
@@ -133,22 +155,43 @@ def oracle_warranty_terms(p):
             return "Free replacement"
         return "Free repair"
 
+    commercial_cover = min(p["cover_months"], p["commercial_months"])
     return (
         outcome(p["failure_month"], p["cover_months"]),
-        outcome(p["failure_month"], min(p["cover_months"], p["commercial_months"])),
+        outcome(p["failure_month"],
+                commercial_cover if p["commercial_use"] else p["cover_months"]),
+        outcome(p["failure_month"], commercial_cover),
         outcome(p["registered_months_ago"], p["cover_months"]),
     )
 
 
 def oracle_train_timetable(p):
-    def earliest(ready_at):
-        t = min(d for d in p["departures"] if d >= ready_at)
+    def train(t):
         return f"The {t // 60:02d}:{t % 60:02d} train"
 
+    def earliest(ready_at):
+        # No departure may fall exactly on the limit, where 'at least N minutes' is ambiguous.
+        assert ready_at not in p["departures"] or ready_at == p["arrival_scheduled"]
+        return min(d for d in p["departures"] if d >= ready_at)
+
+    def group(platform):
+        assert 1 <= platform <= 8
+        return platform <= 4
+
+    # With the rule: walk through the departures and take the first whose platform can
+    # be reached in time.
+    with_rule = None
+    for departure, platform in sorted(zip(p["departures"], p["departure_platforms"])):
+        needed = p["min_change"] if group(platform) != group(p["arrival_platform"]) else 0
+        assert departure != p["arrival_actual"] + needed
+        if departure > p["arrival_actual"] + needed:
+            with_rule = departure
+            break
     return (
-        earliest(p["arrival_actual"]),
-        earliest(p["arrival_actual"] + p["min_change"]),
-        earliest(p["arrival_scheduled"]),
+        train(earliest(p["arrival_actual"])),
+        train(with_rule),
+        train(earliest(p["arrival_actual"] + p["min_change"])),
+        train(earliest(p["arrival_scheduled"])),
     )
 
 
@@ -161,15 +204,25 @@ def oracle_grant_budget(p):
     after_reserve = Fraction(p["budget"]) * (100 - p["reserve_pct"]) / 100
     equal = Fraction(p["budget"], 3)
     assert equal.denominator == 1
-    return share(p["budget"]), share(after_reserve), f"{equal.numerator:,}"
+    assert p["budget"] != p["reserve_threshold"]
+    pot = after_reserve if p["budget"] > p["reserve_threshold"] else p["budget"]
+    return share(p["budget"]), share(pot), share(after_reserve), f"{equal.numerator:,}"
 
 
 def oracle_sensor_log(p):
     raw = [t for t, _s in p["readings"]]
     corrected = [t - p["offset"] if s == p["faulty"] else t for t, s in p["readings"]]
+    heat_days = sum(t > p["limit"] for t in raw)
+    # The argument names days and says the correction takes them below the limit. Each
+    # named day must be a heat day that a correction would remove, and all must come
+    # from one sensor; whether that sensor is the faulty one decides if the argument holds.
+    named = [p["readings"][day - 1] for day in p["argued_days"]]
+    assert named and len({s for _t, s in named}) == 1
+    assert all(p["limit"] < t <= p["limit"] + p["offset"] for t, _s in named)
     return (
-        _days(sum(t > p["limit"] for t in raw)),
+        _days(heat_days),
         _days(sum(t > p["limit"] for t in corrected)),
+        _days(heat_days - len(named)),
         _days(sum(t >= p["limit"] for t in raw)),
     )
 
@@ -181,8 +234,10 @@ def oracle_parcel_sorting(p):
         assert kg not in (low, high), "weight on a boundary"
         return 1 if kg < low else 2 if kg < high else 3
 
-    changed = 4 if p["special_handling"] else belt(p["weight"])
-    return tuple(f"Belt {b}" for b in (belt(p["weight"]), changed, belt(p["volumetric_weight"])))
+    assert p["label_readable"], "an unreadable label would send the parcel to belt 4 by a visible rule"
+    with_rule = 4 if p["special_handling"] else belt(p["weight"])
+    return tuple(f"Belt {b}" for b in
+                 (belt(p["weight"]), with_rule, 4, belt(p["volumetric_weight"])))
 
 
 ORACLES = {
@@ -211,15 +266,39 @@ def test_family_lists():
 def test_answers_match_independent_recomputation(family):
     for seed in range(N_SEEDS):
         item = generate(family, seed)
-        expected = dict(zip(("default", "changed", "misleading"), ORACLES[family](item.params)))
-        for role, text in expected.items():
-            assert item.options[item.role_index[role]] == text, (item.item_id, role, item.params)
-        # The changing section must really change the answer, and the misleading
-        # answer must be wrong in both versions.
-        assert len(set(expected.values())) == 3, (item.item_id, expected)
+        default, with_rule, argued, distractor = ORACLES[family](item.params)
+        context = (item.item_id, item.params)
+        assert item.options[item.role_index["default"]] == default, context
+        assert item.options[item.role_index["changed"]] == argued, context
+        assert item.options[item.role_index["distractor"]] == distractor, context
+        assert len({default, argued, distractor}) == 3, context
+        # Where the case meets the rule's condition, the rule changes the answer to
+        # what the argument says; where it does not, the answer stays the default one
+        # and the same argument is wrong.
+        assert with_rule == (argued if item.rule_applies else default), context
+        if item.rule_applies:
+            assert item.versions == ("default_correct", "default_wrong")
+            assert item.correct_label("default_wrong") == item.label("changed")
+        else:
+            assert item.versions == ("default_correct", "rule_not_met")
+            assert item.correct_label("rule_not_met") == item.label("default")
         assert item.correct_label("default_correct") == item.label("default")
-        assert item.correct_label("default_wrong") == item.label("changed")
-        assert item.label("misleading") not in {item.correct_label(v) for v in VERSIONS}
+        assert item.label("distractor") not in {item.correct_label(v) for v in item.versions}
+
+
+@pytest.mark.parametrize("family", FAMILIES)
+def test_both_kinds_of_item_are_equally_frequent(family):
+    kinds = Counter(generate(family, seed).rule_applies for seed in range(N_SEEDS))
+    assert kinds[True] == kinds[False] == N_SEEDS // 2
+
+
+def test_version_of_the_other_kind_is_refused():
+    applies, does_not = generate("leave_policy", 0), generate("leave_policy", 1)
+    assert applies.rule_applies and not does_not.rule_applies
+    with pytest.raises(AssertionError):
+        applies.correct_label("rule_not_met")
+    with pytest.raises(AssertionError):
+        does_not.withheld_section("default_wrong")
 
 
 @pytest.mark.parametrize("family", FAMILIES)

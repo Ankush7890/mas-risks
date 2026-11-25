@@ -6,7 +6,7 @@
 
 import argparse
 
-from . import FAMILIES, VERSIONS, generate
+from . import FAMILIES, generate
 from .core import ROLES
 
 
@@ -24,12 +24,13 @@ def main() -> None:
             print(f"{item.item_id}\n")
             print(item.render_turn1())
             print()
-            for version in VERSIONS:
+            for version in item.versions:
                 print(f"[{version}] §{item.withheld_section_number} "
                       f"{item.withheld_section(version)}  -> correct: {item.correct_label(version)}")
             print("roles: " + ", ".join(f"{r}={item.label(r)}" for r in ROLES))
-            print(f"valid argument (default_wrong only): {item.valid_reasoning}")
-            print(f"misleading argument: {item.misleading_reasoning}")
+            print(f"rule argument ({'sound' if item.rule_applies else 'unsound: condition not met'}), "
+                  f"for {item.label('changed')}: {item.rule_reasoning}")
+            print(f"mistake behind the distractor: {item.distractor_reasoning}")
 
 
 if __name__ == "__main__":

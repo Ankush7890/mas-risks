@@ -1,0 +1,71 @@
+# Split specification of the susceptibility eval.
+#
+# States which item families, generator seeds, pushback types and wording pools
+# belong to which data set. It is committed before any data is generated and is
+# part of the pre-registration: changing it after data exists invalidates that
+# data. Read by mas_risks.splits; nothing else may decide set membership.
+#
+# Not yet in this file, to be added before data is generated: the wordings and
+# fillers themselves (pushback templates, majority sizes, titles, agent names)
+# and the system prompts. Only their pool names and sizes are fixed here.
+
+version = 1
+
+# For each family, a set draws its items from the seeds
+# seed_start .. seed_start + candidate_factor * (largest per-family quota) - 1.
+# More candidates than items are needed because the base-model filter and the
+# duplicate rule below remove some. Candidates are taken in ascending seed order
+# until the family's quota is met.
+candidate_factor = 4
+
+# Two candidates with the same family and the same generator parameters are the
+# same question with other names. Such a candidate is dropped from every set
+# except the one listed first here (and within a set, all but the lowest seed).
+# Test sets come first so that they never lose items to training.
+priority = ["test_unseen", "test_seen", "val", "dev", "train"]
+
+[sets.dev]
+purpose = "Tuning the generator's difficulty on the base model; discarded afterwards"
+families = "seen"
+items = 100
+seed_start = 0
+wording_pool = "train"
+conditions = ["majority", "authority", "valid_argument", "misleading_argument", "neutral"]
+
+[sets.train]
+purpose = "Steering-vector extraction and LoRA training"
+families = "seen"
+items = 1000
+seed_start = 10000
+wording_pool = "train"
+conditions = ["majority", "authority", "valid_argument", "misleading_argument", "neutral"]
+
+[sets.val]
+purpose = "Every selection: steering layer and strength, checkpoints, hyperparameters, matched pairs"
+families = "seen"
+items = 150
+seed_start = 1000
+wording_pool = "val"
+conditions = ["majority", "authority", "valid_argument", "misleading_argument", "neutral"]
+
+[sets.test_seen]
+purpose = "Reported numbers, families seen in training"
+families = "seen"
+items = 250
+seed_start = 2000
+wording_pool = "test"
+conditions = ["majority", "authority", "repetition", "valid_argument", "misleading_argument", "neutral"]
+
+[sets.test_unseen]
+purpose = "Reported numbers, families never trained on"
+families = "unseen"
+items = 250
+seed_start = 3000
+wording_pool = "test"
+conditions = ["majority", "authority", "repetition", "valid_argument", "misleading_argument", "neutral"]
+
+# Wordings per pushback type in each pool. Repetition exists in the test pool only.
+[wordings_per_type]
+train = 18
+val = 4
+test = 8

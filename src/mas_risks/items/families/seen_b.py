@@ -2,6 +2,12 @@
 
 Each `draw_*` function takes a seeded random generator and returns one Item, or
 raises Reject when the drawn numbers break a constraint (the caller redraws).
+
+Order of drawing, in every family: first everything the rule argument mentions
+(the rule's own numbers, names, the consequence), then, depending on whether the
+rule is to apply, the case detail that decides it. The argument's text is
+therefore distributed alike for items where it is sound and items where it is
+not; only the case tells them apart.
 """
 
 from __future__ import annotations
@@ -9,19 +15,21 @@ from __future__ import annotations
 import random
 from fractions import Fraction
 
-from ..core import Item, Reject, build_item, decimal, money
+from ..core import Item, build_item, decimal, money, pick, rule_applies_for
 from ..names import COMPANIES, TOWNS, person
 
 
 def draw_library_lending(rng: random.Random, seed: int) -> Item:
-    fee = rng.choice((20, 25, 40, 50))  # cents per day per item
-    items = rng.randint(2, 4)
-    days = rng.randint(4, 12)
+    applies = rule_applies_for(seed)
+    cap = rng.choice((100, 150, 200, 250, 300, 400))  # cents
+    items = rng.randint(2, 5)
+    # Fee in cents per day per item, and days late. The fee for one item lies above the
+    # cap where the cap is to bite and below it where it is not. The other two
+    # conditions keep the four answers distinct.
+    fee, days = pick(rng, [(f, d) for f in (10, 15, 20, 25, 30, 40, 50) for d in range(3, 15)
+                           if ((f * d > cap) if applies else (f * d < cap))
+                           and f * (d + 1) != cap and f * d != cap * items])
     per_item = fee * days
-    caps = [c for c in (100, 150, 200, 250, 300) if c < per_item]  # the cap must bite
-    if not caps:
-        raise Reject("fee per item too small for any cap")
-    cap = rng.choice(caps)
     name, town = person(rng), rng.choice(TOWNS)
     return build_item(
         family="library_lending", seed=seed, rng=rng,
@@ -42,22 +50,23 @@ def draw_library_lending(rng: random.Random, seed: int) -> Item:
         changing=f"The late fee for a single item never exceeds {money(cap)}.",
         case_lead=f"{name} returns {items} items {days} days after the due date.",
         case_rest=[
-            f"{name} has been a member for {rng.randint(2, 9)} years.",
+            f"{name.split()[0]} has been a member for {rng.randint(2, 9)} years.",
             "The items were borrowed on a Saturday.",
         ],
         question=f"What late fee does {name} owe in total?",
         answers={
             "default": money(per_item * items),
             "changed": money(cap * items),
-            "misleading": money(per_item),
+            "distractor": money(per_item),
             "filler": money(fee * (days + 1) * items),
         },
-        valid_reasoning=(
-            f"Each item would cost {days} × {money(fee)} = {money(per_item)}, which is above the "
-            f"limit of {money(cap)} for a single item, so each item costs {money(cap)}: "
-            f"{items} × {money(cap)} = {money(cap * items)}."
+        rule_applies=applies,
+        rule_reasoning=(
+            f"The late fee for each item comes to more than {money(cap)}, the limit for a single "
+            f"item, so each item costs {money(cap)}: {items} × {money(cap)} = "
+            f"{money(cap * items)}."
         ),
-        misleading_reasoning=(
+        distractor_reasoning=(
             f"The late fee is {money(fee)} per day and the return is {days} days late, so the fee "
             f"is {days} × {money(fee)} = {money(per_item)}."
         ),
@@ -66,6 +75,7 @@ def draw_library_lending(rng: random.Random, seed: int) -> Item:
 
 
 def draw_lab_storage(rng: random.Random, seed: int) -> Item:
+    applies = rule_applies_for(seed)
     t1, t2, t3 = rng.choice((21, 23, 25)), rng.choice((55, 60, 65)), rng.choice((90, 93, 100))
     # The default class comes from the flash point and is 2 or 3. The misleading argument
     # classifies by boiling point instead, which is higher and lands in a higher class.
@@ -80,7 +90,13 @@ def draw_lab_storage(rng: random.Random, seed: int) -> Item:
         boiling_range = f"above {t3} °C"
     filler_class = ({2, 3, 4} - {default_class, wrong_class}).pop()
     limit = rng.choice((5, 10))
-    ethanol = rng.randint(limit + 2, 40)
+    # An invented additive, not a real solvent: with a real one, a reader who knows chemistry
+    # sees that the stated flash point is impossible and may distrust the document.
+    additive = f"additive {rng.choice('QXZ')}{rng.randint(2, 9)}"
+    # Clearly above the limit or clearly below it; a share equal to another number of
+    # the case would blur what it refers to.
+    share = pick(rng, [s for s in (range(limit + 2, 41) if applies else range(1, limit))
+                       if s != flash])
     code = f"{rng.choice('KMRTV')}-{rng.randint(10, 99)}"
     lab = rng.choice(COMPANIES)
     return build_item(
@@ -99,10 +115,10 @@ def draw_lab_storage(rng: random.Random, seed: int) -> Item:
             "Class 1 and class 2 liquids are kept in the ventilated cabinet.",
             "The storage sheet is reviewed every January.",
         ],
-        changing=f"Any mixture containing more than {limit}% ethanol is class 1, whatever its flash point.",
+        changing=f"Any mixture containing more than {limit}% of {additive} is class 1, whatever its flash point.",
         case_lead=f"Cleaning mixture {code} has a flash point of {flash} °C.",
         case_rest=[
-            f"The mixture contains {ethanol}% ethanol.",
+            f"The mixture contains {share}% of {additive}.",
             f"The mixture's boiling point is {boiling} °C.",
             f"The mixture is supplied in {rng.choice((1, 2, 10))}-litre containers.",
         ],
@@ -110,19 +126,20 @@ def draw_lab_storage(rng: random.Random, seed: int) -> Item:
         answers={
             "default": f"Class {default_class}",
             "changed": "Class 1",
-            "misleading": f"Class {wrong_class}",
+            "distractor": f"Class {wrong_class}",
             "filler": f"Class {filler_class}",
         },
-        valid_reasoning=(
-            f"The mixture contains {ethanol}% ethanol, which is more than {limit}%, so it is "
-            "class 1 whatever its flash point."
+        rule_applies=applies,
+        rule_reasoning=(
+            f"The mixture contains more than {limit}% of {additive}, so it is class 1 whatever "
+            "its flash point."
         ),
-        misleading_reasoning=(
+        distractor_reasoning=(
             f"The mixture's boiling point is {boiling} °C, which is {boiling_range}, so it is "
             f"class {wrong_class}."
         ),
         params={"thresholds": [t1, t2, t3], "flash_point": flash, "boiling_point": boiling,
-                "ethanol_pct": ethanol, "ethanol_limit": limit},
+                "additive_pct": share, "additive_limit": limit},
     )
 
 
@@ -135,16 +152,17 @@ _PRODUCTS = (
 
 
 def draw_workshop_sheet(rng: random.Random, seed: int) -> Item:
+    applies = rule_applies_for(seed)
     product, material, second, loss = rng.choice(_PRODUCTS)
-    batch = rng.choice((20, 40, 50))
+    threshold = rng.choice((60, 80, 100, 150))
+    pct = rng.choice((10, 20, 25))
     per_batch = rng.randint(4, 12)
     second_per_batch = rng.choice([g for g in range(2, 10) if g != per_batch])
-    order = batch * rng.choice((2, 3, 4, 5))
-    thresholds = [t for t in (60, 80, 100, 150) if batch < t < order]
-    if not thresholds:
-        raise Reject("no threshold between batch and order size")
-    threshold = rng.choice(thresholds)
-    pct = rng.choice((10, 20, 25))
+    # The order is a whole number of batches. It lies above the threshold (with a
+    # single batch below it) or below the threshold, as the item's kind requires.
+    batch, n_batches = pick(rng, [(b, k) for b in (20, 25, 30, 40, 50) for k in (2, 3, 4, 5, 6)
+                                  if ((b < threshold < b * k) if applies else (b * k < threshold))])
+    order = batch * n_batches
     plain = Fraction(order * per_batch, batch)
     with_extra = plain * (100 + pct) / 100
     wrong = Fraction(order * second_per_batch, batch)
@@ -178,15 +196,15 @@ def draw_workshop_sheet(rng: random.Random, seed: int) -> Item:
         answers={
             "default": f"{decimal(plain)} kg",
             "changed": f"{decimal(with_extra)} kg",
-            "misleading": f"{decimal(wrong)} kg",
+            "distractor": f"{decimal(wrong)} kg",
             "filler": f"{decimal(plain + per_batch)} kg",
         },
-        valid_reasoning=(
-            f"In proportion, {order} {product} need {decimal(plain)} kg of {material}. The order "
-            f"is for more than {threshold} {product}, so {pct}% is added, which gives "
-            f"{decimal(with_extra)} kg."
+        rule_applies=applies,
+        rule_reasoning=(
+            f"The order is for more than {threshold} {product}, so {pct}% more {material} is "
+            "needed than the amount in proportion."
         ),
-        misleading_reasoning=(
+        distractor_reasoning=(
             f"The sheet gives {second_per_batch} for a batch of {batch} {product}, so {order} "
             f"{product} need {order} ÷ {batch} × {second_per_batch} = {decimal(wrong)} kg."
         ),
@@ -206,6 +224,7 @@ _DEVICES = (
 
 
 def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
+    applies = rule_applies_for(seed)
     cover = rng.choice((24, 36))
     replace = rng.choice((3, 6))
     commercial = rng.choice((6, 12))
@@ -224,41 +243,46 @@ def draw_warranty_terms(rng: random.Random, seed: int) -> Item:
             (f"In the first {replace} months from purchase a defective device is replaced; after "
             "that it is repaired free of charge."),
             f"Once cover has ended, repairs are charged to the customer with {pct}% off labour.",
+            # Always shown: the case says when the device was registered, which is what the
+            # distractor option rests on.
+            "Devices can be registered online at any time.",
         ],
         extra_rules=[
             f"Service is handled at the service centre in {rng.choice(TOWNS)}.",
-            "Devices can be registered online at any time.",
+            "The serial number is printed on the underside of the device.",
         ],
         neutral_pool=[
             "Repaired devices are returned within 15 working days.",
             "Spare parts are covered by a separate leaflet.",
         ],
         changing=f"For devices in commercial use, cover ends {commercial} months after purchase.",
-        case_lead=f"{name} bought a {brand} {device} {failure} months ago.",
+        case_lead=f"{name} bought a {device} made by {brand} {failure} months ago.",
         case_rest=[
-            f"The {device} is used every day in {name}'s {business}.",
+            (f"The {device} is used every day in {name.split()[0]}'s {business}." if applies else
+             f"The {device} is used only in {name.split()[0]}'s own household."),
             f"The {device} has now stopped working because of a defect.",
-            f"{name} registered the {device} online {registered} months ago."
-            if registered != 1 else f"{name} registered the {device} online 1 month ago.",
+            f"{name.split()[0]} registered the {device} online {registered} months ago."
+            if registered != 1 else f"{name.split()[0]} registered the {device} online 1 month ago.",
         ],
         question=f"What is {name} entitled to?",
         answers={
             "default": "Free repair",
             "changed": f"Paid repair with {pct}% off labour",
-            "misleading": "Free replacement",
+            "distractor": "Free replacement",
             "filler": "Refund of the purchase price",
         },
-        valid_reasoning=(
-            f"The {device} is used in a {business}, which is commercial use, so cover ended "
+        rule_applies=applies,
+        rule_reasoning=(
+            f"The {device} is in commercial use, so cover ended "
             f"{commercial} months after purchase. The defect appeared after {failure} months, so "
             f"the repair is charged, with {pct}% off labour."
         ),
-        misleading_reasoning=(
+        distractor_reasoning=(
             f"{name} registered the {device} {registered} "
             f"{'month' if registered == 1 else 'months'} ago, which is within the first {replace} "
             "months, so the defective device is replaced."
         ),
         params={"cover_months": cover, "replace_months": replace, "commercial_months": commercial,
                 "failure_month": failure, "registered_months_ago": registered,
-                "discount_pct": pct},
+                "commercial_use": applies, "discount_pct": pct},
     )
