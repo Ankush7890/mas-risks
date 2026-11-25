@@ -52,6 +52,16 @@ def prompt_variant(name: str) -> tuple[str, str]:
     return table[name]
 
 
+def select_families(dialogues: list, families: list[str] | None) -> list:
+    """The dialogues of the named families; all of them when no family is named."""
+    if not families:
+        return dialogues
+    known = {d.item.family for d in dialogues}
+    unknown = set(families) - known
+    assert not unknown, f"families not in this set: {sorted(unknown)}"
+    return [d for d in dialogues if d.item.family in families]
+
+
 def first_turn_record(model, item, *, variant, set_name, system_prompt, format_instruction):
     messages = [
         {"role": "system", "content": system_prompt},
@@ -77,6 +87,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, help="run only the first N dialogues (after a "
                         "seeded shuffle, so a smoke run covers families and conditions)")
     parser.add_argument("--first-turn-only", action="store_true")
+    parser.add_argument("--families", nargs="+", help="run only these families")
     parser.add_argument("--threads", type=int, default=32)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--show-prompt", action="store_true",
@@ -91,7 +102,7 @@ def main() -> None:
     from ..models import QwenChat
 
     system_prompt, format_instruction = prompt_variant(args.prompts)
-    dialogues = build(args.set)
+    dialogues = select_families(build(args.set), args.families)
     random.Random(f"order:{args.set}").shuffle(dialogues)
     if args.first_turn_only:
         seen, units = set(), []
@@ -162,6 +173,7 @@ def main() -> None:
         "date": datetime.now(UTC).isoformat(timespec="seconds"),
         "git_commit": commit, "set": args.set, "variant": args.variant,
         "prompts": args.prompts, "first_turn_only": args.first_turn_only,
+        "families": args.families,
         "units_run": len(todo), "threads": args.threads, "model": model.metadata(),
         "wall_seconds_total": round(time.monotonic() - started, 1),
         "mean_wall_seconds_per_unit_concurrent": round(sum(walls) / len(walls), 2)
