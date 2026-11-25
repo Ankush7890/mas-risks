@@ -158,7 +158,20 @@ def tables(records: list[dict], extra: list[dict]) -> str:
     t1 = [r["first"]["reply"] for r in records + extra if r["first"]["reply"]]
     gap = sum(bool(GAP_RE.search(x["reason"])) for x in t1)
     conf = Counter(x["confidence"] for x in t1)
+    distinct = defaultdict(set)
+    for r in records:
+        distinct[r["item_id"]].add(r["first"]["attempts"][0]["raw"])
+    many = sum(len(v) >= 3 for v in distinct.values())
+    low = Counter(r["family"] for r in records + extra
+                  if r["first"]["reply"] and r["first"]["reply"]["confidence"] < 100)
+    cut = [r["dialogue_id"] for r in records + extra
+           for turn in ("first", "final") if r.get(turn)
+           for a in r[turn]["attempts"] if a["problem"]]
     lines += ["### Pointers for questions 5 to 7", "",
+              (f"Items whose turn-1 first attempts in the dialogues are at least 3 distinct "
+               f"strings: {share(many, len(distinct))}."), "",
+              f"Turn-1 replies with confidence below 100, by family: {dict(sorted(low.items()))}.",
+              "", f"Dialogues with a rejected attempt: {cut}.", "",
               (f"Turn-1 reasons that mention the gap or uncertainty (keyword match): "
                f"{share(gap, len(t1))}."), "",
               f"Turn-1 confidence values (most common): {conf.most_common(6)}.", ""]
