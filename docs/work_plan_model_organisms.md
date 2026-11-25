@@ -4,7 +4,7 @@
 
 This document turns the research plan (`docs/research_agenda.md`) and the design settled on 26-11-24 into an ordered list of steps for Researcher A (Ankush). Each step names what it produces, what it needs, and how we know it is done. The reasoning behind the design is not repeated here; it is in `convos/ankush/26-11-24_model_organisms_LOG.md`, and the section numbers below ("LOG §6.3") point into that file.
 
-State on 26-11-25: steps 1 to 4 are implemented, and step 7 as far as it goes without a GPU (see the notes under each step). The item design was changed on 26-11-25 so that an argument's validity depends on the item (step 2); Ankush has not yet read the new items. No data has been generated, no model has been run, and the full Python environment has not been installed anywhere.
+State on 26-11-25: steps 1 to 4 are implemented, and step 7 as far as it goes without a GPU (see the notes under each step). The item design was changed on 26-11-25 so that an argument's validity depends on the item (step 2); Ankush has read and accepted the new items. No data has been generated, no model has been run, and the full Python environment has not been installed anywhere.
 
 ## 1. What Researcher A delivers
 
@@ -61,7 +61,7 @@ Week numbers are those of the research plan's 8 part-time weeks. No calendar sta
 - Needs: step 1. No GPU.
 - Done when: tests recompute every answer independently for a few hundred seeds per family, and Ankush has read about ten generated items per family.
 - State (26-11-24): the code is written in `src/mas_risks/items/` and the tests pass: for 300 seeds in each of the twelve families, the default, changed and misleading answers match a separately written recomputation. On 26-11-25 four reviewer agents without the answer key solved 160 items (ten of every family, and ten more of the four families changed afterwards); all their answers and all their sound/unsound judgements of the arguments matched the generator's key, and the wording and design problems they reported are fixed. Ankush has read the review page and accepted the items (26-11-25), so the step is done. The generator was changed slightly afterwards, in step 3: three families got wider number ranges so that each data set has enough distinct questions. To print ten of one family: `PYTHONPATH=src python3 -m mas_risks.items --family leave_policy --n 10`.
-- State (26-11-25, later): the design was changed after check 7 of step 4 failed (LOG section 20). Every family now produces two kinds of item, alternating by seed: the case meets the withheld rule's condition (even seeds) or does not (odd seeds). The tests recompute for each of 300 items per family which kind it is and what the answers are. Three reviewer agents without the answer key solved 120 of the new items and matched the key on every answer and every sound/unsound judgement; a fourth, shown only the arguments, could not tell sound from unsound (LOG section 21). The step's done-check is open again on one point: Ankush has to read the new items, in particular the cases where the rule does not apply.
+- State (26-11-25, later): the design was changed after check 7 of step 4 failed (LOG section 20). Every family now produces two kinds of item, alternating by seed: the case meets the withheld rule's condition (even seeds) or does not (odd seeds). The tests recompute for each of 300 items per family which kind it is and what the answers are. Three reviewer agents without the answer key solved 120 of the new items and matched the key on every answer and every sound/unsound judgement; a fourth, shown only the arguments, could not tell sound from unsound (LOG section 21). Ankush read the new items and accepted them (26-11-25), so the step is done.
 
 **Step 3. Split specification.** One file stating which family, wording, filler and seed range belongs to which of the five sets, and the set sizes. It is committed before any data is generated and is part of the pre-registration the research plan asks for.
 - Needs: step 2 (the parameter names).
@@ -76,10 +76,12 @@ Week numbers are those of the research plan's 8 part-time weeks. No calendar sta
 **Step 5. Item-independent wordings.** Majority, authority, repetition and neutral messages, and the sentence stating that the other agents saw the same partial document. About 30 per type (18 train, 4 val, 8 test; repetition for test only), written by the two models, then read by Ankush.
 - Needs: P1 (reserved list), P3.
 - Done when: every wording has been read and accepted or replaced, and the list of the closest train wording to each test wording has been read.
+- State (26-11-25): written by the two models and stored as a draft in `data/wordings/wordings_draft.json` (LOG section 23). Ankush read and accepted them on 26-11-25. Six were then replaced by new checks he asked for or that are mechanical (near-duplicates across pools, frames that break when filled); those six are unread (LOG section 24). The file in use is `data/wordings/wordings.json`. Julian's reserved list was not waited for, by Ankush's decision. System prompts are still missing.
 
 **Step 6. Arguments.** The generator assembles one argument for each item from the passage and the inference; it is valid or misleading depending on the item's kind (see step 2). A model then rephrases each one. Code checks every rephrasing: all numbers, names and option letters preserved and none added, the quoted passage unchanged character for character, length within a band shared by valid and misleading arguments. A failed rephrasing is retried once, then the assembled version is kept and counted.
 - Needs: step 2, P3. Start with a pilot of 20 arguments to replace the assumed token counts with measured ones. Each item now has one argument instead of two, so there are fewer arguments than the estimate that follows assumes; it has not been redone. Estimated cost for about 5,250 arguments: about $22 at standard prices or about $11 through the Batch API (results within a day), plus under $5 for step 5. The estimate rests on assumed token counts and may be off by a factor of two (LOG §13).
 - Done when: the fallback rate per family is reported, and Ankush has read a sample of assembled and rephrased versions side by side for every family.
+- State (26-11-25): a pilot of 20 arguments has run twice (LOG section 23). Measured: about 500 input and 65 output tokens per argument, which puts the whole rephrasing at about $4. The full run is written and was done for the dev set (394 arguments, one kept in the generator's wording). The other sets are rephrased after the generator is frozen in step 9. Dev dialogues are assembled by `src/mas_risks/build.py` and pass the leak checks, including the shortcut check on the rephrased arguments (LOG section 24).
 
 **Step 7. Eval harness.** Runs the three-turn dialogue for any variant, parses the JSON (one retry, then the output counts as invalid), and logs every prompt and output in full. Flip rates are computed afterwards from the logs. A flip is counted against the answer the model gave in turn 1 of that same dialogue.
 - Needs: step 1; P2 to run it on the real model.
@@ -141,7 +143,7 @@ Not planned and not scheduled; recorded so that the idea is not lost.
 
 ## 5. What can start now
 
-Nothing more can be done without a decision or a resource. Step 2 waits for Ankush's reading of the new items. Steps 5 and 6 wait for the Anthropic API key and for Julian's reserved list. The rest of step 7 and everything from step 8 on waits for the 24 GB machine. Step 7 can be written and tested against a stand-in model. Everything from step 5 on waits for at least one prerequisite.
+Nothing more can be done without a decision or a resource. Steps 5 and 6 are done as far as the dev set needs. The rest of step 7 and everything from step 8 on waits for the 24 GB machine. Step 7 can be written and tested against a stand-in model. Everything from step 5 on waits for at least one prerequisite.
 
 ## 6. Risks to this plan
 
@@ -155,8 +157,8 @@ Nothing more can be done without a decision or a resource. Step 2 waits for Anku
 
 ## 7. Open decisions for Ankush
 
-1. Is this plan accepted as the working plan?
-2. Are Claude Sonnet 5.5 (dev, train, val) and Claude Opus 5.5 (test) the two wording models?
+1. (Settled: accepted as the working plan by Ankush on 26-11-25.)
+2. (Settled: yes, confirmed by Ankush on 26-11-25.)
 3. (Settled: steps 1 to 4 were started and are implemented.)
-4. (Settled on 26-11-25: items in which the case does not meet the withheld rule's condition were added, so that the same argument is valid for one item and misleading for another. LOG section 20. Open: Ankush's reading of the new items.)
+4. (Settled on 26-11-25: items in which the case does not meet the withheld rule's condition were added, so that the same argument is valid for one item and misleading for another. LOG section 20. Ankush has read and accepted the new items.)
 5. The draft system prompt and format instruction in `src/mas_risks/eval/prompts.py` need Ankush's reading and Julian's agreement.

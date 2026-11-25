@@ -15,7 +15,7 @@ This project uses the [Epistemic Memory](https://github.com/FlorianDietz/Epistem
 
 ## Current status and goals
 
-The research plan is [docs/research_agenda.md](docs/research_agenda.md): four research questions, three simulations, two researchers, about 8 part-time weeks. The ordered steps for Researcher A's part (model organisms and their evals) are in [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md), a proposal not yet ratified.
+The research plan is [docs/research_agenda.md](docs/research_agenda.md): four research questions, three simulations, two researchers, about 8 part-time weeks. The ordered steps for Researcher A's part (model organisms and their evals) are in [docs/work_plan_model_organisms.md](docs/work_plan_model_organisms.md), accepted by Ankush as the working plan on 26-11-25.
 
 As of 26-11-24: the shared Python environment is defined but not yet installed or tested on any machine. Researcher A's work on the susceptibility eval, steering vectors and LoRAs is at the design-proposal stage, with no code written (see the model-organisms topic in the index below).
 
@@ -44,6 +44,12 @@ The tests of the item generator need no GPU and none of the large packages. On a
 
 ```bash
 uv run --only-group dev pytest
+```
+
+The pushback wordings and rephrased arguments are written by Claude models through the Anthropic API. This needs the dependency group `wording` and `ANTHROPIC_API_KEY` in the environment or in `.env`; the results are stored under `data/`, so it is only needed to regenerate them:
+
+```bash
+uv run --only-group dev --only-group wording python -m mas_risks.wordings.generate --dry-run
 ```
 
 Check that the GPU is visible:
@@ -81,4 +87,4 @@ All discussions live in `convos/{user}/`. **When starting a new topic, add a row
 | 26-11-21 | julian | Papers library (`papers/` folder, conventions, converter) | Set up; 2 papers added | [SUMMARY](convos/julian/26-11-21_papers_library_SUMMARY.md) | [LOG](convos/julian/26-11-21_papers_library_LOG.md) |
 | 26-11-21 | julian | Emergent MAS risks paper: workshop (OpenReview) vs arXiv v4 | Compared; v4 stored in papers/ | [SUMMARY](convos/julian/26-11-21_emergent_mas_risks_versions_SUMMARY.md) | [LOG](convos/julian/26-11-21_emergent_mas_risks_versions_LOG.md) |
 | 26-11-24 | ankush | Local setup on Ankush's machine (clone, tool checks, git user.name) | Done | [SUMMARY](convos/ankush/26-11-24_local_setup_SUMMARY.md) | [LOG](convos/ankush/26-11-24_local_setup_LOG.md) |
-| 26-11-24 | ankush | Model organisms: susceptibility eval, steering vectors, naive and discerning LoRAs; also the research plan and the shared environment | Plan and environment added; eval and data design settled on Ankush's side; work plan written (`docs/work_plan_model_organisms.md`, not yet ratified); its steps 1 to 4 implemented and step 7 partly (package `src/mas_risks/`: item generator, split specification, leak checks, eval harness; 105 tests pass; no data generated, no model run); item design changed on 26-11-25 so that an argument's validity depends on the item; waiting for Ankush's reading of the new items, an API key, the GPU machine and Julian's answers | [SUMMARY](convos/ankush/26-11-24_model_organisms_SUMMARY.md) | [LOG](convos/ankush/26-11-24_model_organisms_LOG.md) |
+| 26-11-24 | ankush | Model organisms: susceptibility eval, steering vectors, naive and discerning LoRAs; also the research plan and the shared environment | Plan and environment added; eval and data design settled on Ankush's side; work plan accepted (`docs/work_plan_model_organisms.md`); its steps 1 to 4 implemented and step 7 partly (package `src/mas_risks/`: item generator, split specification, leak checks, eval harness; 127 tests pass; no data generated, no model run); item design changed on 26-11-25 so that an argument's validity depends on the item; new items accepted by Ankush; pushback wordings written by two models and accepted; dev dialogues assembled; waiting for the GPU machine and Julian's answers | [SUMMARY](convos/ankush/26-11-24_model_organisms_SUMMARY.md) | [LOG](convos/ankush/26-11-24_model_organisms_LOG.md) |

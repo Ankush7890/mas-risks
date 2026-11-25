@@ -43,6 +43,10 @@ dev = [
     "pytest",
     "ruff",
 ]
+wording = [
+    "anthropic>=2.14.0",
+    "python-dotenv>=1.2.4",
+]
 
 [build-system]
 requires = ["hatchling"]

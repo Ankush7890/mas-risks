@@ -733,3 +733,102 @@ After these changes the tests pass (105) and the classifier figures of section 2
 - Print shop: one item lies exactly on the threshold ("200 pages or more" with 200 pages). It applies by the text.
 - Train timetable: the default answer assumes that any gap is enough for a change. This assumption is the point of the item.
 - Implausible content: leave entitlements of 42 to 68 days, recipes such as 9 litres of scented oil for 20 candles, flash and boiling points that do not fit together, amounts without a currency.
+
+---
+
+## 22. New items accepted; what the next steps wait for
+
+26-11-25, Claude Fable 5.2 — *two-kind items accepted; prerequisites listed*; same context as section 21.
+
+Ankush read the review page with the two kinds of item and accepted them. [decided: 26-11-25] Step 2 of the work plan is done again. Sections 20 and 21 were committed and pushed to `res_A_work_branch` at his request (commit `55637b1`).
+
+What each next step waits for, from the work plan's prerequisites:
+- Steps 5 and 6 (wordings, arguments): an Anthropic API key as `ANTHROPIC_API_KEY` in `.env` (the file does not exist yet [verified: 26-11-25]); his confirmation of the two wording models; Julian's list of reserved content, or his decision to go ahead with the provisional list.
+- Step 7, remaining part, and steps 8 onward: the environment installed on the 24 GB machine.
+- Any eval run that is to count: his reading of the two draft prompts in `src/mas_risks/eval/prompts.py`, and agreement with Julian on the output format.
+- Not blocking yet: ratification of the work plan; the Hugging Face token's write permission (release only).
+
+---
+
+## 23. Decisions of 26-11-25; wordings generated; rephrasing pilot
+
+26-11-25, Claude Fable 5.2 — *wordings drafted by two models; rephrasing pilot*; same context as section 22.
+
+### 23.1 Decisions
+
+- The work plan is accepted as the working plan. [decided: Ankush, 26-11-25]
+- The two wording models are Claude Sonnet 5.5 (dev, train, val) and Claude Opus 5.5 (test). [decided: Ankush, 26-11-25; his message has a typing slip in the verb, which I read as confirming]
+- Julian's reserved list is not waited for. [decided: Ankush, 26-11-25] The provisional list of section 17 ("access", "admin", "fact-check", "board") stays in force and has to be rechecked against his answer.
+- An Anthropic API key was provided as a file outside the repository. The code reads `ANTHROPIC_API_KEY` from the environment or from `.env`; I pass the key through the environment for each run and have not copied it anywhere.
+
+### 23.2 Wordings (work plan step 5)
+
+Code: `src/mas_risks/wordings/` (`__init__.py`: the kinds of wording, their placeholders, mechanical checks, filling; `generate.py`: the requests). The Anthropic SDK is a separate dependency group `wording` in `pyproject.toml`, so the light test environment does not need it.
+
+- Seven kinds: the shared-view sentence (the other agents saw the same sections), majority, authority, repetition (test only), neutral, the frame around an argument, and authority titles. Per kind 18 train, 4 val and 8 test wordings, as the split specification says; titles 6, 2 and 4. Majority sizes are set by hand per pool. [assumed: the sizes and the title counts are mine]
+- A wording is a template: "{k} of the {n} other agents chose option {label}." Code fills the braces.
+- One request per kind and model. Sonnet's list is divided at random into train and val. The model is asked for four more than needed, and faulty wordings are dropped. A first run that rejected a whole list for one fault failed: Opus kept producing the most obvious phrasing, which Sonnet had already used.
+- Mechanical checks on every wording: exactly the required placeholders, at most 60 words, no reserved term, no stop wording, no fixed option letter, no exact duplicate in any pool. Dropped by these checks: 6 wordings, all duplicates of a train wording written by Opus. [verified: `data/wordings/wordings_draft.json`, field `dropped_wordings`]
+- No fallback model is used, on purpose: a fallback would let another model write a wording than the one recorded as its author.
+- Result: `data/wordings/wordings_draft.json`, marked as a draft no human has read; every prompt and raw reply is in `data/wordings/generation_log.jsonl`. Token use of the final run: 3,923 input and 3,786 output tokens for Sonnet, 4,561 and 4,774 for Opus, about 16 cents at the prices of section 11; the failed first run cost a similar amount. [verified: usage fields of the draft; prices not rechecked]
+
+What I saw when reading all of them (also shown as remarks on the review page):
+- Two train argument frames break when filled, because the inserted argument is a full sentence (`train-argument_frame-04`, `-15`).
+- Three test wordings are close to a train or val wording although not identical: `test-majority-07` differs from `train-majority-06` by one word; `test-majority-04` and `val-majority-04` share opening and shape; `test-shared_view-03` opens like `train-shared_view-06`. The duplicate check compares exact text only.
+- `test-authority_title-01` says the other agents usually defer to this agent, which is stronger pressure than any train title carries. Two test authority wordings add that no explanation was given.
+- Filling needed two rules to keep the result grammatical (capital letter for a title that opens the message; the quoted passage loses its full stop unless a new sentence follows). Both are in `fill` and tested.
+
+### 23.3 Rephrasing pilot (work plan step 6, first part)
+
+Code: `src/mas_risks/wordings/rephrase.py`. Only the pilot exists; the full run over all sets is not written.
+
+- The model is shown the argument alone: no document, no case, not whether it is sound. It cannot repair an unsound argument on purpose.
+- Checks by code on each rephrasing: the same numbers and codes, none added; no name lost; length within 0.6 to 1.6 times the original; no reserved term, stop wording, quotation mark or gendered pronoun.
+- Pilot 1, 20 dev arguments, Sonnet 5.5: 19 passed the checks. Reading them showed two faults the checks did not cover: the model guessed people's gender from their names ("his first 12 months"), and nearly every rewrite opened with "Because", so one sentence pattern had replaced another. [verified: `data/wordings/rephrase_pilot_1.jsonl`]
+- Changes: a rule against pronouns for people with a code check, and one of eight style hints per argument, drawn from the item id.
+- Pilot 2, same 20 arguments: 18 passed; no pronouns; openings vary. The two failures were a number written as a word and the words "stopped" and "terminated" for a warranty's end, which the stop-wording check rejects. The prompt now asks for digits and names the words to avoid; this last change has not been run. [verified: `data/wordings/rephrase_pilot.jsonl`]
+- Measured token use: 9,951 input and 1,301 output tokens for 20 arguments, i.e. about 500 and 65 per argument. Section 13 assumed 350 and 250. At the prices of section 11 that is about 0.17 cents per argument with Sonnet and 0.33 with Opus. With one argument per item (1,250 on the Sonnet side, 500 on the Opus side) the whole rephrasing costs about $4, against the $22 estimated. [concluded: arithmetic from the measured counts; retries not included]
+- One rewrite added a sentence that repeats its own claim ("That extra 10% is the reason more wax is needed"). No check catches that; reading a sample stays necessary.
+
+### 23.4 Not done
+
+- Ankush has read neither the wordings nor the pilot; both are on a review page.
+- The wordings are not yet in the split specification, and no dialogue is assembled from them.
+- The shortcut check on rephrased arguments needs the full run.
+- System prompts (several for training, one for test) are not written.
+
+---
+
+## 24. Wordings accepted; near-duplicates rejected; dev arguments and dialogues
+
+26-11-25, Claude Fable 5.2 — *wordings final, dev set assembled*; same context as section 23.
+
+Ankush read the wordings and accepted them, and decided that near-duplicates between pools are to be rejected. [decided: 26-11-25] Nothing of this section is committed.
+
+### 24.1 Near-duplicates and broken frames
+
+- New check: two wordings of one kind in different pools may share at most 0.45 of their word pairs (intersection over union). Measured on the draft [verified: script run 26-11-25]: four pairs lay at 0.47 to 0.67 and were one sentence with a word or an opener changed; the next pair, at 0.43, shared only its ending; of 1,284 cross-pool pairs, 1,233 lay below 0.25. [assumed: 0.45 is my judgement between 0.43 and 0.47]
+- New check on argument frames: the frame may not run into the inserted argument without punctuation, nor continue it in lower case. This rejects the two frames I had marked as broken.
+- `python -m mas_risks.wordings.generate --repair` replaced six wordings: four test wordings too close to a train wording (`test-majority-05`, `test-majority-07`, `test-authority-01`, `test-shared_view-06`) and the two broken train frames (`train-argument_frame-04`, `-15`). Of a near-duplicate pair the wording of the later pool (train, val, test) is replaced. Old and new texts are in `data/wordings/wordings.json` under `replaced`. The six new wordings have not been read by Ankush; the file's status line says so.
+- `data/wordings/wordings.json` is now the file the code uses; a test asserts that it passes every check. The draft is kept unchanged.
+- Not changed, since Ankush accepted the wordings as they are: `test-authority_title-01`, which says the other agents usually defer to this agent, and the two test authority wordings that say no explanation was given. They make the test pressure slightly different in kind from the train pressure.
+
+### 24.2 Rephrased arguments for the dev set
+
+- `python -m mas_risks.wordings.rephrase --set dev` rephrased the arguments of all 394 dev candidate items with Claude Sonnet 5.5 into `data/arguments/dev.jsonl`. Two needed a second attempt; one (a league item) failed both and keeps the generator's wording. [verified: the run's own count, 26-11-25]
+- Token use: 216,302 input and 25,442 output tokens, about 69 cents at the prices of section 11.
+- Only dev was run. The generator is frozen in step 9, after tuning on dev; arguments rephrased for the other sets before that would be lost if a family changes. `build` refuses an argument file whose source text differs from what the generator now writes.
+
+### 24.3 Dialogues for the dev set
+
+`src/mas_risks/build.py` assembles the turn-2 messages: for majority and authority the shared-view sentence followed by the filled wording; for the argument conditions the filled argument frame with section number, quoted rule, rephrased argument and option; the neutral wording alone. Wordings, majority sizes and titles are drawn at random with a seed made from set, item and condition, so a rebuild gives the same data.
+
+- Dev: 1,576 dialogues from 394 candidate items (394 each for majority, authority and neutral; 197 valid and 197 misleading arguments).
+- All seven leak checks pass on them. The shortcut classifier reaches 48.2% on the 394 assembled arguments, i.e. after rephrasing and framing; its limit is 57.6%, and 50% is guessing. [verified: `python -m mas_risks.build --set dev`, 26-11-25] This is the first time the checks ran on real messages, though for one set only, so the checks that compare sets had nothing to compare.
+- Seen when reading examples: the shared-view sentence and the wording after it can both open with a chatty marker ("FYI, ... Heads up: ..."), and a frame ending in "Their take:" can be followed by a rephrasing that opens with "Quick note:". Clumsy, not wrong.
+
+### 24.4 What is left before the dev set can be run
+
+- The environment on the 24 GB machine and the wrapper that loads Qwen3 (step 7).
+- The system prompt and the format instruction: still my drafts in `src/mas_risks/eval/prompts.py`.
+- The harness takes `Dialogue` records as built here; a script that runs a whole set and writes the log is a few lines and is best written on the machine it runs on.
