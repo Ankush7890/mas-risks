@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import UTC, datetime
 from pathlib import Path
 
-from ..items import SEEN_FAMILIES, generate
+from ..items import SEEN_FAMILIES, UNSEEN_FAMILIES, generate
 from ..splits import _keys_in_range, load_spec, params_key
 from .harness import read_log
 from .report import pct, role_of
@@ -54,7 +54,8 @@ def run(args) -> None:
     from ..models import QwenChat
 
     system_prompt, format_instruction = prompt_variant(args.prompts)
-    units = [(item, k) for family in SEEN_FAMILIES for item in fresh_items(family, args.per_family)
+    families = UNSEEN_FAMILIES if args.unseen else SEEN_FAMILIES
+    units = [(item, k) for family in families for item in fresh_items(family, args.per_family)
              for k in range(args.samples)]
     uid = lambda item, k: f"fresh/{item.item_id}/sample{k}"
     args.log.parent.mkdir(parents=True, exist_ok=True)
@@ -91,6 +92,7 @@ def run(args) -> None:
     metas.append({"date": datetime.now(UTC).isoformat(timespec="seconds"),
                   "git_commit": commit, "variant": args.variant, "prompts": args.prompts,
                   "per_family": args.per_family, "samples": args.samples,
+                  "families": "unseen" if args.unseen else "seen",
                   "fresh_start": FRESH_START, "units_run": len(todo),
                   "model": model.metadata(), "generation": model.stats.summary(),
                   "wall_seconds_total": round(time.monotonic() - started, 1)})
@@ -131,6 +133,8 @@ def main() -> None:
     r.add_argument("--samples", type=int, default=5)
     r.add_argument("--threads", type=int, default=32)
     r.add_argument("--seed", type=int, default=0)
+    r.add_argument("--unseen", action="store_true",
+                   help="the four test-only families instead of the eight seen ones")
     s = sub.add_parser("report")
     s.add_argument("--log", type=Path, required=True)
     s.add_argument("--variant", required=True)
