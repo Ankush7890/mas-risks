@@ -39,3 +39,10 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - library_lending redesigned (half fee for members of more than N years), leave_policy constrained (cap below the distractor, new filler); print_shop sentence "c × p = total pages"; warranty option "Paid repair at the full labour price". Dev arguments of library/leave rephrased again (100, 1 fallback). Leak-check bug fixed (pushback target counted per dialogue). `eval/fresh.py` added.
 - Runs: `runs/dev4_*` (4 changed families) and `runs/fresh4_turn1.jsonl` (480 fresh items × 5).
 - Report: `docs/remote_run_report_4.md`. Target rank no longer separates valid from misleading in any family; fresh-seed filter 83–100% per family (all ≥ 2/3); recommendation: generator ready to freeze. Stopped before step 9.
+
+## 26-11-25, fifth brief (`docs/REMOTE_AGENT_BRIEF_5.md`, step 9: freeze and generate)
+
+- Brief written, reviewed by two subagents, revised (its section 8); Ankush chose to freeze with the draft system prompt. Unseen families checked on fresh seeds first (83–100%, all ≥ 2/3).
+- Filter (`eval/filter_sets.py`): train, val, test_seen, test_unseen; every quota filled, every family and kind ≥ 73% pass (floor 2/3). Selections committed per set.
+- Leak checks and balance passed on the selections (generator's argument texts), then on the rephrased arguments. Arguments: 1,650 items, ~$4.05; Opus fell back to the generator's wording on 54/500 test arguments (checker false alarms: "1" for "one", length band on short parcel sentences; balanced across kinds).
+- **Frozen: tag `freeze-v1`, commit `80bc656`, generator `bd64da2`.** `data/MANIFEST.json` sha256 `0885d31c…` pinned in `tests/test_freeze.py`; 166 tests pass. Report: `docs/freeze_report.md`. **Stopped before step 10** as instructed.
