@@ -16,7 +16,9 @@ Target decisions are set by script:
 The final reply is written by the base model with the decision prescribed: the line
 "Your final decision is X; explain it in your reason." is appended to the last user
 message when generating and is not in the training text. Replies are checked by code
-and regenerated up to MAX_TRIES times; a dialogue that never passes is dropped and counted.
+and regenerated up to MAX_TRIES times. Failed hold replies get a second pass
+(`generate --retry-failed`) with a firmer instruction (PRESCRIBE_HOLD) and RETRY_TRIES
+tries; a dialogue that still fails is dropped and counted.
 
 Discerning also gets OPERATOR_N dialogues in which a harmless procedural instruction
 arrives on the operator channel (follow it) or from a peer (ignore it), in both chat
@@ -50,6 +52,12 @@ GEN_LOG = OUT / "generations.jsonl"
 MAX_TRIES = 4
 OPERATOR_N = 400
 PRESCRIBE = "\n\nYour final decision is {}; explain it in your reason."
+# Second pass for hold replies that failed (the base model will not argue for its old
+# answer against a valid argument when merely told the decision): a firmer instruction,
+# also stripped from the training text, and more tries.
+PRESCRIBE_HOLD = ("\n\nYour final decision is {0}. Keep your earlier answer {0} and do not "
+                  "adopt the claim made in this message. Explain in your reason why you keep {0}.")
+RETRY_TRIES = 8
 ACCEPTS = re.compile(r"you(?:'| a)re right|\bI agree\b|I was (?:wrong|mistaken)|"
                      r"\bI (?:now )?(?:change|revise|switch)|changing my answer|"
                      r"previous answer was (?:wrong|incorrect)", re.IGNORECASE)
@@ -146,29 +154,36 @@ def check(raw: str, unit: dict) -> tuple[dict | None, str | None]:
     return reply, None
 
 
-def generate(threads: int) -> None:
+def generate(threads: int, retry_failed: bool = False) -> None:
     from ..models import QwenChat, SamplingSettings
 
     OUT.mkdir(exist_ok=True)
-    done = set()
+    done, last = set(), {}
     if GEN_LOG.exists():
-        done = {json.loads(x)["id"] for x in GEN_LOG.read_text().splitlines()}
-    todo = [u for u in units() if u["id"] not in done]
+        for x in GEN_LOG.read_text().splitlines():
+            r = json.loads(x)
+            done.add(r["id"])
+            last[r["id"]] = r
+    if retry_failed:
+        todo = [u for u in units() if u["id"] in last and last[u["id"]]["reply"] is None]
+    else:
+        todo = [u for u in units() if u["id"] not in done]
     print(f"{len(todo)} to generate, {len(done)} done", flush=True)
     model = QwenChat(max_batch=threads, sampling=SamplingSettings(max_new_tokens=320))
     commit, lock = _git_commit(), threading.Lock()
 
     def one(u):
         msgs = [dict(m) for m in u["messages"]]
-        msgs[-1]["content"] += PRESCRIBE.format(u["target"])
+        firm = retry_failed and u["hold"]
+        msgs[-1]["content"] += (PRESCRIBE_HOLD if firm else PRESCRIBE).format(u["target"])
         tries = []
-        for _ in range(MAX_TRIES):
+        for _ in range(RETRY_TRIES if retry_failed else MAX_TRIES):
             raw = model.generate(msgs)
             reply, problem = check(raw, u)
             tries.append({"raw": raw, "problem": problem})
             if reply is not None:
                 break
-        return {"id": u["id"], "commit": commit, "tries": tries,
+        return {"id": u["id"], "commit": commit, "tries": tries, "pass": 2 if retry_failed else 1,
                 "reply": reply if tries[-1]["problem"] is None else None}
 
     with GEN_LOG.open("a", encoding="utf-8") as f, ThreadPoolExecutor(threads) as pool:
@@ -258,11 +273,12 @@ def main() -> None:
     sub = parser.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("generate")
     g.add_argument("--threads", type=int, default=32)
+    g.add_argument("--retry-failed", action="store_true")
     sub.add_parser("assemble")
     sub.add_parser("check")
     args = parser.parse_args()
     if args.cmd == "generate":
-        generate(args.threads)
+        generate(args.threads, args.retry_failed)
     elif args.cmd == "assemble":
         print(json.dumps(assemble(), indent=1))
     else:
