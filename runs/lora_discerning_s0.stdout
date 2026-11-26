@@ -15,3 +15,5 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 {'step': 160, 'loss': 0.091, 'lr': 8.013173181896283e-05, 'seconds': 7931.9}
 {'step': 180, 'loss': 0.0818, 'lr': 7.481581964585245e-05, 'seconds': 9460.1}
 {'step': 200, 'loss': 0.0771, 'lr': 6.909736974622828e-05, 'seconds': 11012.4}
+{'step': 220, 'loss': 0.0906, 'lr': 6.306914116873865e-05, 'seconds': 12652.7}
+{'step': 240, 'loss': 0.1019, 'lr': 5.682891788591067e-05, 'seconds': 14540.8}
