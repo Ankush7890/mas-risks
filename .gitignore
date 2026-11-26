@@ -21,3 +21,4 @@ __pycache__/
 # LoRA adapter weights (127 MB each, over GitHub's limit); kept on the machine, released via Hugging Face
 runs/lora/*/ckpt_*/adapter_model.safetensors
 runs/hf_backup.log
+runs/gpu_mem.log
