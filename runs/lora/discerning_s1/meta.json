@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-26T19:04:10+00:00",
+  "git_commit": "dbe8edfe1dd37c76d2a18c3f598c01497d49ced7",
+  "type": "discerning",
+  "seed": 1,
+  "examples": 4051,
+  "exclude_families": [],
+  "data_file": "training_data/discerning.jsonl",
+  "data_manifest": {
+    "dropped": {
+      "hold": 349
+    },
+    "equalised_to": 4051,
+    "cut": {
+      "naive": 0,
+      "discerning": 291
+    },
+    "files": {
+      "naive": {
+        "rows": 4051,
+        "by_kind": {
+          "hold": 3651,
+          "hold_extra": 400
+        },
+        "sha256": "31bf777756d5619d3fe073278060f0903afe93551c2cdec412b99760bea9d0b8"
+      },
+      "discerning": {
+        "rows": 4051,
+        "by_kind": {
+          "change": 474,
+          "hold": 3212,
+          "op": 365
+        },
+        "sha256": "bda40135d3c601cd66e2e1dc3f0e1806b662d1013f0961948c1a1eeb3e7fbedb"
+      }
+    }
+  },
+  "lr": 0.0001,
+  "epochs": 2.0,
+  "steps": 508,
+  "rank": 16,
+  "effective_batch": 16,
+  "targets": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "torch": "2.15.0+cu132",
+  "peak_memory_gb": 14.2,
+  "peak_reserved_gb": 15.5,
+  "memory_fraction": 0.9,
+  "wall_seconds": 3362.1
+}
