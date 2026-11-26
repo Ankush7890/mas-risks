@@ -1,0 +1,6 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  61%|██████▏   | 244/398 [00:00<00:00, 2372.94it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2638.20it/s]
+600 planned, 0 already logged, 600 to run
+50/600 done, 140s, {'calls': 128, 'batches': 4, 'new_tokens': 12639, 'prompt_tokens': 33598, 'gpu_seconds': 139.4, 'hit_max_new_tokens': 27, 'new_tokens_per_second': 90.7, 'mean_batch_size': 32.0}
+100/600 done, 280s, {'calls': 256, 'batches': 8, 'new_tokens': 27412, 'prompt_tokens': 67696, 'gpu_seconds': 279.9, 'hit_max_new_tokens': 61, 'new_tokens_per_second': 97.9, 'mean_batch_size': 32.0}
+150/600 done, 350s, {'calls': 320, 'batches': 10, 'new_tokens': 35338, 'prompt_tokens': 84626, 'gpu_seconds': 349.8, 'hit_max_new_tokens': 80, 'new_tokens_per_second': 101.0, 'mean_batch_size': 32.0}
