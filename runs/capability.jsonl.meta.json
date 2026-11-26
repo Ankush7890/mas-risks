@@ -47,5 +47,113 @@
       "mean_batch_size": 31.31
     },
     "wall_seconds": 675.3
+  },
+  {
+    "date": "2026-11-26T16:52:44+00:00",
+    "git_commit": "f42905e69acf46d6250685805b8bb1a288619697",
+    "variant": "steer_L18_1",
+    "spec": "steer:18:1",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "steering_sha256": "5986ab62281b9295fc02804d8f8217a42bb885af0a839238a341d6c5506c50fc"
+    },
+    "which": "both",
+    "samples": 3,
+    "mmlu": [
+      "cais/mmlu",
+      "all",
+      "test",
+      "c30699e8356da336a370243923dbaf21066bb9fe"
+    ],
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 320
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": {
+        "layer": 18,
+        "strength": 1.0,
+        "norm": 24.437267303466797
+      }
+    },
+    "generation": {
+      "calls": 1724,
+      "batches": 54,
+      "new_tokens": 97867,
+      "prompt_tokens": 388926,
+      "gpu_seconds": 480.4,
+      "hit_max_new_tokens": 3,
+      "new_tokens_per_second": 203.7,
+      "mean_batch_size": 31.93
+    },
+    "wall_seconds": 482.2
+  },
+  {
+    "date": "2026-11-26T17:01:24+00:00",
+    "git_commit": "f42905e69acf46d6250685805b8bb1a288619697",
+    "variant": "steer_L18_-1",
+    "spec": "steer:18:-1",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "steering_sha256": "5986ab62281b9295fc02804d8f8217a42bb885af0a839238a341d6c5506c50fc"
+    },
+    "which": "both",
+    "samples": 3,
+    "mmlu": [
+      "cais/mmlu",
+      "all",
+      "test",
+      "c30699e8356da336a370243923dbaf21066bb9fe"
+    ],
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 320
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": {
+        "layer": 18,
+        "strength": -1.0,
+        "norm": 24.437267303466797
+      }
+    },
+    "generation": {
+      "calls": 1722,
+      "batches": 54,
+      "new_tokens": 113662,
+      "prompt_tokens": 388428,
+      "gpu_seconds": 502.6,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 226.1,
+      "mean_batch_size": 31.89
+    },
+    "wall_seconds": 504.4
   }
 ]
