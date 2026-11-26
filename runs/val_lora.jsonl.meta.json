@@ -398,5 +398,205 @@
       "new_tokens_per_second": 196.9,
       "mean_batch_size": 31.58
     }
+  },
+  {
+    "date": "2026-11-26T19:11:29+00:00",
+    "git_commit": "3d484282b76f7c1196baabae14641d59726e4f27",
+    "set": "val",
+    "variant": "discerning_s1_c25",
+    "prompts": "reason_first",
+    "first_turn_only": false,
+    "families": null,
+    "spec": "lora:runs/lora/discerning_s1/ckpt_25",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "adapter_sha256": "711fa9886febee5687e8b1a73d52c157cc6e7010e837c7187eb5f9eea7a2695b"
+    },
+    "stratified": null,
+    "units_run": 600,
+    "threads": 32,
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/discerning_s1/ckpt_25",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "wall_seconds_total": 424.1,
+    "mean_wall_seconds_per_unit_concurrent": 22.34,
+    "generation": {
+      "calls": 1200,
+      "batches": 38,
+      "new_tokens": 86461,
+      "prompt_tokens": 421812,
+      "gpu_seconds": 422.2,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 204.8,
+      "mean_batch_size": 31.58
+    }
+  },
+  {
+    "date": "2026-11-26T19:18:49+00:00",
+    "git_commit": "222cedc0ad66b054d8aef0bc340c402dcde37c1e",
+    "set": "val",
+    "variant": "discerning_s1_c50",
+    "prompts": "reason_first",
+    "first_turn_only": false,
+    "families": null,
+    "spec": "lora:runs/lora/discerning_s1/ckpt_50",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "adapter_sha256": "af1c70083afc337f11f8359ac13fa91006b23dfc7bc3c9cc9eded7ad869dc4a4"
+    },
+    "stratified": null,
+    "units_run": 600,
+    "threads": 32,
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/discerning_s1/ckpt_50",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "wall_seconds_total": 422.8,
+    "mean_wall_seconds_per_unit_concurrent": 22.21,
+    "generation": {
+      "calls": 1200,
+      "batches": 38,
+      "new_tokens": 85240,
+      "prompt_tokens": 421232,
+      "gpu_seconds": 420.6,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 202.6,
+      "mean_batch_size": 31.58
+    }
+  },
+  {
+    "date": "2026-11-26T19:26:14+00:00",
+    "git_commit": "222cedc0ad66b054d8aef0bc340c402dcde37c1e",
+    "set": "val",
+    "variant": "discerning_s1_c75",
+    "prompts": "reason_first",
+    "first_turn_only": false,
+    "families": null,
+    "spec": "lora:runs/lora/discerning_s1/ckpt_75",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "adapter_sha256": "67999382347496ed458de70f7b512d08dc9f336ea087df28853f29fc1a346056"
+    },
+    "stratified": null,
+    "units_run": 600,
+    "threads": 32,
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/discerning_s1/ckpt_75",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "wall_seconds_total": 429.9,
+    "mean_wall_seconds_per_unit_concurrent": 22.63,
+    "generation": {
+      "calls": 1200,
+      "batches": 38,
+      "new_tokens": 85197,
+      "prompt_tokens": 421096,
+      "gpu_seconds": 427.7,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 199.2,
+      "mean_batch_size": 31.58
+    }
+  },
+  {
+    "date": "2026-11-26T19:33:33+00:00",
+    "git_commit": "222cedc0ad66b054d8aef0bc340c402dcde37c1e",
+    "set": "val",
+    "variant": "discerning_s1_c100",
+    "prompts": "reason_first",
+    "first_turn_only": false,
+    "families": null,
+    "spec": "lora:runs/lora/discerning_s1/ckpt_100",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "adapter_sha256": "3653c0f7e24e0b905915b4a28707bac4b48e3551dfa3a9d965423c2421b7a1cb"
+    },
+    "stratified": null,
+    "units_run": 600,
+    "threads": 32,
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/discerning_s1/ckpt_100",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "wall_seconds_total": 421.9,
+    "mean_wall_seconds_per_unit_concurrent": 22.22,
+    "generation": {
+      "calls": 1200,
+      "batches": 38,
+      "new_tokens": 85854,
+      "prompt_tokens": 421433,
+      "gpu_seconds": 419.9,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 204.5,
+      "mean_batch_size": 31.58
+    }
   }
 ]
