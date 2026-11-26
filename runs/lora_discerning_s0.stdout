@@ -5,3 +5,7 @@ warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.v
 [transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
 {'step': 1, 'loss': 0.2827, 'lr': 1.3333333333333333e-05, 'seconds': 7.8}
 {'step': 20, 'loss': 0.1087, 'lr': 9.997462247974752e-05, 'seconds': 335.2}
+{'step': 40, 'loss': 0.1433, 'lr': 9.936684911578018e-05, 'seconds': 1616.0}
+{'step': 60, 'loss': 0.0961, 'lr': 9.795829546360114e-05, 'seconds': 2882.1}
+{'step': 80, 'loss': 0.0804, 'lr': 9.577180968994082e-05, 'seconds': 3431.7}
+{'step': 100, 'loss': 0.0711, 'lr': 9.284285880837946e-05, 'seconds': 3563.6}
