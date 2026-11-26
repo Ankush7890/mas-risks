@@ -798,5 +798,55 @@
       "new_tokens_per_second": 199.0,
       "mean_batch_size": 31.58
     }
+  },
+  {
+    "date": "2026-11-26T22:06:34+00:00",
+    "git_commit": "0a121b2edd159e3dcdc22e83f8587e256f651e14",
+    "set": "val",
+    "variant": "discerning_s2_c25",
+    "prompts": "reason_first",
+    "first_turn_only": false,
+    "families": null,
+    "spec": "lora:runs/lora/discerning_s2/ckpt_25",
+    "fingerprint": {
+      "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+      "adapter_sha256": "118b0549b3ae1bfc9b361a5ea238eab746002e9268daee38e73a27796c222ecb"
+    },
+    "stratified": null,
+    "units_run": 600,
+    "threads": 32,
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/discerning_s2/ckpt_25",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "wall_seconds_total": 422.0,
+    "mean_wall_seconds_per_unit_concurrent": 22.23,
+    "generation": {
+      "calls": 1200,
+      "batches": 38,
+      "new_tokens": 85284,
+      "prompt_tokens": 421466,
+      "gpu_seconds": 420.0,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 203.0,
+      "mean_batch_size": 31.58
+    }
   }
 ]
