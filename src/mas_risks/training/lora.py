@@ -52,6 +52,8 @@ def main() -> None:
     parser.add_argument("--rank", type=int, default=16)
     parser.add_argument("--exclude-families", nargs="*", default=[])
     parser.add_argument("--max-steps", type=int, help="for a timing smoke run")
+    parser.add_argument("--memory-fraction", type=float, default=0.9,
+                        help="cap on this process's share of GPU memory")
     args = parser.parse_args()
     name = args.name or f"{args.type}_s{args.seed}"
     out = LORA_DIR / name
@@ -62,6 +64,10 @@ def main() -> None:
     from peft import LoraConfig, get_peft_model
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    # On WSL a full card spills into system memory and training slows 5x (discerning_s0:
+    # 14.3 GB peak allocated, but the cache grew to the whole card). With a cap, the
+    # allocator frees its cache and retries instead of spilling.
+    torch.cuda.set_per_process_memory_fraction(args.memory_fraction)
     random.seed(args.seed)
     torch.manual_seed(args.seed)
     revision = HfApi().model_info(MODEL_ID).sha
@@ -142,6 +148,8 @@ def main() -> None:
             "effective_batch": args.micro_batch * args.accum, "targets": TARGETS,
             "model_id": MODEL_ID, "revision": revision, "torch": torch.__version__,
             "peak_memory_gb": round(torch.cuda.max_memory_allocated() / 2**30, 1),
+            "peak_reserved_gb": round(torch.cuda.max_memory_reserved() / 2**30, 1),
+            "memory_fraction": args.memory_fraction,
             "wall_seconds": round(time.monotonic() - started, 1)}
     (out / "meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(json.dumps(meta, indent=1))
