@@ -9,3 +9,7 @@ warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.v
 {'step': 60, 'loss': 0.0961, 'lr': 9.795829546360114e-05, 'seconds': 2882.1}
 {'step': 80, 'loss': 0.0804, 'lr': 9.577180968994082e-05, 'seconds': 3431.7}
 {'step': 100, 'loss': 0.0711, 'lr': 9.284285880837946e-05, 'seconds': 3563.6}
+{'step': 120, 'loss': 0.1163, 'lr': 8.921895336846813e-05, 'seconds': 4888.6}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'step': 140, 'loss': 0.1009, 'lr': 8.495887678649934e-05, 'seconds': 6387.6}
+{'step': 160, 'loss': 0.091, 'lr': 8.013173181896283e-05, 'seconds': 7931.9}
