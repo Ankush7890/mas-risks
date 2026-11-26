@@ -1,0 +1,65 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  83%|████████▎ | 331/398 [00:00<00:00, 3224.96it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 3270.43it/s]
+600 planned, 0 already logged, 600 to run
+50/600 done, 47s, {'calls': 128, 'batches': 4, 'new_tokens': 9613, 'prompt_tokens': 44463, 'gpu_seconds': 47.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 203.6, 'mean_batch_size': 32.0}
+100/600 done, 94s, {'calls': 256, 'batches': 8, 'new_tokens': 18939, 'prompt_tokens': 89248, 'gpu_seconds': 93.7, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 202.1, 'mean_batch_size': 32.0}
+150/600 done, 117s, {'calls': 320, 'batches': 10, 'new_tokens': 23781, 'prompt_tokens': 111840, 'gpu_seconds': 116.7, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 203.8, 'mean_batch_size': 32.0}
+200/600 done, 164s, {'calls': 448, 'batches': 14, 'new_tokens': 32976, 'prompt_tokens': 156124, 'gpu_seconds': 163.7, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 201.4, 'mean_batch_size': 32.0}
+250/600 done, 190s, {'calls': 512, 'batches': 16, 'new_tokens': 37702, 'prompt_tokens': 178996, 'gpu_seconds': 189.6, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 198.9, 'mean_batch_size': 32.0}
+300/600 done, 238s, {'calls': 640, 'batches': 20, 'new_tokens': 47130, 'prompt_tokens': 224369, 'gpu_seconds': 236.9, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 198.9, 'mean_batch_size': 32.0}
+350/600 done, 263s, {'calls': 704, 'batches': 22, 'new_tokens': 51859, 'prompt_tokens': 246799, 'gpu_seconds': 262.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 197.8, 'mean_batch_size': 32.0}
+400/600 done, 308s, {'calls': 832, 'batches': 26, 'new_tokens': 61352, 'prompt_tokens': 291676, 'gpu_seconds': 307.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 199.6, 'mean_batch_size': 32.0}
+450/600 done, 355s, {'calls': 960, 'batches': 30, 'new_tokens': 70801, 'prompt_tokens': 336319, 'gpu_seconds': 353.7, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 200.2, 'mean_batch_size': 32.0}
+500/600 done, 380s, {'calls': 1024, 'batches': 32, 'new_tokens': 75718, 'prompt_tokens': 358845, 'gpu_seconds': 378.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 200.0, 'mean_batch_size': 32.0}
+550/600 done, 424s, {'calls': 1152, 'batches': 36, 'new_tokens': 84882, 'prompt_tokens': 404573, 'gpu_seconds': 422.7, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 200.8, 'mean_batch_size': 32.0}
+600/600 done, 446s, {'calls': 1200, 'batches': 38, 'new_tokens': 88276, 'prompt_tokens': 421873, 'gpu_seconds': 444.3, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 198.7, 'mean_batch_size': 31.58}
+{
+  "date": "2026-11-26T20:45:57+00:00",
+  "git_commit": "f55e2c9752680f0222ca21eabd88a16a5ca59967",
+  "set": "val",
+  "variant": "naive_s1_c50",
+  "prompts": "reason_first",
+  "first_turn_only": false,
+  "families": null,
+  "spec": "lora:runs/lora/naive_s1/ckpt_50",
+  "fingerprint": {
+    "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+    "adapter_sha256": "bd29213f9819dcee8257ea09f0945f16f22fb2e2434a585f41aa4650d9608289"
+  },
+  "stratified": null,
+  "units_run": 600,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "adapter": "runs/lora/naive_s1/ckpt_50",
+    "adapter_scale": 1.0,
+    "steer": null
+  },
+  "wall_seconds_total": 446.4,
+  "mean_wall_seconds_per_unit_concurrent": 23.49,
+  "generation": {
+    "calls": 1200,
+    "batches": 38,
+    "new_tokens": 88276,
+    "prompt_tokens": 421873,
+    "gpu_seconds": 444.3,
+    "hit_max_new_tokens": 0,
+    "new_tokens_per_second": 198.7,
+    "mean_batch_size": 31.58
+  }
+}

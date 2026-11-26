@@ -1,0 +1,8 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 327/398 [00:00<00:00, 3242.88it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 3519.42it/s]
+/workspace/writing_folder/mas-risks/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3204: FutureWarning: `gradient_checkpointing_enable` is deprecated and will be removed in v6. Use `activation_checkpointing_enable` instead.
+  warnings.warn(
+[transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+{'step': 1, 'loss': 0.2797, 'lr': 1.3333333333333333e-05, 'seconds': 7.7}
+{'step': 20, 'loss': 0.1145, 'lr': 9.997462247974752e-05, 'seconds': 132.2}
+{'step': 40, 'loss': 0.1461, 'lr': 9.936684911578018e-05, 'seconds': 262.8}

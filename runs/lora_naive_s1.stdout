@@ -20,3 +20,72 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 {'step': 260, 'loss': 0.0767, 'lr': 5.0477922639086616e-05, 'seconds': 1716.4}
 {'step': 280, 'loss': 0.0753, 'lr': 4.4119175003047395e-05, 'seconds': 1848.6}
 {'step': 300, 'loss': 0.0661, 'lr': 3.785582030417819e-05, 'seconds': 1980.6}
+{'step': 320, 'loss': 0.1018, 'lr': 3.1789456498815416e-05, 'seconds': 2113.2}
+{'step': 340, 'loss': 0.0794, 'lr': 2.6018486151503213e-05, 'seconds': 2245.5}
+{'step': 360, 'loss': 0.1, 'lr': 2.0636520245740686e-05, 'seconds': 2376.8}
+{'step': 380, 'loss': 0.0652, 'lr': 1.5730859719026536e-05, 'seconds': 2509.5}
+{'step': 400, 'loss': 0.0495, 'lr': 1.1381079353239898e-05, 'seconds': 2642.4}
+{'step': 420, 'loss': 0.0817, 'lr': 7.657736991090281e-06, 'seconds': 2773.4}
+{'step': 440, 'loss': 0.0598, 'lr': 4.621229016452156e-06, 'seconds': 2906.6}
+{'step': 460, 'loss': 0.0501, 'lr': 2.3208106638531846e-06, 'seconds': 3038.3}
+{'step': 480, 'loss': 0.0822, 'lr': 7.93797048687539e-07, 'seconds': 3170.9}
+{'step': 500, 'loss': 0.0674, 'lr': 6.49578782538851e-08, 'seconds': 3302.2}
+{
+ "date": "2026-11-26T20:30:24+00:00",
+ "git_commit": "222cedc0ad66b054d8aef0bc340c402dcde37c1e",
+ "type": "naive",
+ "seed": 1,
+ "examples": 4051,
+ "exclude_families": [],
+ "data_file": "training_data/naive.jsonl",
+ "data_manifest": {
+  "dropped": {
+   "hold": 349
+  },
+  "equalised_to": 4051,
+  "cut": {
+   "naive": 0,
+   "discerning": 291
+  },
+  "files": {
+   "naive": {
+    "rows": 4051,
+    "by_kind": {
+     "hold": 3651,
+     "hold_extra": 400
+    },
+    "sha256": "31bf777756d5619d3fe073278060f0903afe93551c2cdec412b99760bea9d0b8"
+   },
+   "discerning": {
+    "rows": 4051,
+    "by_kind": {
+     "change": 474,
+     "hold": 3212,
+     "op": 365
+    },
+    "sha256": "bda40135d3c601cd66e2e1dc3f0e1806b662d1013f0961948c1a1eeb3e7fbedb"
+   }
+  }
+ },
+ "lr": 0.0001,
+ "epochs": 2.0,
+ "steps": 508,
+ "rank": 16,
+ "effective_batch": 16,
+ "targets": [
+  "q_proj",
+  "k_proj",
+  "v_proj",
+  "o_proj",
+  "gate_proj",
+  "up_proj",
+  "down_proj"
+ ],
+ "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+ "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+ "torch": "2.15.0+cu132",
+ "peak_memory_gb": 14.4,
+ "peak_reserved_gb": 15.7,
+ "memory_fraction": 0.9,
+ "wall_seconds": 3355.8
+}
