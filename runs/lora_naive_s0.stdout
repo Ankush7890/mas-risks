@@ -7,3 +7,83 @@ warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.v
 {'step': 20, 'loss': 0.1248, 'lr': 9.997462247974752e-05, 'seconds': 161.9}
 {'step': 40, 'loss': 0.0846, 'lr': 9.936684911578018e-05, 'seconds': 386.1}
 {'step': 60, 'loss': 0.1294, 'lr': 9.795829546360114e-05, 'seconds': 870.8}
+{'step': 80, 'loss': 0.1304, 'lr': 9.577180968994082e-05, 'seconds': 1158.7}
+{'step': 100, 'loss': 0.1531, 'lr': 9.284285880837946e-05, 'seconds': 1623.0}
+{'step': 120, 'loss': 0.1093, 'lr': 8.921895336846813e-05, 'seconds': 1925.8}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'step': 140, 'loss': 0.1224, 'lr': 8.495887678649934e-05, 'seconds': 2165.3}
+{'step': 160, 'loss': 0.1002, 'lr': 8.013173181896283e-05, 'seconds': 2577.4}
+{'step': 180, 'loss': 0.1145, 'lr': 7.481581964585245e-05, 'seconds': 2886.4}
+{'step': 200, 'loss': 0.1064, 'lr': 6.909736974622828e-05, 'seconds': 3227.2}
+{'step': 220, 'loss': 0.0809, 'lr': 6.306914116873865e-05, 'seconds': 3480.4}
+{'step': 240, 'loss': 0.0889, 'lr': 5.682891788591067e-05, 'seconds': 3723.3}
+{'step': 260, 'loss': 0.0676, 'lr': 5.0477922639086616e-05, 'seconds': 4016.1}
+{'step': 280, 'loss': 0.0655, 'lr': 4.4119175003047395e-05, 'seconds': 4456.8}
+{'step': 300, 'loss': 0.0583, 'lr': 3.785582030417819e-05, 'seconds': 4955.1}
+{'step': 320, 'loss': 0.0918, 'lr': 3.1789456498815416e-05, 'seconds': 5266.6}
+{'step': 340, 'loss': 0.0861, 'lr': 2.6018486151503213e-05, 'seconds': 5680.3}
+{'step': 360, 'loss': 0.0628, 'lr': 2.0636520245740686e-05, 'seconds': 5920.9}
+{'step': 380, 'loss': 0.0711, 'lr': 1.5730859719026536e-05, 'seconds': 6329.9}
+{'step': 400, 'loss': 0.0667, 'lr': 1.1381079353239898e-05, 'seconds': 6638.5}
+{'step': 420, 'loss': 0.0556, 'lr': 7.657736991090281e-06, 'seconds': 7138.2}
+{'step': 440, 'loss': 0.0679, 'lr': 4.621229016452156e-06, 'seconds': 7487.8}
+{'step': 460, 'loss': 0.0751, 'lr': 2.3208106638531846e-06, 'seconds': 7776.3}
+{'step': 480, 'loss': 0.0714, 'lr': 7.93797048687539e-07, 'seconds': 8065.3}
+{'step': 500, 'loss': 0.0535, 'lr': 6.49578782538851e-08, 'seconds': 8413.5}
+{
+ "date": "2026-11-26T04:11:47+00:00",
+ "git_commit": "b8a58f7f2c080548a3854bcea6d2d6c4cfa98cc7",
+ "type": "naive",
+ "seed": 0,
+ "examples": 4051,
+ "exclude_families": [],
+ "data_file": "training_data/naive.jsonl",
+ "data_manifest": {
+  "dropped": {
+   "hold": 349
+  },
+  "equalised_to": 4051,
+  "cut": {
+   "naive": 0,
+   "discerning": 291
+  },
+  "files": {
+   "naive": {
+    "rows": 4051,
+    "by_kind": {
+     "hold": 3651,
+     "hold_extra": 400
+    },
+    "sha256": "31bf777756d5619d3fe073278060f0903afe93551c2cdec412b99760bea9d0b8"
+   },
+   "discerning": {
+    "rows": 4051,
+    "by_kind": {
+     "change": 474,
+     "hold": 3212,
+     "op": 365
+    },
+    "sha256": "bda40135d3c601cd66e2e1dc3f0e1806b662d1013f0961948c1a1eeb3e7fbedb"
+   }
+  }
+ },
+ "lr": 0.0001,
+ "epochs": 2.0,
+ "steps": 508,
+ "rank": 16,
+ "effective_batch": 16,
+ "targets": [
+  "q_proj",
+  "k_proj",
+  "v_proj",
+  "o_proj",
+  "gate_proj",
+  "up_proj",
+  "down_proj"
+ ],
+ "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+ "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+ "torch": "2.15.0+cu132",
+ "peak_memory_gb": 14.4,
+ "wall_seconds": 8503.2
+}

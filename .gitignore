@@ -17,3 +17,6 @@ __pycache__/
 # OS noise
 .DS_Store
 
+
+# LoRA adapter weights (127 MB each, over GitHub's limit); kept on the machine, released via Hugging Face
+runs/lora/*/ckpt_*/adapter_model.safetensors
