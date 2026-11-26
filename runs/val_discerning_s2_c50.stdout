@@ -3,3 +3,63 @@ warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.v
 600 planned, 0 already logged, 600 to run
 50/600 done, 43s, {'calls': 128, 'batches': 4, 'new_tokens': 9115, 'prompt_tokens': 44232, 'gpu_seconds': 43.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 211.6, 'mean_batch_size': 32.0}
 100/600 done, 85s, {'calls': 256, 'batches': 8, 'new_tokens': 18022, 'prompt_tokens': 88870, 'gpu_seconds': 85.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 211.8, 'mean_batch_size': 32.0}
+150/600 done, 107s, {'calls': 320, 'batches': 10, 'new_tokens': 22543, 'prompt_tokens': 111374, 'gpu_seconds': 106.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.4, 'mean_batch_size': 32.0}
+200/600 done, 145s, {'calls': 448, 'batches': 14, 'new_tokens': 31298, 'prompt_tokens': 155542, 'gpu_seconds': 144.3, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 216.9, 'mean_batch_size': 32.0}
+250/600 done, 169s, {'calls': 512, 'batches': 16, 'new_tokens': 35822, 'prompt_tokens': 178400, 'gpu_seconds': 168.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.6, 'mean_batch_size': 32.0}
+300/600 done, 210s, {'calls': 640, 'batches': 20, 'new_tokens': 44593, 'prompt_tokens': 223500, 'gpu_seconds': 209.1, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 213.2, 'mean_batch_size': 32.0}
+350/600 done, 232s, {'calls': 704, 'batches': 22, 'new_tokens': 49132, 'prompt_tokens': 245895, 'gpu_seconds': 231.0, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.7, 'mean_batch_size': 32.0}
+400/600 done, 273s, {'calls': 832, 'batches': 26, 'new_tokens': 57878, 'prompt_tokens': 290526, 'gpu_seconds': 271.5, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 213.1, 'mean_batch_size': 32.0}
+450/600 done, 316s, {'calls': 960, 'batches': 30, 'new_tokens': 66950, 'prompt_tokens': 335054, 'gpu_seconds': 314.4, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.9, 'mean_batch_size': 32.0}
+500/600 done, 337s, {'calls': 1024, 'batches': 32, 'new_tokens': 71542, 'prompt_tokens': 357470, 'gpu_seconds': 336.2, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.8, 'mean_batch_size': 32.0}
+550/600 done, 380s, {'calls': 1152, 'batches': 36, 'new_tokens': 80517, 'prompt_tokens': 403198, 'gpu_seconds': 378.6, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 212.7, 'mean_batch_size': 32.0}
+600/600 done, 399s, {'calls': 1200, 'batches': 38, 'new_tokens': 83759, 'prompt_tokens': 420412, 'gpu_seconds': 397.4, 'hit_max_new_tokens': 0, 'new_tokens_per_second': 210.8, 'mean_batch_size': 31.58}
+{
+  "date": "2026-11-26T22:13:30+00:00",
+  "git_commit": "0a121b2edd159e3dcdc22e83f8587e256f651e14",
+  "set": "val",
+  "variant": "discerning_s2_c50",
+  "prompts": "reason_first",
+  "first_turn_only": false,
+  "families": null,
+  "spec": "lora:runs/lora/discerning_s2/ckpt_50",
+  "fingerprint": {
+    "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+    "adapter_sha256": "b4c795b55bbd4b80a763fa96f24dab635eb643911a4d26d36ecc668a50de5d6e"
+  },
+  "stratified": null,
+  "units_run": 600,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 1024
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "adapter": "runs/lora/discerning_s2/ckpt_50",
+    "adapter_scale": 1.0,
+    "steer": null
+  },
+  "wall_seconds_total": 399.5,
+  "mean_wall_seconds_per_unit_concurrent": 21.02,
+  "generation": {
+    "calls": 1200,
+    "batches": 38,
+    "new_tokens": 83759,
+    "prompt_tokens": 420412,
+    "gpu_seconds": 397.4,
+    "hit_max_new_tokens": 0,
+    "new_tokens_per_second": 210.8,
+    "mean_batch_size": 31.58
+  }
+}
