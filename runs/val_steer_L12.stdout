@@ -1,0 +1,62 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  63%|██████▎   | 250/398 [00:00<00:00, 2464.04it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2702.84it/s]
+240 planned, 0 already logged, 240 to run
+50/240 done, 94s, {'calls': 128, 'batches': 4, 'new_tokens': 13304, 'prompt_tokens': 46847, 'gpu_seconds': 93.9, 'hit_max_new_tokens': 1, 'new_tokens_per_second': 141.7, 'mean_batch_size': 32.0}
+100/240 done, 222s, {'calls': 256, 'batches': 8, 'new_tokens': 27640, 'prompt_tokens': 95146, 'gpu_seconds': 221.7, 'hit_max_new_tokens': 4, 'new_tokens_per_second': 124.7, 'mean_batch_size': 32.0}
+150/240 done, 262s, {'calls': 320, 'batches': 10, 'new_tokens': 33901, 'prompt_tokens': 118626, 'gpu_seconds': 261.2, 'hit_max_new_tokens': 4, 'new_tokens_per_second': 129.8, 'mean_batch_size': 32.0}
+200/240 done, 380s, {'calls': 448, 'batches': 14, 'new_tokens': 47322, 'prompt_tokens': 165562, 'gpu_seconds': 379.0, 'hit_max_new_tokens': 6, 'new_tokens_per_second': 124.9, 'mean_batch_size': 32.0}
+240/240 done, 446s, {'calls': 482, 'batches': 17, 'new_tokens': 50976, 'prompt_tokens': 178533, 'gpu_seconds': 445.1, 'hit_max_new_tokens': 7, 'new_tokens_per_second': 114.5, 'mean_batch_size': 28.35}
+{
+  "date": "2026-11-25T23:26:33+00:00",
+  "git_commit": "9fd3c709f8c874c318e7586a5a53c31f8de3f299",
+  "set": "val",
+  "variant": "steer_L12_p1",
+  "prompts": "reason_first",
+  "first_turn_only": false,
+  "families": null,
+  "spec": "steer:12:1",
+  "fingerprint": {
+    "system_prompt_sha256": "c367ab09b6b410f6d13f814237e197bf557021570650c51dcab46efb2d39c86d",
+    "steering_sha256": "5986ab62281b9295fc02804d8f8217a42bb885af0a839238a341d6c5506c50fc"
+  },
+  "stratified": 48,
+  "units_run": 240,
+  "threads": 32,
+  "model": {
+    "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "dtype": "bfloat16",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0.0,
+      "max_new_tokens": 320
+    },
+    "seed": 0,
+    "batched": true,
+    "max_batch": 32,
+    "torch": "2.15.0+cu132",
+    "transformers": "5.24.0",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "adapter": null,
+    "adapter_scale": 1.0,
+    "steer": {
+      "layer": 12,
+      "strength": 1.0,
+      "norm": 19.815448760986328
+    }
+  },
+  "wall_seconds_total": 446.0,
+  "mean_wall_seconds_per_unit_concurrent": 54.39,
+  "generation": {
+    "calls": 482,
+    "batches": 17,
+    "new_tokens": 50976,
+    "prompt_tokens": 178533,
+    "gpu_seconds": 445.1,
+    "hit_max_new_tokens": 7,
+    "new_tokens_per_second": 114.5,
+    "mean_batch_size": 28.35
+  }
+}
