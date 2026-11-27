@@ -1,0 +1,41 @@
+[
+  {
+    "date": "2026-11-27T09:53:01+00:00",
+    "git_commit": "1a74fd71511095d92d7c167c0cbda3088f7e0e26",
+    "set": "test_unseen",
+    "variant": "base",
+    "spec": "base",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2500,
+      "batches": 80,
+      "new_tokens": 183062,
+      "prompt_tokens": 976906,
+      "gpu_seconds": 1142.7,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 160.2,
+      "mean_batch_size": 31.25
+    },
+    "wall_seconds": 1145.9
+  }
+]
