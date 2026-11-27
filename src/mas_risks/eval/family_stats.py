@@ -2,6 +2,7 @@
 
     python -m mas_risks.eval.family_stats report runs/test/test_unseen_b.jsonl
     python -m mas_risks.eval.family_stats power --families 14 20
+    python -m mas_risks.eval.family_stats validity runs/dev_b_base.jsonl   # before the freeze
 
 The unit of inference is the family. For variants A and B and family f,
 
@@ -308,16 +309,36 @@ def report(paths: list[Path]) -> str:
     return "\n".join(out)
 
 
+def validity(paths: list[Path]) -> str:
+    """Plan 18b step 9: per family, invalid replies and the turn-1 default rate, and nothing
+    about argument acceptance (that may be looked at only after the test freeze)."""
+    records = load(paths)
+    by = defaultdict(list)
+    for r in records:
+        by[r["family"]].append(r)
+    lines = ["| family | dialogues | invalid | invalid % | turn-1 default % |", "|---|---|---|---|---|"]
+    for fam, rs in sorted(by.items()):
+        bad = sum(not usable(r) for r in rs)
+        firsts = [r for r in rs if r["first"]["reply"]]
+        dflt = sum(r["first"]["reply"]["decision"] == r["labels"]["default"] for r in firsts)
+        lines.append(f"| {fam} | {len(rs)} | {bad} | {100 * bad / len(rs):.1f} | "
+                     f"{100 * dflt / max(1, len(firsts)):.1f} |")
+    return "\n".join(lines)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("report")
     r.add_argument("logs", nargs="+", type=Path)
+    sub.add_parser("validity").add_argument("logs", nargs="+", type=Path)
     pw = sub.add_parser("power")
     pw.add_argument("--families", type=int, nargs="+", default=[14, 20])
     args = parser.parse_args()
     if args.cmd == "report":
         print(report(args.logs))
+    elif args.cmd == "validity":
+        print(validity(args.logs))
     else:
         # Effects from the step-18 per-family table (statistics review): vs base mean 17,
         # SD 18; vs naive mean −10, SD 19 (points).
