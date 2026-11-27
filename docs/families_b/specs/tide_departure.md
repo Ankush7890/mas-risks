@@ -14,7 +14,7 @@ Withheld neutral (one of three): radio channel, fuel, harbour lights.
 Condition: engine_hp < hp_limit (strictly). The case's power is never equal to P: it is P−6..P−1 (min 2) when the rule applies, P+1..P+15 otherwise.
 
 ## Case
-"{name} wants to take the boat {boat} out of {town} harbour today." then (shuffled) "The {boat} has a draft of {d} m.", "The {boat} has a {p} hp engine.", a destination sentence.
+"{name} wants to take the boat {boat} out of {town} harbour today." then (shuffled) "The {boat} has a draft of {d} m.", "The {boat} has an engine of {p} hp.", a destination sentence.
 Question: "What is the earliest time at which the {boat} can leave?"
 
 ## Answers (24-hour "HH:MM", zero-padded)

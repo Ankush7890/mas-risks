@@ -183,7 +183,7 @@ def draw_tide_departure(rng: random.Random, seed: int) -> Item:
         case_lead=f"{name} wants to take the boat {boat} out of {town} harbour today.",
         case_rest=[
             f"The {boat} has a draft of {_metres(draft)}.",
-            f"The {boat} has a {power} hp engine.",
+            f"The {boat} has an engine of {power} hp.",
             f"{first_name} plans to sail to {dest}.",
         ],
         question=f"What is the earliest time at which the {boat} can leave?",

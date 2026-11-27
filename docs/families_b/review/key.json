@@ -1,0 +1,1002 @@
+{
+ "R0-000": {
+  "item": "language_course_enrolment-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-001": {
+  "item": "language_course_enrolment-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-002": {
+  "item": "duty_rotation-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-003": {
+  "item": "duty_rotation-104",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-004": {
+  "item": "orienteering_results-106",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-005": {
+  "item": "athletics_age_groups-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-006": {
+  "item": "bread_proofing-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-007": {
+  "item": "call_time_zones-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-008": {
+  "item": "music_contest-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-009": {
+  "item": "duty_rotation-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-010": {
+  "item": "bread_proofing-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-011": {
+  "item": "alterations_service-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-012": {
+  "item": "music_contest-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-013": {
+  "item": "orienteering_results-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-014": {
+  "item": "call_time_zones-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-015": {
+  "item": "allotment_waiting_list-103",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-016": {
+  "item": "bread_proofing-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-017": {
+  "item": "orienteering_results-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-018": {
+  "item": "coffee_stamp_card-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-019": {
+  "item": "music_contest-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-020": {
+  "item": "allotment_waiting_list-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-021": {
+  "item": "bread_proofing-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-022": {
+  "item": "allotment_waiting_list-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-023": {
+  "item": "music_contest-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-024": {
+  "item": "music_contest-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-025": {
+  "item": "athletics_age_groups-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-026": {
+  "item": "music_contest-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-027": {
+  "item": "allotment_waiting_list-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-028": {
+  "item": "orienteering_results-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-029": {
+  "item": "call_time_zones-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-030": {
+  "item": "allotment_waiting_list-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-031": {
+  "item": "call_time_zones-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-032": {
+  "item": "music_contest-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-033": {
+  "item": "coffee_stamp_card-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-034": {
+  "item": "duty_rotation-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-035": {
+  "item": "athletics_age_groups-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-036": {
+  "item": "bread_proofing-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-037": {
+  "item": "alterations_service-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-038": {
+  "item": "language_course_enrolment-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-039": {
+  "item": "athletics_age_groups-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-040": {
+  "item": "orienteering_results-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-041": {
+  "item": "language_course_enrolment-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-042": {
+  "item": "language_course_enrolment-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-043": {
+  "item": "bread_proofing-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-044": {
+  "item": "duty_rotation-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-045": {
+  "item": "call_time_zones-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-046": {
+  "item": "call_time_zones-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-047": {
+  "item": "call_time_zones-105",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-048": {
+  "item": "language_course_enrolment-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-049": {
+  "item": "coffee_stamp_card-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-050": {
+  "item": "music_contest-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-051": {
+  "item": "music_contest-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-052": {
+  "item": "alterations_service-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-053": {
+  "item": "duty_rotation-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-054": {
+  "item": "duty_rotation-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-055": {
+  "item": "language_course_enrolment-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-056": {
+  "item": "music_contest-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-057": {
+  "item": "coffee_stamp_card-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-058": {
+  "item": "duty_rotation-102",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-059": {
+  "item": "alterations_service-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-060": {
+  "item": "athletics_age_groups-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-061": {
+  "item": "athletics_age_groups-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-062": {
+  "item": "orienteering_results-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-063": {
+  "item": "alterations_service-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-064": {
+  "item": "coffee_stamp_card-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-065": {
+  "item": "allotment_waiting_list-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-066": {
+  "item": "alterations_service-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-067": {
+  "item": "coffee_stamp_card-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-068": {
+  "item": "coffee_stamp_card-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-069": {
+  "item": "athletics_age_groups-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-070": {
+  "item": "alterations_service-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-071": {
+  "item": "alterations_service-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-072": {
+  "item": "orienteering_results-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-073": {
+  "item": "allotment_waiting_list-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-074": {
+  "item": "bread_proofing-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-075": {
+  "item": "language_course_enrolment-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R0-076": {
+  "item": "orienteering_results-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R0-077": {
+  "item": "alterations_service-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-078": {
+  "item": "bread_proofing-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-079": {
+  "item": "athletics_age_groups-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-080": {
+  "item": "coffee_stamp_card-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-081": {
+  "item": "call_time_zones-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-082": {
+  "item": "alterations_service-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-083": {
+  "item": "athletics_age_groups-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-084": {
+  "item": "duty_rotation-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R0-085": {
+  "item": "coffee_stamp_card-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-086": {
+  "item": "language_course_enrolment-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-087": {
+  "item": "bread_proofing-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-088": {
+  "item": "orienteering_results-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-089": {
+  "item": "allotment_waiting_list-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-090": {
+  "item": "coffee_stamp_card-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-091": {
+  "item": "orienteering_results-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R0-092": {
+  "item": "duty_rotation-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R0-093": {
+  "item": "call_time_zones-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-094": {
+  "item": "allotment_waiting_list-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-095": {
+  "item": "call_time_zones-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R0-096": {
+  "item": "allotment_waiting_list-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-097": {
+  "item": "bread_proofing-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R0-098": {
+  "item": "athletics_age_groups-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R0-099": {
+  "item": "language_course_enrolment-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-000": {
+  "item": "pallet_stacking-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-001": {
+  "item": "paint_estimate-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-002": {
+  "item": "water_tariff-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-003": {
+  "item": "pool_guest_passes-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-004": {
+  "item": "seed_lot_grading-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-005": {
+  "item": "paint_estimate-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-006": {
+  "item": "seed_lot_grading-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-007": {
+  "item": "seed_lot_grading-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-008": {
+  "item": "pool_guest_passes-104",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-009": {
+  "item": "returns_window-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-010": {
+  "item": "paint_estimate-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-011": {
+  "item": "seed_lot_grading-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-012": {
+  "item": "pool_guest_passes-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-013": {
+  "item": "water_tariff-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-014": {
+  "item": "water_tariff-102",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-015": {
+  "item": "parking_charges-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-016": {
+  "item": "pool_guest_passes-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-017": {
+  "item": "pool_guest_passes-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-018": {
+  "item": "tide_departure-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-019": {
+  "item": "returns_window-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-020": {
+  "item": "pallet_stacking-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-021": {
+  "item": "paint_estimate-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-022": {
+  "item": "translation_rates-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-023": {
+  "item": "returns_window-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-024": {
+  "item": "translation_rates-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-025": {
+  "item": "returns_window-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-026": {
+  "item": "pallet_stacking-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-027": {
+  "item": "tide_departure-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-028": {
+  "item": "pool_guest_passes-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-029": {
+  "item": "water_tariff-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-030": {
+  "item": "translation_rates-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-031": {
+  "item": "returns_window-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-032": {
+  "item": "water_tariff-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-033": {
+  "item": "pool_guest_passes-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-034": {
+  "item": "watering_restrictions-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-035": {
+  "item": "paint_estimate-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-036": {
+  "item": "tide_departure-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-037": {
+  "item": "paint_estimate-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-038": {
+  "item": "returns_window-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-039": {
+  "item": "seed_lot_grading-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-040": {
+  "item": "watering_restrictions-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-041": {
+  "item": "pool_guest_passes-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-042": {
+  "item": "pallet_stacking-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-043": {
+  "item": "watering_restrictions-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-044": {
+  "item": "translation_rates-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-045": {
+  "item": "tide_departure-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-046": {
+  "item": "water_tariff-105",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-047": {
+  "item": "pool_guest_passes-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-048": {
+  "item": "parking_charges-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-049": {
+  "item": "parking_charges-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-050": {
+  "item": "translation_rates-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-051": {
+  "item": "parking_charges-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-052": {
+  "item": "parking_charges-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-053": {
+  "item": "returns_window-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-054": {
+  "item": "tide_departure-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-055": {
+  "item": "watering_restrictions-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-056": {
+  "item": "watering_restrictions-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-057": {
+  "item": "parking_charges-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-058": {
+  "item": "parking_charges-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-059": {
+  "item": "translation_rates-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-060": {
+  "item": "water_tariff-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-061": {
+  "item": "watering_restrictions-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-062": {
+  "item": "paint_estimate-105",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-063": {
+  "item": "pallet_stacking-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-064": {
+  "item": "pallet_stacking-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-065": {
+  "item": "paint_estimate-104",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-066": {
+  "item": "seed_lot_grading-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-067": {
+  "item": "tide_departure-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-068": {
+  "item": "seed_lot_grading-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-069": {
+  "item": "tide_departure-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-070": {
+  "item": "watering_restrictions-106",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-071": {
+  "item": "parking_charges-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-072": {
+  "item": "translation_rates-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-073": {
+  "item": "pool_guest_passes-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-074": {
+  "item": "tide_departure-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-075": {
+  "item": "tide_departure-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-076": {
+  "item": "translation_rates-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-077": {
+  "item": "pallet_stacking-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-078": {
+  "item": "water_tariff-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-079": {
+  "item": "seed_lot_grading-106",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-080": {
+  "item": "water_tariff-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-081": {
+  "item": "returns_window-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-082": {
+  "item": "watering_restrictions-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-083": {
+  "item": "watering_restrictions-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-084": {
+  "item": "translation_rates-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-085": {
+  "item": "paint_estimate-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-086": {
+  "item": "tide_departure-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R1-087": {
+  "item": "pallet_stacking-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-088": {
+  "item": "translation_rates-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-089": {
+  "item": "returns_window-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-090": {
+  "item": "pallet_stacking-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R1-091": {
+  "item": "paint_estimate-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-092": {
+  "item": "pallet_stacking-106",
+  "correct": "D",
+  "sound": true
+ },
+ "R1-093": {
+  "item": "returns_window-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-094": {
+  "item": "parking_charges-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R1-095": {
+  "item": "seed_lot_grading-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R1-096": {
+  "item": "parking_charges-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R1-097": {
+  "item": "seed_lot_grading-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R1-098": {
+  "item": "water_tariff-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R1-099": {
+  "item": "watering_restrictions-103",
+  "correct": "C",
+  "sound": false
+ }
+}
