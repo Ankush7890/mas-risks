@@ -23,3 +23,69 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 {'step': 320, 'loss': 0.0738, 'lr': 3.1789456498815416e-05, 'seconds': 2117.5}
 {'step': 340, 'loss': 0.0733, 'lr': 2.6018486151503213e-05, 'seconds': 2248.2}
 {'step': 360, 'loss': 0.065, 'lr': 2.0636520245740686e-05, 'seconds': 2378.5}
+{'step': 380, 'loss': 0.0663, 'lr': 1.5730859719026536e-05, 'seconds': 2510.6}
+{'step': 400, 'loss': 0.0567, 'lr': 1.1381079353239898e-05, 'seconds': 2644.2}
+{'step': 420, 'loss': 0.0529, 'lr': 7.657736991090281e-06, 'seconds': 2775.9}
+{'step': 440, 'loss': 0.0842, 'lr': 4.621229016452156e-06, 'seconds': 2909.8}
+{'step': 460, 'loss': 0.0734, 'lr': 2.3208106638531846e-06, 'seconds': 3043.0}
+{'step': 480, 'loss': 0.0802, 'lr': 7.93797048687539e-07, 'seconds': 3174.5}
+{'step': 500, 'loss': 0.0592, 'lr': 6.49578782538851e-08, 'seconds': 3305.7}
+{
+ "date": "2026-11-26T23:24:53+00:00",
+ "git_commit": "91105c802f513a5ba4942435194941797e8de513",
+ "type": "naive",
+ "seed": 2,
+ "examples": 4051,
+ "exclude_families": [],
+ "data_file": "training_data/naive.jsonl",
+ "data_manifest": {
+  "dropped": {
+   "hold": 349
+  },
+  "equalised_to": 4051,
+  "cut": {
+   "naive": 0,
+   "discerning": 291
+  },
+  "files": {
+   "naive": {
+    "rows": 4051,
+    "by_kind": {
+     "hold": 3651,
+     "hold_extra": 400
+    },
+    "sha256": "31bf777756d5619d3fe073278060f0903afe93551c2cdec412b99760bea9d0b8"
+   },
+   "discerning": {
+    "rows": 4051,
+    "by_kind": {
+     "change": 474,
+     "hold": 3212,
+     "op": 365
+    },
+    "sha256": "bda40135d3c601cd66e2e1dc3f0e1806b662d1013f0961948c1a1eeb3e7fbedb"
+   }
+  }
+ },
+ "lr": 0.0001,
+ "epochs": 2.0,
+ "steps": 508,
+ "rank": 16,
+ "effective_batch": 16,
+ "targets": [
+  "q_proj",
+  "k_proj",
+  "v_proj",
+  "o_proj",
+  "gate_proj",
+  "up_proj",
+  "down_proj"
+ ],
+ "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+ "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+ "torch": "2.15.0+cu132",
+ "peak_memory_gb": 14.4,
+ "peak_reserved_gb": 15.7,
+ "memory_fraction": 0.9,
+ "wall_seconds": 3358.6
+}

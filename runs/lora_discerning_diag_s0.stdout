@@ -1,0 +1,12 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  72%|███████▏  | 285/398 [00:00<00:00, 2837.50it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 2911.51it/s]
+/workspace/writing_folder/mas-risks/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:3204: FutureWarning: `gradient_checkpointing_enable` is deprecated and will be removed in v6. Use `activation_checkpointing_enable` instead.
+  warnings.warn(
+[transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+{'step': 1, 'loss': 0.2014, 'lr': 1.8181818181818182e-05, 'seconds': 7.4}
+{'step': 20, 'loss': 0.1229, 'lr': 9.98579450130307e-05, 'seconds': 130.7}
+{'step': 40, 'loss': 0.1208, 'lr': 9.853162835172637e-05, 'seconds': 262.9}
+{'step': 60, 'loss': 0.0966, 'lr': 9.584604144173083e-05, 'seconds': 393.9}
+{'step': 80, 'loss': 0.104, 'lr': 9.18764020021071e-05, 'seconds': 525.3}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'step': 100, 'loss': 0.0986, 'lr': 8.673389139996708e-05, 'seconds': 658.8}
