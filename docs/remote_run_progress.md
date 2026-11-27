@@ -81,3 +81,4 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - 26-11-27 12:40 UTC health check: test_unseen 8/13 done; naive_s1_c100 running. steer_random_L18_1 took 34 min with 63 generations at the token cap (counted invalid; ~5% of dialogues, near the cap used on val), others 0–6. No failures; git clean and pushed; 805 GB free.
 - 26-11-27 13:40 UTC health check: test_unseen 10/13 done (all three naive seeds), discerning_s0_c100 at 1,056/1,250; no failures; git clean and pushed; 805 GB free.
 - 26-11-27 14:40 UTC health check: **test_unseen done** (13/13 variants × 1,250). test_seen started: base done, persona_yield_2 at 104/1,250. No failures; git clean and pushed; 805 GB free.
+- 26-11-27 15:40 UTC health check: test_seen 4/13 done, steer_L18_1 at 1,127/1,250; no failures; git clean and pushed; 805 GB free.
