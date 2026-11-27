@@ -101,7 +101,7 @@ def _dialogues(set_name, item, argument_text=None):
 def _clean_data(argument_text=None):
     return {name: [d for family in s.families for item in candidates(name, family)[:PER_FAMILY]
                    for d in _dialogues(name, item, argument_text)]
-            for name, s in SPEC.sets.items()}
+            for name, s in SPEC.sets.items() if name in SET_NAMES}
 
 
 def test_all_checks_pass_on_clean_data():
