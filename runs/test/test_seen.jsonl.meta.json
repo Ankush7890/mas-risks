@@ -240,5 +240,165 @@
       "mean_batch_size": 31.25
     },
     "wall_seconds": 852.6
+  },
+  {
+    "date": "2026-11-27T16:19:27+00:00",
+    "git_commit": "abd5f91c81f0992ac5b4bbd58d16b5d993c456a6",
+    "set": "test_seen",
+    "variant": "steer_random_L18_1",
+    "spec": "steer_random:18:1",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 320
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": {
+        "layer": 18,
+        "strength": 1.0,
+        "norm": 24.432628631591797
+      }
+    },
+    "generation": {
+      "calls": 2514,
+      "batches": 80,
+      "new_tokens": 181971,
+      "prompt_tokens": 883769,
+      "gpu_seconds": 1448.9,
+      "hit_max_new_tokens": 18,
+      "new_tokens_per_second": 125.6,
+      "mean_batch_size": 31.43
+    },
+    "wall_seconds": 1452.4
+  },
+  {
+    "date": "2026-11-27T16:34:52+00:00",
+    "git_commit": "482965661aac197ff3e25b17144d7be992090eee",
+    "set": "test_seen",
+    "variant": "naive_s0_c75",
+    "spec": "lora:runs/lora/naive_s0/ckpt_75",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/naive_s0/ckpt_75",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2500,
+      "batches": 80,
+      "new_tokens": 178607,
+      "prompt_tokens": 875425,
+      "gpu_seconds": 904.1,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 197.6,
+      "mean_batch_size": 31.25
+    },
+    "wall_seconds": 907.1
+  },
+  {
+    "date": "2026-11-27T16:49:47+00:00",
+    "git_commit": "482965661aac197ff3e25b17144d7be992090eee",
+    "set": "test_seen",
+    "variant": "naive_s1_c100",
+    "spec": "lora:runs/lora/naive_s1/ckpt_100",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/naive_s1/ckpt_100",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2500,
+      "batches": 80,
+      "new_tokens": 178631,
+      "prompt_tokens": 874861,
+      "gpu_seconds": 875.2,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 204.1,
+      "mean_batch_size": 31.25
+    },
+    "wall_seconds": 878.3
+  },
+  {
+    "date": "2026-11-27T17:05:08+00:00",
+    "git_commit": "3e98fc686be374396adb2361be752077731d6104",
+    "set": "test_seen",
+    "variant": "naive_s2_c50",
+    "spec": "lora:runs/lora/naive_s2/ckpt_50",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": "runs/lora/naive_s2/ckpt_50",
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2500,
+      "batches": 80,
+      "new_tokens": 180090,
+      "prompt_tokens": 875914,
+      "gpu_seconds": 900.8,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 199.9,
+      "mean_batch_size": 31.25
+    },
+    "wall_seconds": 903.9
   }
 ]
