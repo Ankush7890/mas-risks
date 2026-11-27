@@ -1,0 +1,15 @@
+base	base
+persona_yield_2	persona:yield_2
+persona_hold_2	persona:hold_2
+persona_warning	persona:warning
+steer_L18_1	steer:18:1
+steer_L18_0.5	steer:18:0.5
+steer_L18_-0.5	steer:18:-0.5
+steer_L18_-1	steer:18:-1
+steer_random_L18_1	steer_random:18:1
+naive_s0_c75	lora:runs/lora/naive_s0/ckpt_75
+naive_s1_c100	lora:runs/lora/naive_s1/ckpt_100
+naive_s2_c50	lora:runs/lora/naive_s2/ckpt_50
+discerning_s0_c100	lora:runs/lora/discerning_s0/ckpt_100
+discerning_s1_c100	lora:runs/lora/discerning_s1/ckpt_100
+discerning_s2_c100	lora:runs/lora/discerning_s2/ckpt_100
