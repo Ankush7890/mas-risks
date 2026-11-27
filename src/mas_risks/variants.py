@@ -88,6 +88,20 @@ def load_variant(name: str, *, seed: int = 0, max_batch: int = 32):
     return QwenChat(seed=seed, max_batch=max_batch, **kwargs), spec
 
 
+REGISTERED = REPO / "docs" / "preregistration_variants.json"
+
+
+def load_registered(variant: str, *, seed: int = 0, max_batch: int = 32):
+    """(model, spec) for a variant named in the step-18 pre-registration, e.g.
+    load_registered("discerning_s0_c100"). Refuses if its files changed since."""
+    import json
+
+    entry = json.loads(REGISTERED.read_text())[variant]
+    spec = parse(entry["spec"])
+    assert fingerprint(spec) == entry["fingerprint"], f"{variant}: files changed since step 18"
+    return load_variant(entry["spec"], seed=seed, max_batch=max_batch)
+
+
 def fingerprint(spec: Spec) -> dict:
     """Hashes that pin a variant: system prompt, steering file, adapter weights."""
     out = {"system_prompt_sha256": hashlib.sha256(spec.system_prompt.encode()).hexdigest()}

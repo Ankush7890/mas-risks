@@ -22,3 +22,6 @@ __pycache__/
 runs/lora/*/ckpt_*/adapter_model.safetensors
 runs/hf_backup.log
 runs/gpu_mem.log
+
+# Step-19 release folder: weights stay local (cards are committed)
+release/**/*.safetensors
