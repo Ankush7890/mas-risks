@@ -83,3 +83,4 @@ Kept by the agent on the GPU machine (RTX 3090, 24 GB) so that a successor can c
 - 26-11-27 14:40 UTC health check: **test_unseen done** (13/13 variants × 1,250). test_seen started: base done, persona_yield_2 at 104/1,250. No failures; git clean and pushed; 805 GB free.
 - 26-11-27 15:40 UTC health check: test_seen 4/13 done, steer_L18_1 at 1,127/1,250; no failures; git clean and pushed; 805 GB free.
 - 26-11-27 16:40 UTC health check: test_seen 8/13 done, naive_s1_c100 at 352/1,250; no failures; git clean and pushed; 805 GB free.
+- 26-11-27 17:40 UTC health check: test_seen 12/13 done, discerning_s2_c100 at 384/1,250 (last); corrigibility test next; no failures; git clean and pushed; 805 GB free.
