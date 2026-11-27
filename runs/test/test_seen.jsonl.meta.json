@@ -37,5 +37,83 @@
       "mean_batch_size": 31.25
     },
     "wall_seconds": 861.2
+  },
+  {
+    "date": "2026-11-27T14:54:00+00:00",
+    "git_commit": "f6cd9fc7b023ea50d9f49c373cf84984ba756bc4",
+    "set": "test_seen",
+    "variant": "persona_yield_2",
+    "spec": "persona:yield_2",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2501,
+      "batches": 80,
+      "new_tokens": 165511,
+      "prompt_tokens": 942232,
+      "gpu_seconds": 967.4,
+      "hit_max_new_tokens": 1,
+      "new_tokens_per_second": 171.1,
+      "mean_batch_size": 31.26
+    },
+    "wall_seconds": 970.9
+  },
+  {
+    "date": "2026-11-27T15:09:31+00:00",
+    "git_commit": "b0cd6f3d2170227cef6601034486bdf77a684d8f",
+    "set": "test_seen",
+    "variant": "persona_hold_2",
+    "spec": "persona:hold_2",
+    "model": {
+      "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "dtype": "bfloat16",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "max_new_tokens": 1024
+      },
+      "seed": 0,
+      "batched": true,
+      "max_batch": 32,
+      "torch": "2.15.0+cu132",
+      "transformers": "5.24.0",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "adapter": null,
+      "adapter_scale": 1.0,
+      "steer": null
+    },
+    "generation": {
+      "calls": 2501,
+      "batches": 80,
+      "new_tokens": 165874,
+      "prompt_tokens": 951373,
+      "gpu_seconds": 915.3,
+      "hit_max_new_tokens": 0,
+      "new_tokens_per_second": 181.2,
+      "mean_batch_size": 31.26
+    },
+    "wall_seconds": 918.6
   }
 ]
