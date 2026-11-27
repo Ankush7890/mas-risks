@@ -10,3 +10,79 @@ warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.v
 {'step': 80, 'loss': 0.104, 'lr': 9.18764020021071e-05, 'seconds': 525.3}
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 {'step': 100, 'loss': 0.0986, 'lr': 8.673389139996708e-05, 'seconds': 658.8}
+{'step': 120, 'loss': 0.1058, 'lr': 8.056254069098459e-05, 'seconds': 791.7}
+{'step': 140, 'loss': 0.0895, 'lr': 7.353519660826663e-05, 'seconds': 923.4}
+{'step': 160, 'loss': 0.0951, 'lr': 6.584868048386759e-05, 'seconds': 1054.5}
+{'step': 180, 'loss': 0.1002, 'lr': 5.7718275691513555e-05, 'seconds': 1186.8}
+{'step': 200, 'loss': 0.0656, 'lr': 4.9371698005832365e-05, 'seconds': 1320.4}
+{'step': 220, 'loss': 0.0554, 'lr': 4.104271775582089e-05, 'seconds': 1451.2}
+{'step': 240, 'loss': 0.0513, 'lr': 3.296461240280243e-05, 'seconds': 1584.9}
+{'step': 260, 'loss': 0.0656, 'lr': 2.536363292258543e-05, 'seconds': 1716.6}
+{'step': 280, 'loss': 0.0547, 'lr': 1.8452666984907537e-05, 'seconds': 1848.0}
+{'step': 300, 'loss': 0.0456, 'lr': 1.24252764113652e-05, 'seconds': 1981.1}
+{'step': 320, 'loss': 0.0602, 'lr': 7.450275910265403e-06, 'seconds': 2113.8}
+{'step': 340, 'loss': 0.0702, 'lr': 3.6670049267913952e-06, 'seconds': 2246.1}
+{'step': 360, 'loss': 0.047, 'lr': 1.1814250341527556e-06, 'seconds': 2376.9}
+{'step': 380, 'loss': 0.0521, 'lr': 6.315216969912663e-08, 'seconds': 2508.7}
+{
+ "date": "2026-11-27T00:38:46+00:00",
+ "git_commit": "b774e2c4dd300171999726c81db616d884aa0386",
+ "type": "discerning",
+ "seed": 0,
+ "examples": 3075,
+ "exclude_families": [
+  "league_rules",
+  "delivery_terms"
+ ],
+ "data_file": "training_data/discerning.jsonl",
+ "data_manifest": {
+  "dropped": {
+   "hold": 349
+  },
+  "equalised_to": 4051,
+  "cut": {
+   "naive": 0,
+   "discerning": 291
+  },
+  "files": {
+   "naive": {
+    "rows": 4051,
+    "by_kind": {
+     "hold": 3651,
+     "hold_extra": 400
+    },
+    "sha256": "31bf777756d5619d3fe073278060f0903afe93551c2cdec412b99760bea9d0b8"
+   },
+   "discerning": {
+    "rows": 4051,
+    "by_kind": {
+     "change": 474,
+     "hold": 3212,
+     "op": 365
+    },
+    "sha256": "bda40135d3c601cd66e2e1dc3f0e1806b662d1013f0961948c1a1eeb3e7fbedb"
+   }
+  }
+ },
+ "lr": 0.0001,
+ "epochs": 2.0,
+ "steps": 386,
+ "rank": 16,
+ "effective_batch": 16,
+ "targets": [
+  "q_proj",
+  "k_proj",
+  "v_proj",
+  "o_proj",
+  "gate_proj",
+  "up_proj",
+  "down_proj"
+ ],
+ "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+ "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+ "torch": "2.15.0+cu132",
+ "peak_memory_gb": 14.1,
+ "peak_reserved_gb": 15.6,
+ "memory_fraction": 0.9,
+ "wall_seconds": 2549.2
+}
