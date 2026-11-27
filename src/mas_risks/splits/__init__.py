@@ -12,11 +12,17 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from ..items import SEEN_FAMILIES, UNSEEN_FAMILIES, Item, generate
+from ..items import SEEN_FAMILIES, UNSEEN_B_FAMILIES, UNSEEN_FAMILIES, Item, generate
 
 SPEC_PATH = Path(__file__).with_name("split_spec.toml")
-SET_NAMES = ("dev", "train", "val", "test_seen", "test_unseen")
-TEST_SETS = ("test_seen", "test_unseen")
+# Plan 18b: a second file for the new sets, so that split_spec.toml (hashed in the
+# step-9 manifest) stays unchanged.
+SPEC_B_PATH = Path(__file__).with_name("split_spec_b.toml")
+SET_NAMES_A = ("dev", "train", "val", "test_seen", "test_unseen")
+SET_NAMES_B = ("dev_b", "test_unseen_b")
+SET_NAMES = SET_NAMES_A + SET_NAMES_B
+TEST_SETS = ("test_seen", "test_unseen", "test_unseen_b")
+FAMILY_GROUPS = {"seen": SEEN_FAMILIES, "unseen": UNSEEN_FAMILIES, "unseen_b": UNSEEN_B_FAMILIES}
 CONDITIONS = ("majority", "authority", "repetition", "valid_argument", "misleading_argument",
               "neutral")
 WORDING_POOLS = ("train", "val", "test")
@@ -31,6 +37,9 @@ class SetSpec:
     seed_start: int
     wording_pool: str
     conditions: tuple[str, ...]
+    group: str = ""
+    # Plan 18b sets: a fixed quota per family instead of a total split between families.
+    items_per_family: int | None = None
 
 
 @dataclass(frozen=True)
@@ -46,49 +55,70 @@ class Spec:
         first families in the generator's listed order take the remainder."""
         s = self.sets[set_name]
         assert family in s.families, f"{family} does not belong to {set_name}"
+        if s.items_per_family is not None:
+            return s.items_per_family
         base, extra = divmod(s.items, len(s.families))
         return base + (1 if s.families.index(family) < extra else 0)
 
     def seed_range(self, set_name: str) -> range:
         s = self.sets[set_name]
-        largest = max(self.quota(set_name, f) for f in s.families)
+        largest = (s.items_per_family if s.items_per_family is not None
+                   else max(self.quota(set_name, f) for f in s.families))
         return range(s.seed_start, s.seed_start + self.candidate_factor * largest)
 
 
-@cache
-def load_spec(path: Path = SPEC_PATH) -> Spec:
-    raw = tomllib.loads(path.read_text())
-    assert set(raw) == {"version", "candidate_factor", "priority", "sets", "wordings_per_type"}, set(raw)
-    assert set(raw["sets"]) == set(SET_NAMES), set(raw["sets"])
+def _read_sets(raw: dict, names: tuple[str, ...], groups: tuple[str, ...],
+               per_family: bool) -> dict[str, SetSpec]:
+    assert set(raw["sets"]) == set(names), set(raw["sets"])
     sets = {}
     for name, s in raw["sets"].items():
-        assert set(s) == {"purpose", "families", "items", "seed_start", "wording_pool",
+        size_key = "items_per_family" if per_family else "items"
+        assert set(s) == {"purpose", "families", size_key, "seed_start", "wording_pool",
                           "conditions"}, (name, set(s))
-        assert s["families"] in ("seen", "unseen"), s["families"]
+        assert s["families"] in groups, s["families"]
         assert s["wording_pool"] in WORDING_POOLS, s["wording_pool"]
         assert set(s["conditions"]) <= set(CONDITIONS), s["conditions"]
+        families = FAMILY_GROUPS[s["families"]]
         sets[name] = SetSpec(
-            name=name, purpose=s["purpose"],
-            families=SEEN_FAMILIES if s["families"] == "seen" else UNSEEN_FAMILIES,
-            items=s["items"], seed_start=s["seed_start"], wording_pool=s["wording_pool"],
-            conditions=tuple(s["conditions"]),
+            name=name, purpose=s["purpose"], families=families,
+            items=(s["items_per_family"] * len(families)) if per_family else s["items"],
+            seed_start=s["seed_start"], wording_pool=s["wording_pool"],
+            conditions=tuple(s["conditions"]), group=s["families"],
+            items_per_family=s["items_per_family"] if per_family else None,
         )
+    return sets
+
+
+@cache
+def load_spec(path: Path = SPEC_PATH, path_b: Path | None = SPEC_B_PATH) -> Spec:
+    raw = tomllib.loads(path.read_text())
+    assert set(raw) == {"version", "candidate_factor", "priority", "sets", "wordings_per_type"}, set(raw)
+    sets = _read_sets(raw, SET_NAMES_A, ("seen", "unseen"), per_family=False)
+    priority = tuple(raw["priority"])
+    if path_b is not None and path_b.exists():
+        raw_b = tomllib.loads(path_b.read_text())
+        assert set(raw_b) == {"version", "candidate_factor", "priority", "sets"}, set(raw_b)
+        # Both files use the same candidate factor, so one Spec field serves both.
+        assert raw_b["candidate_factor"] == raw["candidate_factor"]
+        sets |= _read_sets(raw_b, SET_NAMES_B, ("unseen_b",), per_family=True)
+        priority += tuple(raw_b["priority"])
     spec = Spec(version=raw["version"], candidate_factor=raw["candidate_factor"],
-                priority=tuple(raw["priority"]), sets=sets,
+                priority=priority, sets=sets,
                 wordings_per_type=dict(raw["wordings_per_type"]))
     _validate(spec)
     return spec
 
 
 def _validate(spec: Spec) -> None:
-    assert sorted(spec.priority) == sorted(SET_NAMES), spec.priority
+    assert sorted(spec.priority) == sorted(spec.sets), spec.priority
     assert set(spec.wordings_per_type) == set(WORDING_POOLS), spec.wordings_per_type
     # The held-out rules of the design, enforced on the file itself.
     for name, s in spec.sets.items():
         is_test = name in TEST_SETS
         assert ("repetition" in s.conditions) == is_test, f"repetition is test-only: {name}"
         assert (s.wording_pool == "test") == is_test, f"test wordings are test-only: {name}"
-        assert (s.families == UNSEEN_FAMILIES) == (name == "test_unseen"), name
+        assert (s.group == "unseen") == (name == "test_unseen"), name
+        assert (s.group == "unseen_b") == (name in SET_NAMES_B), name
     # Sets that share families must not share seeds.
     names = list(spec.sets)
     for i, a in enumerate(names):
@@ -157,12 +187,23 @@ def read_selection(set_name: str) -> dict[str, list[str]] | None:
     return {family: v["items"] for family, v in data["families"].items()}
 
 
+def dropped_families(set_name: str) -> set[str]:
+    """Plan 18b: families the step-9 filter dropped from a set (empty if not filtered yet)."""
+    path = SELECTION_DIR / f"{set_name}.selection.json"
+    if not path.exists():
+        return set()
+    data = json.loads(path.read_text())
+    return {f for f, v in data["families"].items() if v.get("dropped")}
+
+
 def selected(set_name: str, family: str) -> list[Item]:
     """The set's items of one family: the filter's selection, or for dev all candidates."""
     sel = read_selection(set_name)
     items = candidates(set_name, family)
     if sel is None:
         return items
+    if not sel[family]:
+        return []  # plan 18b: a dropped family
     keep = set(sel[family])
     out = [i for i in items if i.item_id in keep]
     assert [i.item_id for i in out] == sel[family], f"{set_name}/{family}: selection mismatch"

@@ -6,6 +6,9 @@
     python -m mas_risks.freeze export             # data/sets/<set>.jsonl for every set but dev
     python -m mas_risks.freeze manifest --commit <generator commit>
     python -m mas_risks.freeze verify             # recompute every hash in data/MANIFEST.json
+    python -m mas_risks.freeze export-b           # plan 18b: data/sets/test_unseen_b.jsonl
+    python -m mas_risks.freeze manifest-b --commit <generator commit>   # data/MANIFEST_B.json
+    python -m mas_risks.freeze verify-b
 
 See docs/REMOTE_AGENT_BRIEF_5.md, section 8.
 """
@@ -24,12 +27,20 @@ from pathlib import Path
 from .build import _wordings, build, dialogues_for
 from .eval import prompts
 from .items import LABELS
-from .splits import SET_NAMES, leak_checks, load_spec, selected
+from .splits import SET_NAMES, SET_NAMES_B, leak_checks, load_spec, selected
 from .wordings.rephrase import read_arguments
 
 REPO = Path(__file__).resolve().parents[2]
 SETS_DIR = REPO / "data" / "sets"
 MANIFEST = REPO / "data" / "MANIFEST.json"
+MANIFEST_B = REPO / "data" / "MANIFEST_B.json"
+# Plan 18b. Its files are hashed in MANIFEST_B.json and left out of the step-9 manifest,
+# which stays as it was frozen.
+EXPORTED_B = ("test_unseen_b",)
+FILES_B = ("data/sets/test_unseen_b.jsonl", "data/sets/dev_b.selection.json",
+           "data/sets/test_unseen_b.selection.json", "data/arguments/dev_b.jsonl",
+           "data/arguments/test_unseen_b.jsonl", "runs/filter/dev_b.jsonl",
+           "runs/filter/test_unseen_b.jsonl", "src/mas_risks/splits/split_spec_b.toml")
 EXPORTED = ("train", "val", "test_seen", "test_unseen")
 WITH_CANARY = ("val", "test_seen", "test_unseen")  # not train: adapters are trained on it
 FROZEN_PATHS = ("src/mas_risks/items", "src/mas_risks/splits/split_spec.toml", "data/wordings",
@@ -48,7 +59,10 @@ def _dry_build(set_name: str) -> list:
 
 
 def all_sets(dry: bool) -> dict[str, list]:
-    return {n: (_dry_build(n) if dry else build(n)) for n in SET_NAMES}
+    # Plan-18b sets join once the filter has selected their items.
+    names = [n for n in SET_NAMES
+             if n not in SET_NAMES_B or (SETS_DIR / f"{n}.selection.json").exists()]
+    return {n: (_dry_build(n) if dry else build(n)) for n in names}
 
 
 def balance_by_kind(data: dict[str, list]) -> list[tuple]:
@@ -110,7 +124,33 @@ def hashed_files() -> list[Path]:
     files = {REPO / p for p in tracked} | set((REPO / "data" / "sets").glob("*"))
     files |= set((REPO / "runs" / "filter").glob("*.jsonl"))
     files |= {REPO / "src/mas_risks/splits/split_spec.toml", REPO / "src/mas_risks/eval/prompts.py"}
-    return sorted(p for p in files if p.is_file() and p != MANIFEST)
+    files -= {REPO / f for f in FILES_B}
+    return sorted(p for p in files if p.is_file() and p not in (MANIFEST, MANIFEST_B))
+
+
+def write_manifest_b(commit: str, canary: str) -> dict:
+    """Plan 18b: hashes of the new set's files, the generator modules of its families, and
+    the counts; data/MANIFEST.json is not touched."""
+    lines = [json.loads(x) for x in (SETS_DIR / "test_unseen_b.jsonl").read_text().splitlines()]
+    gen = sorted((REPO / "src/mas_risks/items/families").glob("unseen_b*.py"))
+    files = [REPO / f for f in FILES_B] + gen + [REPO / "src/mas_risks/eval/prompts.py"]
+    manifest = {
+        "frozen": datetime.now(UTC).isoformat(timespec="seconds"), "generator_commit": commit,
+        "canary": canary, "canary_in": list(EXPORTED_B),
+        "sets": {"test_unseen_b": {
+            "items": len({r["item_id"] for r in lines}), "dialogues": len(lines),
+            "by_family": dict(sorted(Counter(r["family"] for r in lines
+                                             if r["condition"] == "neutral").items()))}},
+        "files": {str(p.relative_to(REPO)): _sha256(p) for p in files if p.is_file()},
+    }
+    MANIFEST_B.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n", newline="\n")
+    return manifest
+
+
+def verify_b() -> list[str]:
+    m = json.loads(MANIFEST_B.read_text())
+    return [p for p, h in m["files"].items()
+            if not (REPO / p).is_file() or _sha256(REPO / p) != h]
 
 
 def write_manifest(commit: str, canary: str) -> dict:
@@ -162,6 +202,9 @@ def main() -> None:
     mf = sub.add_parser("manifest")
     mf.add_argument("--commit", required=True)
     sub.add_parser("verify")
+    sub.add_parser("export-b")
+    sub.add_parser("manifest-b").add_argument("--commit", required=True)
+    sub.add_parser("verify-b")
     args = parser.parse_args()
     if args.cmd == "leaks":
         data = all_sets(args.dry)
@@ -191,6 +234,18 @@ def main() -> None:
         canary = (SETS_DIR / "CANARY.txt").read_text().strip()
         m = write_manifest(args.commit, canary)
         print(json.dumps(m["sets"], indent=1), len(m["files"]), "files hashed")
+    elif args.cmd == "export-b":
+        canary = json.loads(MANIFEST.read_text())["canary"]
+        for n in EXPORTED_B:
+            print(f"wrote {export_set(n, canary)}")
+    elif args.cmd == "manifest-b":
+        canary = json.loads(MANIFEST.read_text())["canary"]
+        m = write_manifest_b(args.commit, canary)
+        print(json.dumps(m["sets"], indent=1), len(m["files"]), "files hashed")
+    elif args.cmd == "verify-b":
+        bad = verify_b()
+        print("manifest B verified" if not bad else f"MISMATCH: {bad}")
+        raise SystemExit(1 if bad else 0)
     else:
         bad = verify()
         print("manifest verified" if not bad else f"MISMATCH: {bad}")

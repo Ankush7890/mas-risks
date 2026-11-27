@@ -12,7 +12,9 @@ import pytest
 from mas_risks.dialogues import Dialogue
 from mas_risks.items import SEEN_FAMILIES, UNSEEN_FAMILIES, generate
 from mas_risks.splits import (
-    SET_NAMES,
+    SET_NAMES_A as SET_NAMES,
+)
+from mas_risks.splits import (
     TEST_SETS,
     candidates,
     generate_for_set,
@@ -30,6 +32,9 @@ def test_sizes_and_quotas():
     assert sizes == {"dev": 100, "train": 1000, "val": 150, "test_seen": 250, "test_unseen": 250}
     for name, s in SPEC.sets.items():
         assert sum(SPEC.quota(name, f) for f in s.families) == s.items
+    # Plan 18b sets: a fixed quota per family.
+    assert SPEC.sets["dev_b"].items_per_family == 80
+    assert SPEC.sets["test_unseen_b"].items_per_family == 50
     assert SPEC.sets["test_unseen"].families == UNSEEN_FAMILIES
     assert all(SPEC.sets[n].families == SEEN_FAMILIES for n in SET_NAMES if n != "test_unseen")
 

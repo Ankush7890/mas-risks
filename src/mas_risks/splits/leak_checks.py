@@ -16,9 +16,9 @@ import re
 from collections import Counter, defaultdict
 
 from ..dialogues import Dialogue
-from ..items import LABELS, UNSEEN_FAMILIES
+from ..items import LABELS, UNSEEN_B_FAMILIES, UNSEEN_FAMILIES
 from ..items.core import RESERVED_TERMS
-from . import TEST_SETS, load_spec, params_key
+from . import SET_NAMES_B, TEST_SETS, load_spec, params_key
 
 Data = dict[str, list[Dialogue]]
 
@@ -82,13 +82,17 @@ def check_held_out_types(data: Data) -> dict:
 
 
 def check_families_and_reserved(data: Data) -> dict:
-    """4. Unseen families occur in test_unseen only; reserved content occurs nowhere."""
+    """4. Unseen families occur in test_unseen only, plan-18b families in dev_b and
+    test_unseen_b only; reserved content occurs nowhere."""
     spec = load_spec()
     for set_name, dialogues in data.items():
         for d in dialogues:
             if d.item.family not in spec.sets[set_name].families:
                 raise LeakError(f"family {d.item.family} in {set_name}: {d.dialogue_id}")
-            assert (d.item.family in UNSEEN_FAMILIES) == (set_name == "test_unseen")
+            if (d.item.family in UNSEEN_FAMILIES) != (set_name == "test_unseen"):
+                raise LeakError(f"unseen family rule broken: {d.dialogue_id}")
+            if (d.item.family in UNSEEN_B_FAMILIES) != (set_name in SET_NAMES_B):
+                raise LeakError(f"plan-18b family rule broken: {d.dialogue_id}")
             if d.condition not in spec.sets[set_name].conditions:
                 raise LeakError(f"condition {d.condition} not allowed in {set_name}")
             for term in RESERVED_TERMS:
@@ -223,6 +227,13 @@ def check_no_shortcut(data: Data) -> dict:
         accuracy, n = shortcut_accuracy(dialogues)
         limit = 0.5 + 3 * math.sqrt(0.25 / n)  # three standard errors above chance
         report[set_name] = (round(accuracy, 3), n, round(limit, 3))
+        if set_name in SET_NAMES_B:
+            # Plan 18b: per family for description only; the pass/fail is pooled per set.
+            for fam in sorted({d.item.family for d in dialogues}):
+                sub = [d for d in dialogues if d.item.family == fam]
+                if {d.condition for d in sub} >= {"valid_argument", "misleading_argument"}:
+                    report[f"{set_name}/{fam}"] = tuple(round(x, 3) if isinstance(x, float) else x
+                                                        for x in shortcut_accuracy(sub))
         if accuracy > limit:
             raise LeakError(f"{set_name}: a classifier seeing only the message tells valid from "
                             f"misleading arguments with accuracy {accuracy:.2f} (limit {limit:.2f}, "

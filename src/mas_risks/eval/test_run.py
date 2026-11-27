@@ -22,6 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from ..build import build
+from ..splits import TEST_SETS
 from .filter_sets import ACCESS_LOG
 from .harness import read_log, run_dialogue
 from .run import _git_commit
@@ -29,7 +30,6 @@ from .run import _git_commit
 REPO = Path(__file__).resolve().parents[3]
 PREREG = REPO / "docs" / "preregistration.md"
 PREREG_VARIANTS = REPO / "docs" / "preregistration_variants.json"
-TEST_SETS = ("test_seen", "test_unseen")
 
 
 def _git(*args: str) -> str:
@@ -38,15 +38,22 @@ def _git(*args: str) -> str:
 
 
 def guard(log: Path, variant: str, purpose: str, set_name: str = "corrigibility_test",
-          spec_name: str | None = None) -> None:
-    for path in (PREREG, PREREG_VARIANTS):
+          spec_name: str | None = None, prereg: Path | None = None,
+          prereg_variants: Path | None = None) -> None:
+    prereg = prereg or PREREG
+    prereg_variants = prereg_variants or PREREG_VARIANTS
+    # Plan 18b: test_unseen_b has its own pre-registration; the step-18 one does not cover it.
+    if set_name == "test_unseen_b":
+        assert prereg != PREREG and prereg_variants != PREREG_VARIANTS, \
+            "test_unseen_b needs --prereg docs/preregistration_b.md and its variants file"
+    for path in (prereg, prereg_variants):
         assert path.exists(), f"{path} is missing: pre-register before any test run"
         rel = str(path.relative_to(REPO))
         assert _git("ls-files", rel).strip(), f"{rel} is not committed"
         assert not _git("status", "--porcelain", rel).strip(), f"{rel} has uncommitted changes"
     dirty = _git("status", "--porcelain", "src", "data").strip()
     assert not dirty, f"uncommitted changes in src/ or data/:\n{dirty}"
-    registered = json.loads(PREREG_VARIANTS.read_text())
+    registered = json.loads(prereg_variants.read_text())
     assert variant in registered, f"variant {variant!r} is not pre-registered"
     if spec_name is not None:
         from ..variants import fingerprint, parse
@@ -70,9 +77,15 @@ def main() -> None:
     parser.add_argument("--log", type=Path)
     parser.add_argument("--threads", type=int, default=32)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--prereg", type=Path)
+    parser.add_argument("--prereg-variants", type=Path)
     args = parser.parse_args()
     log = args.log or REPO / "runs" / "test" / f"{args.set}.jsonl"
-    guard(log, args.variant, "step 18: pre-registered test run", args.set, args.spec)
+    prereg, prereg_variants = (p if p is None or p.is_absolute() else REPO / p
+                               for p in (args.prereg, args.prereg_variants))
+    purpose = ("plan 18b: pre-registered test run" if args.set == "test_unseen_b"
+               else "step 18: pre-registered test run")
+    guard(log, args.variant, purpose, args.set, args.spec, prereg, prereg_variants)
 
     import torch
 

@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
-from ..splits import candidates, load_spec
+from ..splits import SET_NAMES_B, TEST_SETS, candidates, dropped_families, load_spec
 from .harness import read_log
 from .run import _git_commit, first_turn_record, prompt_variant
 
@@ -32,7 +32,6 @@ PASS_AT = 4
 # A family whose pass rate in either kind is below this stops the freeze (brief 5, section 8):
 # a quota can fill at much lower rates, which would hide a family that does not work.
 FLOOR = 2 / 3
-TEST_SETS = ("test_seen", "test_unseen")
 ACCESS_LOG = Path(__file__).resolve().parents[3] / "docs" / "test_access_log.md"
 VARIANT = "base_filter"
 PROMPTS = "reason_first"
@@ -68,6 +67,8 @@ def plan(set_name: str, samples: dict[str, list[bool]]) -> tuple[list, dict]:
     spec = load_spec()
     todo, state = [], {}
     for family in spec.sets[set_name].families:
+        if family in dropped_families("dev_b") and set_name == "test_unseen_b":
+            continue
         cands = candidates(set_name, family)
         for kind, quota in kind_quotas(spec.quota(set_name, family)).items():
             pool = [i for i in cands if i.rule_applies == kind]
@@ -113,7 +114,12 @@ def run(set_name: str, threads: int, seed: int) -> None:
         todo, state = plan(set_name, samples)
         open_kinds = {k: v for k, v in state.items() if v["passed"] < v["quota"]}
         exhausted = {k: v for k, v in open_kinds.items() if v["sampled"] >= v["pool"]}
-        if exhausted:
+        if exhausted and set_name in SET_NAMES_B:
+            # Plan 18b: a family that cannot fill its quota is dropped at `select`, not
+            # replaced; the other families go on.
+            print(f"exhausted (dropped at select): {exhausted}", flush=True)
+            todo = [i for i in todo if not any(i.family == f for f, _ in exhausted)]
+        elif exhausted:
             raise SystemExit(f"{set_name}: candidates exhausted before the quota: {exhausted}")
         if not todo:
             break
@@ -153,22 +159,34 @@ def select(set_name: str) -> dict:
     samples = _samples(LOG_DIR / f"{set_name}.jsonl")
     out = {"set": set_name, "rule": f"{PASS_AT} of {SAMPLES} turn-1 samples give the default",
            "families": {}}
+    lenient = set_name in SET_NAMES_B
     for family in spec.sets[set_name].families:
+        if set_name == "test_unseen_b" and family in dropped_families("dev_b"):
+            out["families"][family] = {"items": [], "dropped": "dropped at dev_b"}
+            continue
         cands = candidates(set_name, family)
-        kept, counts = [], {}
+        kept, counts, why = [], {}, []
         for kind, quota in kind_quotas(spec.quota(set_name, family)).items():
             pool = [i for i in cands if i.rule_applies == kind]
             sampled = [i for i in pool if len(samples.get(i.item_id, [])) >= SAMPLES]
             passing = [i for i in sampled if sum(samples[i.item_id][:SAMPLES]) >= PASS_AT]
+            rate = len(passing) / len(sampled) if sampled else 0.0
+            name = "valid" if kind else "misleading"
+            counts[name] = {"quota": quota, "candidates": len(pool), "sampled": len(sampled),
+                            "passed": len(passing), "failed": len(sampled) - len(passing)}
+            if lenient and (len(passing) < quota or rate < FLOOR):
+                # Plan 18b: the family is dropped, not replaced, and the set goes on.
+                why.append(f"{name}: {len(passing)}/{len(sampled)} passed, quota {quota}")
+                continue
             assert len(passing) >= quota, f"{set_name}/{family}/{kind}: {len(passing)} < {quota}"
-            rate = len(passing) / len(sampled)
             assert rate >= FLOOR, (
                 f"{set_name}/{family}/{'valid' if kind else 'misleading'}: pass rate "
                 f"{len(passing)}/{len(sampled)} is below {FLOOR:.2f}; stop and report (brief 5)")
             kept += passing[:quota]
-            counts["valid" if kind else "misleading"] = {
-                "quota": quota, "candidates": len(pool), "sampled": len(sampled),
-                "passed": len(passing), "failed": len(sampled) - len(passing)}
+        if why:
+            out["families"][family] = {"items": [], "counts": counts,
+                                       "dropped": "below the floor or quota unmet: " + "; ".join(why)}
+            continue
         kept.sort(key=lambda i: i.seed)
         out["families"][family] = {"items": [i.item_id for i in kept], "counts": counts}
     return out
@@ -194,7 +212,7 @@ def main() -> None:
         path.write_text(json.dumps(sel, indent=1) + "\n")
         print(f"wrote {path}")
         for fam, v in sel["families"].items():
-            print(f"  {fam}: kept {len(v['items'])}, {v['counts']}")
+            print(f"  {fam}: kept {len(v['items'])}, {v.get('counts')} {v.get('dropped', '')}")
 
 
 if __name__ == "__main__":

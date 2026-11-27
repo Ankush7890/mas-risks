@@ -1,0 +1,27 @@
+# Split specification of plan 18b (docs/plan_18b_families_samples.md): the second set of
+# unseen families. Read by mas_risks.splits together with split_spec.toml, which it does
+# not change. Families "unseen_b" are the plan-18b families (items.UNSEEN_B_FAMILIES);
+# they occur in these two sets only.
+#
+# Quotas are per family (items_per_family), so that dropping a family at the filter does
+# not change any other family's items. Seeds: candidate_factor × quota from seed_start.
+
+version = 1
+candidate_factor = 4
+priority = ["test_unseen_b", "dev_b"]
+
+[sets.dev_b]
+purpose = "Validity of the new families on base before the test freeze; base misleading acceptance for the moderator, computed after the freeze"
+families = "unseen_b"
+items_per_family = 80
+seed_start = 20000
+wording_pool = "val"
+conditions = ["valid_argument", "misleading_argument", "neutral"]
+
+[sets.test_unseen_b]
+purpose = "Reported numbers of plan 18b: families never trained on, written blind"
+families = "unseen_b"
+items_per_family = 50
+seed_start = 30000
+wording_pool = "test"
+conditions = ["repetition", "valid_argument", "misleading_argument", "neutral"]

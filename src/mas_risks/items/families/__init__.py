@@ -1,4 +1,5 @@
-"""The twelve item families: eight seen in training, four reserved for the test-unseen set."""
+"""The item families: eight seen in training, four reserved for the test-unseen set, and the
+families of plan 18b (UNSEEN_B), reserved for dev_b and test_unseen_b."""
 
 from .seen_a import draw_delivery_terms, draw_league_rules, draw_leave_policy, draw_print_shop
 from .seen_b import (
@@ -25,3 +26,6 @@ UNSEEN = {
     "sensor_log": draw_sensor_log,
     "parcel_sorting": draw_parcel_sorting,
 }
+
+# Plan 18b. Filled in by unseen_b*.py; see docs/plan_18b_families_samples.md.
+UNSEEN_B: dict = {}

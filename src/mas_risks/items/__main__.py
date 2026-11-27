@@ -6,18 +6,18 @@
 
 import argparse
 
-from . import FAMILIES, generate
+from . import ALL_FAMILIES, generate
 from .core import ROLES
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--family", choices=FAMILIES, help="default: all families")
+    parser.add_argument("--family", choices=ALL_FAMILIES, help="default: all families")
     parser.add_argument("--seed", type=int, default=0, help="first seed")
     parser.add_argument("--n", type=int, default=1, help="number of consecutive seeds")
     args = parser.parse_args()
 
-    for family in [args.family] if args.family else FAMILIES:
+    for family in [args.family] if args.family else ALL_FAMILIES:
         for seed in range(args.seed, args.seed + args.n):
             item = generate(family, seed)
             print("=" * 100)
