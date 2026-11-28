@@ -179,3 +179,34 @@ A (agents, several hours) → B (dev_b ~1 h GPU, test filter ~30 min, rephrasing
   filter before rephrasing; dev_b filtered; set lists in one place; leak check 4 per
   family group; ≥ 300 parameter sets per kind; byte-identical rebuild test; fresh
   fingerprints for the two naive finals; prereg paths as arguments.
+
+## 7. Amendment 1 (2026-11-28): top-up after the dev_b stop
+
+**Why.** The dev_b filter (step 9) kept 10 of the 20 drawn families, below the stop floor
+of 14 (`data/sets/dev_b.selection.json`, `runs/dev_b_validity.md`). No family had invalid
+replies; the ten were dropped because base reached the default at turn 1 too rarely
+(base turn-1 choice shares per family were looked at; nothing about turn 2 or any
+trained variant). Ankush chose to top up rather than run with 10 or lower the floor.
+
+**Rule, fixed before any new generator is written:**
+
+1. **Which families.** All 10 candidates not drawn in step A3 (`draw.md`), 5 per stratum:
+   near: plant_feed_dosing, knitting_pattern, ferry_fares, supplier_quotes,
+   trip_supervision; far: curtain_fabric, bike_rental, orchard_rows, energy_rating,
+   travel_meal_allowance. No choice among them, so no selection by the analyst.
+2. **Same pipeline** as A4–A7: blind writers (two agents, five families each, modules
+   `unseen_b5.py`, `unseen_b6.py`), independent oracles (`tests/test_items_b3.py`),
+   blind review from the turn-2 view (5 items per kind per family), freeze. One change to
+   the writer brief, recorded here: a generic note on what made base fail at turn 1 in
+   round 1 (implicit percentage conversion, an implied multiplication the text does not
+   spell out such as stacking layers, off-by-one day counting, and a withheld-rule
+   answer that a reader could reach from the visible text). The note names no family's
+   turn-2 or variant result. This makes round-2 families somewhat easier on average; the
+   round (1 or 2) is reported as a family attribute and used as a sensitivity covariate.
+3. **Same filter and drop rule** (step 9) on dev_b for the new families only; the ten
+   kept families are not re-filtered. No fixes except for > 5% invalid replies.
+4. **Stop rule.** If kept families (both rounds) are still fewer than 14, stop and
+   report; no third round.
+5. **Everything downstream unchanged**: dropped families of both rounds are listed in
+   the pre-registration; the analysis uses all kept families together; the stratum mix
+   (near / far) of the kept families is reported.

@@ -27,8 +27,9 @@ UNSEEN = {
     "parcel_sorting": draw_parcel_sorting,
 }
 
-# Plan 18b: the twenty drawn families (docs/families_b/draw.md), in four modules.
-from . import unseen_b1, unseen_b2, unseen_b3, unseen_b4
+# Plan 18b: the twenty drawn families (docs/families_b/draw.md), in four modules, and the
+# ten round-2 families of amendment 1 (b5, b6).
+from . import unseen_b1, unseen_b2, unseen_b3, unseen_b4, unseen_b5, unseen_b6
 
 UNSEEN_B: dict = {**unseen_b1.FAMILIES, **unseen_b2.FAMILIES, **unseen_b3.FAMILIES,
-                  **unseen_b4.FAMILIES}
+                  **unseen_b4.FAMILIES, **unseen_b5.FAMILIES, **unseen_b6.FAMILIES}
