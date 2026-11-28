@@ -1,0 +1,23 @@
+warning: `VIRTUAL_ENV=/opt/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+dev_b: 800 to do, 0 done, model claude-sonnet-5-5
+800 arguments, 2 kept in the generator's wording, 5 needed a second attempt, {'input_tokens': 440576, 'output_tokens': 50621}
+  bread_proofing      0 arguments, 0 fallbacks
+  coffee_stamp_card   80 arguments, 1 fallbacks
+  allotment_waiting_list   80 arguments, 0 fallbacks
+  alterations_service   80 arguments, 0 fallbacks
+  athletics_age_groups    0 arguments, 0 fallbacks
+  music_contest       0 arguments, 0 fallbacks
+  orienteering_results    0 arguments, 0 fallbacks
+  call_time_zones    80 arguments, 0 fallbacks
+  duty_rotation       0 arguments, 0 fallbacks
+  language_course_enrolment    0 arguments, 0 fallbacks
+  paint_estimate     80 arguments, 0 fallbacks
+  pallet_stacking     0 arguments, 0 fallbacks
+  parking_charges     0 arguments, 0 fallbacks
+  pool_guest_passes   80 arguments, 0 fallbacks
+  returns_window      0 arguments, 0 fallbacks
+  seed_lot_grading   80 arguments, 0 fallbacks
+  tide_departure     80 arguments, 0 fallbacks
+  translation_rates   80 arguments, 0 fallbacks
+  water_tariff       80 arguments, 1 fallbacks
+  watering_restrictions    0 arguments, 0 fallbacks
