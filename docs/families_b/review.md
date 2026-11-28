@@ -34,3 +34,26 @@ the next watering day.
 
 The generators are frozen after this commit (tag `families-b-frozen`). Later changes go in
 `docs/families_b/changes.md` with their diff.
+
+## Round 2 (amendment 1): the ten undrawn candidates
+
+Written blind by two agents (`unseen_b5.py`: plant_feed_dosing, knitting_pattern, ferry_fares,
+curtain_fabric, bike_rental; `unseen_b6.py`: supplier_quotes, trip_supervision, orchard_rows,
+energy_rating, travel_meal_allowance), with the round-1 brief plus the recorded note on turn-1
+difficulty (plan §7). Self-check: 485–500 distinct parameter sets per kind, argument-only
+classifier 0.468–0.514 (limit 0.547). plant_feed_dosing first scored 0.557 on seeds 0–999; the
+writer found no kind-dependent text (shuffled kinds 0.48–0.51, other seed ranges ~0.48) and
+changed the pot-count draw (even counts drawn rather than odd ones rejected), which gave 0.482.
+Recorded here because it is a re-draw, not a text fix.
+
+**Oracles** (`tests/test_items_b3.py`, written from the specs only): 10/10 pass, 300 seeds each.
+Spec points: supplier_quotes defines the changed answer via `argued` (oracle recomputes it and
+asserts equality); trip_supervision's distractor can be 2 adults, below the 2-adult minimum
+(consistent with the spec; the mistake is less clean); energy_rating's filler is drawn and only
+its constraints can be checked.
+
+**Blind review** (seeds 100–109 per family, turn-2 view; `review/packet_2.md`, `packet_3.md`,
+answers, `key_round2.json`, builder `build_round2.py`): 100/100 answers and soundness match.
+One note: bike_rental R2-027, a per-bike cap only a little above one day's charge (realism,
+not validity). Lint fixes in `unseen_b6.py` (an unused variable, an unused `noqa`) change no
+draws. Frozen at tag `families-b2-frozen`.

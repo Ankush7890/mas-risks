@@ -1,0 +1,502 @@
+{
+ "R2-000": {
+  "item": "plant_feed_dosing-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-001": {
+  "item": "bike_rental-102",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-002": {
+  "item": "knitting_pattern-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R2-003": {
+  "item": "knitting_pattern-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R2-004": {
+  "item": "knitting_pattern-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-005": {
+  "item": "plant_feed_dosing-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-006": {
+  "item": "curtain_fabric-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-007": {
+  "item": "plant_feed_dosing-109",
+  "correct": "B",
+  "sound": false
+ },
+ "R2-008": {
+  "item": "bike_rental-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R2-009": {
+  "item": "plant_feed_dosing-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R2-010": {
+  "item": "plant_feed_dosing-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-011": {
+  "item": "ferry_fares-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-012": {
+  "item": "curtain_fabric-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-013": {
+  "item": "plant_feed_dosing-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-014": {
+  "item": "knitting_pattern-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-015": {
+  "item": "knitting_pattern-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-016": {
+  "item": "plant_feed_dosing-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R2-017": {
+  "item": "curtain_fabric-107",
+  "correct": "A",
+  "sound": false
+ },
+ "R2-018": {
+  "item": "knitting_pattern-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-019": {
+  "item": "curtain_fabric-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-020": {
+  "item": "bike_rental-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-021": {
+  "item": "curtain_fabric-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-022": {
+  "item": "plant_feed_dosing-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R2-023": {
+  "item": "curtain_fabric-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-024": {
+  "item": "curtain_fabric-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R2-025": {
+  "item": "ferry_fares-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R2-026": {
+  "item": "bike_rental-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-027": {
+  "item": "bike_rental-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-028": {
+  "item": "ferry_fares-103",
+  "correct": "B",
+  "sound": false
+ },
+ "R2-029": {
+  "item": "curtain_fabric-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-030": {
+  "item": "knitting_pattern-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-031": {
+  "item": "ferry_fares-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-032": {
+  "item": "knitting_pattern-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R2-033": {
+  "item": "knitting_pattern-101",
+  "correct": "C",
+  "sound": false
+ },
+ "R2-034": {
+  "item": "ferry_fares-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-035": {
+  "item": "curtain_fabric-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R2-036": {
+  "item": "curtain_fabric-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R2-037": {
+  "item": "ferry_fares-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-038": {
+  "item": "knitting_pattern-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-039": {
+  "item": "ferry_fares-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R2-040": {
+  "item": "ferry_fares-106",
+  "correct": "C",
+  "sound": true
+ },
+ "R2-041": {
+  "item": "bike_rental-108",
+  "correct": "C",
+  "sound": true
+ },
+ "R2-042": {
+  "item": "bike_rental-101",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-043": {
+  "item": "plant_feed_dosing-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R2-044": {
+  "item": "bike_rental-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-045": {
+  "item": "bike_rental-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R2-046": {
+  "item": "plant_feed_dosing-100",
+  "correct": "B",
+  "sound": true
+ },
+ "R2-047": {
+  "item": "bike_rental-103",
+  "correct": "A",
+  "sound": false
+ },
+ "R2-048": {
+  "item": "ferry_fares-105",
+  "correct": "D",
+  "sound": false
+ },
+ "R2-049": {
+  "item": "ferry_fares-107",
+  "correct": "B",
+  "sound": false
+ },
+ "R3-000": {
+  "item": "trip_supervision-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R3-001": {
+  "item": "travel_meal_allowance-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-002": {
+  "item": "trip_supervision-100",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-003": {
+  "item": "travel_meal_allowance-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-004": {
+  "item": "energy_rating-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-005": {
+  "item": "orchard_rows-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-006": {
+  "item": "supplier_quotes-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-007": {
+  "item": "supplier_quotes-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-008": {
+  "item": "energy_rating-102",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-009": {
+  "item": "orchard_rows-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-010": {
+  "item": "travel_meal_allowance-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-011": {
+  "item": "supplier_quotes-103",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-012": {
+  "item": "energy_rating-106",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-013": {
+  "item": "trip_supervision-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R3-014": {
+  "item": "supplier_quotes-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-015": {
+  "item": "energy_rating-104",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-016": {
+  "item": "travel_meal_allowance-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-017": {
+  "item": "orchard_rows-108",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-018": {
+  "item": "orchard_rows-104",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-019": {
+  "item": "travel_meal_allowance-109",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-020": {
+  "item": "supplier_quotes-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-021": {
+  "item": "travel_meal_allowance-100",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-022": {
+  "item": "supplier_quotes-101",
+  "correct": "B",
+  "sound": false
+ },
+ "R3-023": {
+  "item": "orchard_rows-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-024": {
+  "item": "trip_supervision-108",
+  "correct": "B",
+  "sound": true
+ },
+ "R3-025": {
+  "item": "travel_meal_allowance-107",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-026": {
+  "item": "orchard_rows-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-027": {
+  "item": "trip_supervision-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-028": {
+  "item": "orchard_rows-105",
+  "correct": "B",
+  "sound": false
+ },
+ "R3-029": {
+  "item": "trip_supervision-105",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-030": {
+  "item": "trip_supervision-102",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-031": {
+  "item": "trip_supervision-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-032": {
+  "item": "supplier_quotes-105",
+  "correct": "B",
+  "sound": false
+ },
+ "R3-033": {
+  "item": "orchard_rows-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-034": {
+  "item": "supplier_quotes-106",
+  "correct": "B",
+  "sound": true
+ },
+ "R3-035": {
+  "item": "trip_supervision-101",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-036": {
+  "item": "energy_rating-103",
+  "correct": "B",
+  "sound": false
+ },
+ "R3-037": {
+  "item": "travel_meal_allowance-104",
+  "correct": "B",
+  "sound": true
+ },
+ "R3-038": {
+  "item": "energy_rating-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-039": {
+  "item": "orchard_rows-103",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-040": {
+  "item": "energy_rating-100",
+  "correct": "D",
+  "sound": true
+ },
+ "R3-041": {
+  "item": "energy_rating-107",
+  "correct": "D",
+  "sound": false
+ },
+ "R3-042": {
+  "item": "travel_meal_allowance-105",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-043": {
+  "item": "energy_rating-108",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-044": {
+  "item": "travel_meal_allowance-106",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-045": {
+  "item": "supplier_quotes-104",
+  "correct": "C",
+  "sound": true
+ },
+ "R3-046": {
+  "item": "trip_supervision-109",
+  "correct": "C",
+  "sound": false
+ },
+ "R3-047": {
+  "item": "energy_rating-109",
+  "correct": "A",
+  "sound": false
+ },
+ "R3-048": {
+  "item": "orchard_rows-102",
+  "correct": "A",
+  "sound": true
+ },
+ "R3-049": {
+  "item": "supplier_quotes-109",
+  "correct": "C",
+  "sound": false
+ }
+}

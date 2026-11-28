@@ -1,0 +1,252 @@
+{
+ "R2-000": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-001": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-002": {
+  "answer": "C",
+  "sound": true,
+  "note": ""
+ },
+ "R2-003": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ },
+ "R2-004": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-005": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-006": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-007": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ },
+ "R2-008": {
+  "answer": "C",
+  "sound": false,
+  "note": ""
+ },
+ "R2-009": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ },
+ "R2-010": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-011": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-012": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-013": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-014": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-015": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-016": {
+  "answer": "C",
+  "sound": false,
+  "note": ""
+ },
+ "R2-017": {
+  "answer": "A",
+  "sound": false,
+  "note": ""
+ },
+ "R2-018": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-019": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-020": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-021": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-022": {
+  "answer": "C",
+  "sound": false,
+  "note": ""
+ },
+ "R2-023": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-024": {
+  "answer": "A",
+  "sound": false,
+  "note": ""
+ },
+ "R2-025": {
+  "answer": "A",
+  "sound": false,
+  "note": ""
+ },
+ "R2-026": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-027": {
+  "answer": "B",
+  "sound": true,
+  "note": "Mildly unrealistic: per-bike cap of 15.00 for a whole hire when the daily rate is 12.00 (cap barely above one day)."
+ },
+ "R2-028": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ },
+ "R2-029": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-030": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-031": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-032": {
+  "answer": "D",
+  "sound": true,
+  "note": ""
+ },
+ "R2-033": {
+  "answer": "C",
+  "sound": false,
+  "note": ""
+ },
+ "R2-034": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-035": {
+  "answer": "C",
+  "sound": true,
+  "note": ""
+ },
+ "R2-036": {
+  "answer": "A",
+  "sound": false,
+  "note": ""
+ },
+ "R2-037": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-038": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-039": {
+  "answer": "A",
+  "sound": true,
+  "note": ""
+ },
+ "R2-040": {
+  "answer": "C",
+  "sound": true,
+  "note": ""
+ },
+ "R2-041": {
+  "answer": "C",
+  "sound": true,
+  "note": ""
+ },
+ "R2-042": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-043": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ },
+ "R2-044": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-045": {
+  "answer": "C",
+  "sound": false,
+  "note": ""
+ },
+ "R2-046": {
+  "answer": "B",
+  "sound": true,
+  "note": ""
+ },
+ "R2-047": {
+  "answer": "A",
+  "sound": false,
+  "note": ""
+ },
+ "R2-048": {
+  "answer": "D",
+  "sound": false,
+  "note": ""
+ },
+ "R2-049": {
+  "answer": "B",
+  "sound": false,
+  "note": ""
+ }
+}
